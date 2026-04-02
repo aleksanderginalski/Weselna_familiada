@@ -1,0 +1,145 @@
+# Weselna Familiada
+
+Aplikacja do przeprowadzenia gry Familiada na weselu lub imprezie rodzinnej.
+
+## 🎯 O projekcie
+
+Dwa zsynchronizowane okna:
+- **Tablica** (rzutnik) — widok dla gości z odpowiedziami, punktami, błędami
+- **Panel Operatora** (laptop) — kontrola gry, odkrywanie odpowiedzi, zarządzanie rundami
+
+## 🛠️ Tech Stack
+
+- React 18 + TypeScript
+- Vite (bundler)
+- Tailwind CSS (styling)
+- Zustand (state management)
+- BroadcastChannel API (synchronizacja okien)
+- Howler.js (dźwięki)
+
+## 📦 Setup
+
+### Prerequisites
+
+- Node.js 18+
+- npm 9+ lub yarn
+- Git
+- VS Code (zalecany)
+
+### Installation
+
+```powershell
+# Klonowanie repozytorium
+git clone https://github.com/[USERNAME]/Weselna_familiada.git
+cd Weselna_familiada
+
+# Instalacja zależności
+npm install
+
+# Uruchomienie w trybie dev
+npm run dev
+```
+
+Aplikacja otworzy się na `http://localhost:3000`
+
+### VS Code Extensions
+
+Otwórz projekt w VS Code — pojawi się sugestia instalacji rekomendowanych rozszerzeń.
+
+## 🎮 Jak używać
+
+1. Uruchom aplikację (`npm run dev`)
+2. W Panelu Operatora kliknij "Otwórz Tablicę w Nowym Oknie"
+3. Przeciągnij okno Tablicy na rzutnik (rozszerz pulpit)
+4. Załaduj pytania z pliku `public/pytania.json`
+5. Prowadź grę używając Panelu Operatora
+
+## 📁 Struktura projektu
+
+```
+Weselna_familiada/
+├── .claude/agents/       # Agenci Claude Code
+├── .vscode/              # Konfiguracja VS Code
+├── public/
+│   └── pytania.json      # Pytania i odpowiedzi (edytuj tutaj!)
+├── src/
+│   ├── components/       # Komponenty React
+│   ├── hooks/            # Custom hooks
+│   ├── store/            # Zustand store
+│   ├── types/            # TypeScript types
+│   └── assets/           # Dźwięki, obrazy
+├── CLAUDE.md             # Instrukcje dla /dev
+├── BACKLOG.md            # Product backlog
+├── architecture.md       # Dokumentacja architektury
+└── requirements.md       # Wymagania funkcjonalne
+```
+
+## 📝 Edycja pytań
+
+Edytuj plik `public/pytania.json` w VS Code:
+
+```json
+{
+  "config": {
+    "mode": "fixed",
+    "numberOfRounds": 4,
+    "multipliers": [1, 2, 3, 3],
+    "teams": {
+      "left": { "name": "Drużyna Pana Młodego" },
+      "right": { "name": "Drużyna Panny Młodej" }
+    }
+  },
+  "rounds": [
+    {
+      "question": "Twoje pytanie?",
+      "answers": [
+        { "text": "Odpowiedź 1", "points": 30 },
+        { "text": "Odpowiedź 2", "points": 25 }
+      ]
+    }
+  ]
+}
+```
+
+## 🚀 Build produkcyjny
+
+```powershell
+npm run build
+```
+
+Wynik w folderze `dist/` — otwórz `dist/index.html` w przeglądarce.
+
+## 📚 Dokumentacja
+
+- [CLAUDE.md](./CLAUDE.md) — instrukcje dla Claude Code
+- [BACKLOG.md](./BACKLOG.md) — product backlog
+- [architecture.md](./architecture.md) — architektura systemu
+- [requirements.md](./requirements.md) — wymagania
+
+## 🤝 Development
+
+Projekt używa systemu multi-agent z Claude Code:
+
+| Agent | Cel |
+|-------|-----|
+| /pm | Router sesji, sprawdzenie git status |
+| /planning | Weryfikacja US, generowanie Task instruction |
+| /dev | Implementacja |
+| /qa | Testy |
+| /debug | Rozwiązywanie problemów |
+| /docs | Aktualizacja dokumentacji |
+
+Szczegóły w [MULTI_AGENT_ARCHITECTURE.md](./MULTI_AGENT_ARCHITECTURE.md)
+
+## 📄 License
+
+MIT License — zobacz [LICENSE](./LICENSE)
+
+---
+
+## Latest
+
+**v0.1.0** — Initial project setup
+- Project structure created
+- Documentation prepared
+- Backlog defined

@@ -1,0 +1,61 @@
+{
+  "config": {
+    "mode": "fixed",
+    "numberOfRounds": 4,
+    "winningScore": 300,
+    "multipliers": [1, 2, 3, 3],
+    "teams": {
+      "left": {
+        "name": "Drużyna Pana Młodego"
+      },
+      "right": {
+        "name": "Drużyna Panny Młodej"
+      }
+    }
+  },
+  "rounds": [
+    {
+      "question": "Czego ludzie boją się na weselu?",
+      "answers": [
+        { "text": "Brzydkiej pogody", "points": 31 },
+        { "text": "Kradzieży", "points": 14 },
+        { "text": "Wysokich cen", "points": 11 },
+        { "text": "Zgubienia dokumentów", "points": 8 },
+        { "text": "Że zabraknie alkoholu", "points": 20 },
+        { "text": "Kłótni rodzinnej", "points": 16 }
+      ]
+    },
+    {
+      "question": "Co zabiera Pan Młody w podróż poślubną?",
+      "answers": [
+        { "text": "Żonę", "points": 35 },
+        { "text": "Pieniądze", "points": 25 },
+        { "text": "Dokumenty", "points": 18 },
+        { "text": "Ubrania", "points": 12 },
+        { "text": "Aparat fotograficzny", "points": 10 }
+      ]
+    },
+    {
+      "question": "Co robi gość weselny gdy się nudzi?",
+      "answers": [
+        { "text": "Pije alkohol", "points": 32 },
+        { "text": "Rozmawia z innymi", "points": 22 },
+        { "text": "Tańczy", "points": 18 },
+        { "text": "Przegląda telefon", "points": 15 },
+        { "text": "Wychodzi na papierosa", "points": 8 },
+        { "text": "Idzie spać", "points": 5 }
+      ]
+    },
+    {
+      "question": "Co Para Młoda dostaje w prezencie ślubnym?",
+      "answers": [
+        { "text": "Pieniądze w kopercie", "points": 40 },
+        { "text": "Sprzęt AGD", "points": 20 },
+        { "text": "Pościel/ręczniki", "points": 15 },
+        { "text": "Zastawa stołowa", "points": 12 },
+        { "text": "Obrazy/dekoracje", "points": 8 },
+        { "text": "Voucher na podróż", "points": 5 }
+      ]
+    }
+  ]
+}

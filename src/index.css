@@ -1,0 +1,100 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom Familiada styles */
+@layer base {
+  body {
+    @apply bg-familiada-bg-dark text-familiada-text-primary font-body;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+@layer components {
+  /* Answer row styles */
+  .answer-row {
+    @apply flex items-center justify-between;
+    @apply bg-familiada-answer-hidden;
+    @apply border-2 border-familiada-border;
+    @apply px-4 py-3;
+    @apply transition-all duration-300;
+  }
+
+  .answer-row.revealed {
+    @apply bg-familiada-answer-revealed;
+    @apply border-familiada-gold;
+  }
+
+  /* Score display */
+  .score-display {
+    @apply font-display text-4xl text-familiada-gold;
+    @apply bg-familiada-bg-panel;
+    @apply border-4 border-familiada-gold;
+    @apply px-6 py-4 rounded-lg;
+    @apply text-center;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+  }
+
+  /* Mistake X indicator */
+  .mistake-x {
+    @apply w-12 h-12;
+    @apply flex items-center justify-center;
+    @apply border-4 border-familiada-red;
+    @apply font-display text-3xl text-familiada-red;
+    @apply bg-familiada-bg-panel;
+  }
+
+  .mistake-x.active {
+    @apply bg-familiada-red text-white;
+    animation: pulse 0.3s ease-out;
+  }
+
+  .mistake-x.empty {
+    @apply border-familiada-border text-transparent;
+  }
+
+  /* Operator panel button */
+  .operator-btn {
+    @apply px-6 py-3;
+    @apply font-bold text-lg;
+    @apply rounded-lg;
+    @apply transition-all duration-200;
+    @apply disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .operator-btn-primary {
+    @apply operator-btn;
+    @apply bg-familiada-gold text-familiada-bg-dark;
+    @apply hover:bg-familiada-gold-dark;
+  }
+
+  .operator-btn-danger {
+    @apply operator-btn;
+    @apply bg-familiada-red text-white;
+    @apply hover:bg-red-700;
+  }
+
+  .operator-btn-secondary {
+    @apply operator-btn;
+    @apply bg-familiada-bg-panel text-familiada-text-primary;
+    @apply border-2 border-familiada-border;
+    @apply hover:border-familiada-gold;
+  }
+}
+
+@layer utilities {
+  /* Text glow effect */
+  .text-glow-gold {
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.7),
+                 0 0 20px rgba(255, 215, 0, 0.5),
+                 0 0 30px rgba(255, 215, 0, 0.3);
+  }
+
+  /* Box glow effect */
+  .box-glow-gold {
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5),
+                0 0 20px rgba(255, 215, 0, 0.3);
+  }
+}
