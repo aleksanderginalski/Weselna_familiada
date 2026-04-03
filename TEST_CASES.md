@@ -314,6 +314,21 @@ beforeEach(() => {
 
 ---
 
+#### TC-016: Testing framework — package.json defines test, test:watch, and test:coverage scripts
+
+**Related US:** US-005  
+**Type:** Unit  
+**Priority:** Critical  
+**File:** `src/test/lintingConfig.test.ts`
+
+**Test Steps:**
+1. Parse `package.json`
+2. Verify `scripts.test`, `scripts['test:watch']`, and `scripts['test:coverage']` are defined
+
+**Status:** ✅ Done
+
+---
+
 ### FEATURE-002: Game State Management
 
 #### TC-001: Load game from JSON

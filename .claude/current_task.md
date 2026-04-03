@@ -1,43 +1,35 @@
-# Current Task — US-004
+# Current Task — US-005
 
 ## Context
-ESLint is already configured (.eslintrc.cjs with React + TypeScript rules).
-VS Code settings (format on save) already exist.
-Missing: Prettier installation, .prettierrc config, `format` npm script,
-and eslint-config-prettier to prevent ESLint/Prettier rule conflicts.
-Branch: 34-us-004-configure-linting-and-formatting
+Configure the testing framework for Weselna Familiada. Most infrastructure is already
+in place from prior US work (Vitest, RTL, jsdom, vite.config.ts test block,
+src/test/setup.ts, src/App.test.tsx). The only gap vs. Acceptance Criteria is a
+missing `test:watch` npm script. Task is to add it and verify everything works.
 
 ## Read
-- package.json
-- .eslintrc.cjs
-- .vscode/settings.json
+- package.json (scripts section — see what's there)
+- vite.config.ts (test block — already configured)
+- src/test/setup.ts (already has jest-dom import)
+- src/App.test.tsx (sample test — already written)
 
 ## Tasks
-1. Install Prettier and eslint-config-prettier:
-   npm install --save-dev prettier eslint-config-prettier
-2. Create .prettierrc in project root with rules consistent with
-   existing codebase style (single quotes, 2 spaces, trailing commas,
-   100 char print width, semicolons)
-3. Update .eslintrc.cjs — add 'prettier' as last item in `extends`
-   array to disable ESLint rules that conflict with Prettier
-4. Add `format` script to package.json:
-   "format": "prettier --write src/**/*.{ts,tsx}"
-5. Run npm run lint and fix any issues in existing source files
-6. Run npm run format to apply Prettier to all src files
+1. Add `test:watch` script to package.json:
+   `"test:watch": "vitest --watch"`
+   Place it between `test` and `test:ui` scripts.
+
+2. Run `npm run lint` — verify no errors.
+
+3. Run `npm test -- --run` (single-pass, non-interactive) — verify all existing
+   tests pass (TC-000 through TC-015 + App.test.tsx).
 
 ## Constraints
-- Do NOT modify existing ESLint rules — only add prettier to extends
-- Do NOT change VS Code settings (already correct)
-- Do NOT install eslint-plugin-prettier (causes performance issues,
-  eslint-config-prettier alone is the recommended approach)
-- Follow CLAUDE.md: no `any`, no console.log, functional components only
+- Do NOT modify vite.config.ts — test configuration is complete
+- Do NOT modify src/test/setup.ts — it is correct
+- Do NOT modify src/App.test.tsx — it is the sample test, written by /qa
+- Only change: package.json scripts section
+- No `any` types, no @ts-ignore
 
 ## After implementation
 - Run linter: npm run lint
-- Run tests: npm test
-- Manual verification steps (in Polish):
-  1. Uruchom `npm run lint` — brak błędów
-  2. Uruchom `npm run format` — pliki w src/ sformatowane
-  3. Otwórz dowolny plik .tsx w VS Code, zrób celowy błąd formatowania
-     (np. podwójne cudzysłowy), zapisz — powinien się naprawić automatycznie
-  4. Uruchom `npm run lint:fix` — brak błędów
+- Run tests: npm test -- --run
+- List manual verification steps (in Polish)
