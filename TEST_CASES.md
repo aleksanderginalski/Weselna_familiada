@@ -85,6 +85,112 @@ beforeEach(() => {
 
 ---
 
+#### TC-001: TypeScript types — GameConfig fixed mode
+
+**Related US:** US-002  
+**Type:** Unit  
+**Priority:** Critical  
+**File:** `src/types/game.test.ts`
+
+**Test Steps:**
+1. Create a `GameConfig` object with `mode: 'fixed'`
+2. Verify `numberOfRounds`, `multipliers`, and team names are accessible
+
+**Status:** ✅ Done
+
+---
+
+#### TC-002: TypeScript types — GameConfig score mode
+
+**Related US:** US-002  
+**Type:** Unit  
+**Priority:** High  
+**File:** `src/types/game.test.ts`
+
+**Test Steps:**
+1. Create a `GameConfig` object with `mode: 'score'`
+2. Verify `winningScore` is set and `numberOfRounds` is undefined
+
+**Status:** ✅ Done
+
+---
+
+#### TC-003: TypeScript types — RoundState initial shape
+
+**Related US:** US-002  
+**Type:** Unit  
+**Priority:** Critical  
+**File:** `src/types/game.test.ts`
+
+**Test Steps:**
+1. Create a `RoundState` with initial values
+2. Verify all fields: phase, controllingTeam, revealedAnswers, mistakes, stealAttempted, roundScore
+
+**Status:** ✅ Done
+
+---
+
+#### TC-004: TypeScript types — RoundPhase all values
+
+**Related US:** US-002  
+**Type:** Unit  
+**Priority:** High  
+**File:** `src/types/game.test.ts`
+
+**Test Steps:**
+1. Iterate over all `RoundPhase` values: `showdown`, `guessing`, `steal`, `summary`
+2. Assign each to a `RoundState` and verify
+
+**Status:** ✅ Done
+
+---
+
+#### TC-005: TypeScript types — GameStatus all values
+
+**Related US:** US-002  
+**Type:** Unit  
+**Priority:** High  
+**File:** `src/types/game.test.ts`
+
+**Test Steps:**
+1. Iterate over `lobby`, `playing`, `finished`
+2. Assign each to a `GameState` and verify
+
+**Status:** ✅ Done
+
+---
+
+#### TC-006: TypeScript types — GameAction discriminated union exhaustiveness
+
+**Related US:** US-002  
+**Type:** Unit  
+**Priority:** Critical  
+**File:** `src/types/game.test.ts`
+
+**Test Steps:**
+1. Create one instance of every `GameAction` variant (9 total)
+2. Process all via a switch statement
+3. Verify all 9 are handled
+
+**Status:** ✅ Done
+
+---
+
+#### TC-007: TypeScript types — Component prop types shape
+
+**Related US:** US-002  
+**Type:** Unit  
+**Priority:** Medium  
+**File:** `src/types/game.test.ts`
+
+**Test Steps:**
+1. Create valid objects for `AnswerDisplayProps`, `TeamPanelProps`, `MistakeIndicatorProps`
+2. Verify all required fields are accessible
+
+**Status:** ✅ Done
+
+---
+
 ### FEATURE-002: Game State Management
 
 #### TC-001: Load game from JSON
