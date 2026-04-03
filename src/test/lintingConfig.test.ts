@@ -39,3 +39,15 @@ describe('Linting and Formatting Configuration', () => {
     });
   });
 });
+
+describe('Testing Framework Configuration', () => {
+  describe('package.json scripts', () => {
+    it('should define test, test:watch, and test:coverage scripts', () => {
+      const pkg = JSON.parse(readFileSync(resolve(root, 'package.json'), 'utf-8'));
+
+      expect(pkg.scripts['test']).toBeDefined();
+      expect(pkg.scripts['test:watch']).toBeDefined();
+      expect(pkg.scripts['test:coverage']).toBeDefined();
+    });
+  });
+});
