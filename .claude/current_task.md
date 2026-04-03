@@ -1,33 +1,32 @@
-# Current Task — US-005
+# Current Task — US-007
 
 ## Context
-Configure the testing framework for Weselna Familiada. Most infrastructure is already
-in place from prior US work (Vitest, RTL, jsdom, vite.config.ts test block,
-src/test/setup.ts, src/App.test.tsx). The only gap vs. Acceptance Criteria is a
-missing `test:watch` npm script. Task is to add it and verify everything works.
+Set up GitHub Actions CI workflow that runs linting and tests automatically
+on every push and pull request. Add a status badge to README.md.
+Dependencies already in place: ESLint (US-004), Vitest (US-005).
 
 ## Read
-- package.json (scripts section — see what's there)
-- vite.config.ts (test block — already configured)
-- src/test/setup.ts (already has jest-dom import)
-- src/App.test.tsx (sample test — already written)
+- package.json (scripts: lint, test, build — node version)
+- .eslintrc.cjs (lint config)
+- vite.config.ts (vitest config)
+- README.md (where to add badge)
 
 ## Tasks
-1. Add `test:watch` script to package.json:
-   `"test:watch": "vitest --watch"`
-   Place it between `test` and `test:ui` scripts.
-
-2. Run `npm run lint` — verify no errors.
-
-3. Run `npm test -- --run` (single-pass, non-interactive) — verify all existing
-   tests pass (TC-000 through TC-015 + App.test.tsx).
+1. Create `.github/workflows/ci.yml` with:
+   - trigger: push (all branches) + pull_request (all branches)
+   - single job `ci` running on `ubuntu-latest`
+   - steps: checkout → setup Node.js 20 → npm ci → lint → test
+2. Add CI status badge to README.md directly below the `# Weselna Familiada` heading
 
 ## Constraints
-- Do NOT modify vite.config.ts — test configuration is complete
-- Do NOT modify src/test/setup.ts — it is correct
-- Do NOT modify src/App.test.tsx — it is the sample test, written by /qa
-- Only change: package.json scripts section
-- No `any` types, no @ts-ignore
+- Use `npm ci` (not `npm install`) for deterministic installs
+- Node version: 20 (matches Node.js 18+ requirement from README, use 20 LTS)
+- Use `actions/checkout@v4` and `actions/setup-node@v4`
+- Badge format: GitHub Actions badge for workflow named `CI`
+- Badge links to the Actions tab of the repo
+- Repo: https://github.com/AleksanderGinalworking/Weselna_familiada
+- Do NOT add a build job — that is US-008 scope
+- No test coverage upload — keep it simple
 
 ## After implementation
 - Run linter: npm run lint
