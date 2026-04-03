@@ -191,11 +191,75 @@ beforeEach(() => {
 
 ---
 
+#### TC-008: App — renders title and theme demo elements
+
+**Related US:** US-003  
+**Type:** Component  
+**Priority:** Critical  
+**File:** `src/App.test.tsx`
+
+**Test Steps:**
+1. Render `<App />`
+2. Verify heading "Weselna Familiada" is present
+3. Verify hidden and revealed answer row text is present
+4. Verify score display label "PUNKTY" and value "120" are present
+
+**Status:** ✅ Done
+
+---
+
+#### TC-009: App — second answer row has revealed class
+
+**Related US:** US-003  
+**Type:** Component  
+**Priority:** High  
+**File:** `src/App.test.tsx`
+
+**Test Steps:**
+1. Render `<App />`
+2. Query all `.answer-row` elements
+3. Verify first row does NOT have `revealed` class
+4. Verify second row HAS `revealed` class
+
+**Status:** ✅ Done
+
+---
+
+#### TC-010: Tailwind theme — Design Brief color tokens are correct
+
+**Related US:** US-003  
+**Type:** Unit  
+**Priority:** Critical  
+**File:** `src/test/tailwindTheme.test.ts`
+
+**Test Steps:**
+1. Import `tailwind.config.js`
+2. Verify all 7 primary color tokens match Design Brief hex values exactly
+
+**Status:** ✅ Done
+
+---
+
+#### TC-011: Tailwind theme — component-level color tokens exist
+
+**Related US:** US-003  
+**Type:** Unit  
+**Priority:** High  
+**File:** `src/test/tailwindTheme.test.ts`
+
+**Test Steps:**
+1. Import `tailwind.config.js`
+2. Verify `answer-hidden`, `answer-revealed`, `gold-dark` tokens are defined
+
+**Status:** ✅ Done
+
+---
+
 ### FEATURE-002: Game State Management
 
 #### TC-001: Load game from JSON
 
-**Related US:** US-003  
+**Related US:** US-007  
 **Type:** Unit  
 **Priority:** Critical
 
@@ -210,7 +274,7 @@ beforeEach(() => {
 
 #### TC-002: Reveal answer updates state
 
-**Related US:** US-003  
+**Related US:** US-007  
 **Type:** Unit  
 **Priority:** Critical
 
@@ -226,7 +290,7 @@ beforeEach(() => {
 
 #### TC-003: Three mistakes trigger steal
 
-**Related US:** US-003  
+**Related US:** US-007  
 **Type:** Unit  
 **Priority:** Critical
 

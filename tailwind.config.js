@@ -7,20 +7,20 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Familiada color palette
+        // Familiada color palette — aligned with Design Brief v1.0
         'familiada': {
-          'bg-dark': '#0a0a1a',      // Deep dark blue/black background
-          'bg-panel': '#1a1a3a',      // Panel background
-          'border': '#3a3a6a',        // Border color
-          'gold': '#ffd700',          // Gold for points, highlights
-          'gold-dark': '#b8960f',     // Darker gold
-          'orange': '#ff8c00',        // Orange accents
-          'red': '#dc2626',           // Error/X color
+          'bg-dark': '#0a1628',       // Main board background
+          'bg-panel': '#1a2744',      // Answer rows, panels
+          'border': '#334155',        // Subtle borders
+          'gold': '#fbbf24',          // Scores, revealed text, highlights
+          'gold-dark': '#b45309',     // Darker gold for hover states
+          'orange': '#f97316',        // Orange accents
+          'red': '#ef4444',           // Mistakes (X), error states
           'green': '#22c55e',         // Success color
-          'text-primary': '#ffffff',  // Primary text
-          'text-secondary': '#a0a0c0', // Secondary text
-          'answer-hidden': '#2a2a4a', // Hidden answer background
-          'answer-revealed': '#1e3a5f', // Revealed answer background
+          'text-primary': '#ffffff',  // Main text
+          'text-secondary': '#9ca3af', // Secondary info (gray-400)
+          'answer-hidden': '#1e3a5f', // Hidden answer background
+          'answer-revealed': '#1a2744', // Revealed answer background
         }
       },
       fontFamily: {

@@ -139,6 +139,13 @@ MIT License — zobacz [LICENSE](./LICENSE)
 
 ## Latest
 
+**v0.3.0** — Tailwind CSS with Familiada theme (US-003)
+- `tailwind.config.js` — custom color palette aligned with Design Brief (familiada-bg-dark, familiada-gold, familiada-red, etc.)
+- `src/index.css` — Tailwind directives + component classes (answer-row, score-display, mistake-x, operator-btn)
+- `src/main.tsx` — React 18 entry point
+- `src/App.tsx` — theme verification component
+- 4 tests added (TC-008 through TC-011)
+
 **v0.2.0** — TypeScript types for game state (US-006)
 - `src/types/game.ts` — complete type definitions: GameConfig, GameState, RoundState, GameAction, component props
 - `src/types/index.ts` — barrel export for all types
