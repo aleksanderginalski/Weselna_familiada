@@ -1,8 +1,8 @@
-import { existsSync } from 'fs'
-import { resolve } from 'path'
-import { describe, it, expect } from 'vitest'
+import { existsSync } from 'fs';
+import { resolve } from 'path';
+import { describe, it, expect } from 'vitest';
 
-const root = resolve(__dirname, '../../')
+const root = resolve(__dirname, '../../');
 
 describe('Project Structure', () => {
   const requiredDirs = [
@@ -18,14 +18,11 @@ describe('Project Structure', () => {
     'src/assets/sounds',
     'public',
     'docs',
-  ]
+  ];
 
-  it.each(requiredDirs)(
-    'should have required directory: %s',
-    (dir) => {
-      expect(existsSync(resolve(root, dir))).toBe(true)
-    }
-  )
+  it.each(requiredDirs)('should have required directory: %s', (dir) => {
+    expect(existsSync(resolve(root, dir))).toBe(true);
+  });
 
   const requiredFiles = [
     '.gitignore',
@@ -34,12 +31,9 @@ describe('Project Structure', () => {
     'tsconfig.json',
     'vite.config.ts',
     'index.html',
-  ]
+  ];
 
-  it.each(requiredFiles)(
-    'should have required file: %s',
-    (file) => {
-      expect(existsSync(resolve(root, file))).toBe(true)
-    }
-  )
-})
+  it.each(requiredFiles)('should have required file: %s', (file) => {
+    expect(existsSync(resolve(root, file))).toBe(true);
+  });
+});

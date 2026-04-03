@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect } from 'vitest';
 import type {
   AnswerData,
   AnswerDisplayProps,
@@ -14,7 +14,7 @@ import type {
   TeamPanelProps,
   TeamSide,
   TeamState,
-} from './index'
+} from './index';
 
 // ---------------------------------------------------------------------------
 // Fixtures — valid objects for each type
@@ -28,7 +28,7 @@ const fixedConfig: GameConfig = {
     left: { name: 'Team A' },
     right: { name: 'Team B' },
   },
-}
+};
 
 const scoreConfig: GameConfig = {
   mode: 'score',
@@ -38,7 +38,7 @@ const scoreConfig: GameConfig = {
     left: { name: 'Team A' },
     right: { name: 'Team B' },
   },
-}
+};
 
 const mockRound: RoundData = {
   question: 'What do you find in a kitchen?',
@@ -46,12 +46,12 @@ const mockRound: RoundData = {
     { text: 'Stove', points: 40 },
     { text: 'Fridge', points: 30 },
   ],
-}
+};
 
 const mockGameData: GameDataFile = {
   config: fixedConfig,
   rounds: [mockRound],
-}
+};
 
 const initialRoundState: RoundState = {
   phase: 'showdown',
@@ -60,9 +60,9 @@ const initialRoundState: RoundState = {
   mistakes: 0,
   stealAttempted: false,
   roundScore: 0,
-}
+};
 
-const mockTeamState: TeamState = { name: 'Team A', totalScore: 0 }
+const mockTeamState: TeamState = { name: 'Team A', totalScore: 0 };
 
 const mockGameState: GameState = {
   config: fixedConfig,
@@ -74,7 +74,7 @@ const mockGameState: GameState = {
     right: { name: 'Team B', totalScore: 0 },
   },
   currentRound: initialRoundState,
-}
+};
 
 // ---------------------------------------------------------------------------
 // GameConfig
@@ -82,19 +82,19 @@ const mockGameState: GameState = {
 
 describe('GameConfig', () => {
   it('should have all required fields for fixed mode', () => {
-    expect(fixedConfig.mode).toBe('fixed')
-    expect(fixedConfig.numberOfRounds).toBe(4)
-    expect(fixedConfig.multipliers).toEqual([1, 2, 3, 3])
-    expect(fixedConfig.teams.left.name).toBe('Team A')
-    expect(fixedConfig.teams.right.name).toBe('Team B')
-  })
+    expect(fixedConfig.mode).toBe('fixed');
+    expect(fixedConfig.numberOfRounds).toBe(4);
+    expect(fixedConfig.multipliers).toEqual([1, 2, 3, 3]);
+    expect(fixedConfig.teams.left.name).toBe('Team A');
+    expect(fixedConfig.teams.right.name).toBe('Team B');
+  });
 
   it('should have all required fields for score mode', () => {
-    expect(scoreConfig.mode).toBe('score')
-    expect(scoreConfig.winningScore).toBe(200)
-    expect(scoreConfig.numberOfRounds).toBeUndefined()
-  })
-})
+    expect(scoreConfig.mode).toBe('score');
+    expect(scoreConfig.winningScore).toBe(200);
+    expect(scoreConfig.numberOfRounds).toBeUndefined();
+  });
+});
 
 // ---------------------------------------------------------------------------
 // AnswerData / RoundData / GameDataFile
@@ -102,25 +102,25 @@ describe('GameConfig', () => {
 
 describe('AnswerData', () => {
   it('should have text and points', () => {
-    const answer: AnswerData = { text: 'Stove', points: 40 }
-    expect(answer.text).toBe('Stove')
-    expect(answer.points).toBe(40)
-  })
-})
+    const answer: AnswerData = { text: 'Stove', points: 40 };
+    expect(answer.text).toBe('Stove');
+    expect(answer.points).toBe(40);
+  });
+});
 
 describe('RoundData', () => {
   it('should have question and answers array', () => {
-    expect(mockRound.question).toBe('What do you find in a kitchen?')
-    expect(mockRound.answers).toHaveLength(2)
-  })
-})
+    expect(mockRound.question).toBe('What do you find in a kitchen?');
+    expect(mockRound.answers).toHaveLength(2);
+  });
+});
 
 describe('GameDataFile', () => {
   it('should combine config and rounds', () => {
-    expect(mockGameData.config).toBe(fixedConfig)
-    expect(mockGameData.rounds).toHaveLength(1)
-  })
-})
+    expect(mockGameData.config).toBe(fixedConfig);
+    expect(mockGameData.rounds).toHaveLength(1);
+  });
+});
 
 // ---------------------------------------------------------------------------
 // RoundState
@@ -128,30 +128,30 @@ describe('GameDataFile', () => {
 
 describe('RoundState', () => {
   it('should have correct initial shape', () => {
-    expect(initialRoundState.phase).toBe('showdown')
-    expect(initialRoundState.controllingTeam).toBeNull()
-    expect(initialRoundState.revealedAnswers).toEqual([])
-    expect(initialRoundState.mistakes).toBe(0)
-    expect(initialRoundState.stealAttempted).toBe(false)
-    expect(initialRoundState.roundScore).toBe(0)
-  })
+    expect(initialRoundState.phase).toBe('showdown');
+    expect(initialRoundState.controllingTeam).toBeNull();
+    expect(initialRoundState.revealedAnswers).toEqual([]);
+    expect(initialRoundState.mistakes).toBe(0);
+    expect(initialRoundState.stealAttempted).toBe(false);
+    expect(initialRoundState.roundScore).toBe(0);
+  });
 
   it('should accept all valid RoundPhase values', () => {
-    const phases: RoundPhase[] = ['showdown', 'guessing', 'steal', 'summary']
+    const phases: RoundPhase[] = ['showdown', 'guessing', 'steal', 'summary'];
     phases.forEach((phase) => {
-      const state: RoundState = { ...initialRoundState, phase }
-      expect(state.phase).toBe(phase)
-    })
-  })
+      const state: RoundState = { ...initialRoundState, phase };
+      expect(state.phase).toBe(phase);
+    });
+  });
 
   it('should accept both TeamSide values for controllingTeam', () => {
-    const sides: TeamSide[] = ['left', 'right']
+    const sides: TeamSide[] = ['left', 'right'];
     sides.forEach((side) => {
-      const state: RoundState = { ...initialRoundState, controllingTeam: side }
-      expect(state.controllingTeam).toBe(side)
-    })
-  })
-})
+      const state: RoundState = { ...initialRoundState, controllingTeam: side };
+      expect(state.controllingTeam).toBe(side);
+    });
+  });
+});
 
 // ---------------------------------------------------------------------------
 // GameState
@@ -159,20 +159,20 @@ describe('RoundState', () => {
 
 describe('GameState', () => {
   it('should have all required fields', () => {
-    expect(mockGameState.status).toBe('lobby')
-    expect(mockGameState.currentRoundIndex).toBe(0)
-    expect(mockGameState.teams.left).toEqual(mockTeamState)
-    expect(mockGameState.currentRound).toEqual(initialRoundState)
-  })
+    expect(mockGameState.status).toBe('lobby');
+    expect(mockGameState.currentRoundIndex).toBe(0);
+    expect(mockGameState.teams.left).toEqual(mockTeamState);
+    expect(mockGameState.currentRound).toEqual(initialRoundState);
+  });
 
   it('should accept all valid GameStatus values', () => {
-    const statuses: GameStatus[] = ['lobby', 'playing', 'finished']
+    const statuses: GameStatus[] = ['lobby', 'playing', 'finished'];
     statuses.forEach((status) => {
-      const state: GameState = { ...mockGameState, status }
-      expect(state.status).toBe(status)
-    })
-  })
-})
+      const state: GameState = { ...mockGameState, status };
+      expect(state.status).toBe(status);
+    });
+  });
+});
 
 // ---------------------------------------------------------------------------
 // GameAction — discriminated union exhaustiveness
@@ -190,27 +190,45 @@ describe('GameAction', () => {
       { type: 'NEXT_ROUND' },
       { type: 'RESET_GAME' },
       { type: 'SYNC_STATE', payload: mockGameState },
-    ]
+    ];
 
-    const handled: string[] = []
+    const handled: string[] = [];
 
     actions.forEach((action) => {
       switch (action.type) {
-        case 'LOAD_GAME': handled.push(action.type); break
-        case 'START_GAME': handled.push(action.type); break
-        case 'SELECT_CONTROLLING_TEAM': handled.push(action.type); break
-        case 'REVEAL_ANSWER': handled.push(action.type); break
-        case 'MARK_MISTAKE': handled.push(action.type); break
-        case 'END_ROUND': handled.push(action.type); break
-        case 'NEXT_ROUND': handled.push(action.type); break
-        case 'RESET_GAME': handled.push(action.type); break
-        case 'SYNC_STATE': handled.push(action.type); break
+        case 'LOAD_GAME':
+          handled.push(action.type);
+          break;
+        case 'START_GAME':
+          handled.push(action.type);
+          break;
+        case 'SELECT_CONTROLLING_TEAM':
+          handled.push(action.type);
+          break;
+        case 'REVEAL_ANSWER':
+          handled.push(action.type);
+          break;
+        case 'MARK_MISTAKE':
+          handled.push(action.type);
+          break;
+        case 'END_ROUND':
+          handled.push(action.type);
+          break;
+        case 'NEXT_ROUND':
+          handled.push(action.type);
+          break;
+        case 'RESET_GAME':
+          handled.push(action.type);
+          break;
+        case 'SYNC_STATE':
+          handled.push(action.type);
+          break;
       }
-    })
+    });
 
-    expect(handled).toHaveLength(actions.length)
-  })
-})
+    expect(handled).toHaveLength(actions.length);
+  });
+});
 
 // ---------------------------------------------------------------------------
 // Component prop types — shape verification
@@ -223,11 +241,11 @@ describe('AnswerDisplayProps', () => {
       index: 0,
       isRevealed: false,
       totalAnswers: 5,
-    }
-    expect(props.isRevealed).toBe(false)
-    expect(props.totalAnswers).toBe(5)
-  })
-})
+    };
+    expect(props.isRevealed).toBe(false);
+    expect(props.totalAnswers).toBe(5);
+  });
+});
 
 describe('TeamPanelProps', () => {
   it('should have all required fields', () => {
@@ -237,11 +255,11 @@ describe('TeamPanelProps', () => {
       isControlling: true,
       mistakes: 1,
       maxMistakes: 3,
-    }
-    expect(props.isControlling).toBe(true)
-    expect(props.maxMistakes).toBe(3)
-  })
-})
+    };
+    expect(props.isControlling).toBe(true);
+    expect(props.maxMistakes).toBe(3);
+  });
+});
 
 describe('MistakeIndicatorProps', () => {
   it('should have all required fields', () => {
@@ -249,8 +267,8 @@ describe('MistakeIndicatorProps', () => {
       mistakes: 2,
       maxMistakes: 3,
       side: 'right',
-    }
-    expect(props.mistakes).toBe(2)
-    expect(props.side).toBe('right')
-  })
-})
+    };
+    expect(props.mistakes).toBe(2);
+    expect(props.side).toBe('right');
+  });
+});

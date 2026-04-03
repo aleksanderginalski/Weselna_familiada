@@ -11,7 +11,9 @@ export function App() {
       <div className="w-full max-w-lg flex flex-col gap-3">
         <div className="answer-row">
           <span className="font-display text-familiada-gold text-xl">1</span>
-          <span className="text-familiada-text-primary font-body text-lg">Przykładowa odpowiedź</span>
+          <span className="text-familiada-text-primary font-body text-lg">
+            Przykładowa odpowiedź
+          </span>
           <span className="font-display text-familiada-gold text-xl">42</span>
         </div>
 
