@@ -139,6 +139,11 @@ MIT License — zobacz [LICENSE](./LICENSE)
 
 ## Latest
 
+**v0.2.0** — TypeScript types for game state (US-006)
+- `src/types/game.ts` — complete type definitions: GameConfig, GameState, RoundState, GameAction, component props
+- `src/types/index.ts` — barrel export for all types
+- 14 type conformance tests added (TC-001 through TC-007)
+
 **v0.1.0** — Initial project setup
 - Project structure created
 - Documentation prepared
