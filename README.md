@@ -139,6 +139,12 @@ MIT License — zobacz [LICENSE](./LICENSE)
 
 ## Latest
 
+**v0.4.0** — Linting and formatting (US-004)
+- `.prettierrc` — Prettier config (singleQuote, semi, tabWidth: 2, trailingComma: all, printWidth: 100)
+- `.eslintrc.cjs` — added `prettier` to extends to prevent ESLint/Prettier rule conflicts
+- `package.json` — added `format` script (`prettier --write "src/**/*.{ts,tsx}"`)
+- 4 tests added (TC-012 through TC-015)
+
 **v0.3.0** — Tailwind CSS with Familiada theme (US-003)
 - `tailwind.config.js` — custom color palette aligned with Design Brief (familiada-bg-dark, familiada-gold, familiada-red, etc.)
 - `src/index.css` — Tailwind directives + component classes (answer-row, score-display, mistake-x, operator-btn)

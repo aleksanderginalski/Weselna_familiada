@@ -2,7 +2,7 @@
 
 **Project:** Weselna Familiada  
 **Version:** 2.0  
-**Last Updated:** 2026-04-03 (US-003 Done)  
+**Last Updated:** 2026-04-03 (US-004 Done)  
 **Product Owner:** Aleksander Ginalski  
 **Repository:** https://github.com/AleksanderGinalworking/Weselna_familiada
 
@@ -152,28 +152,28 @@ EPIC-003: Weselna Familiada M3 - Final Round (Optional)
 **I want to** have ESLint and Prettier configured  
 **So that** code quality is enforced automatically
 
-**Status:** 📋 Planned  
+**Status:** ✅ Done  
 **Story Points:** 2  
 **Priority:** P0
 
 **Acceptance Criteria:**
 
-- [ ] ESLint configured with React and TypeScript rules
-- [ ] Prettier configured for consistent formatting
-- [ ] npm scripts: `lint`, `lint:fix`, `format`
-- [ ] VS Code settings for format on save
+- [x] ESLint configured with React and TypeScript rules
+- [x] Prettier configured for consistent formatting
+- [x] npm scripts: `lint`, `lint:fix`, `format`
+- [x] VS Code settings for format on save
 
 **Tasks:**
 
-- [ ] **TASK-004.1:** Install ESLint and plugins - 5min
-- [ ] **TASK-004.2:** Create .eslintrc.cjs with rules - 15min
-- [ ] **TASK-004.3:** Install Prettier - 5min
-- [ ] **TASK-004.4:** Create .prettierrc - 5min
-- [ ] **TASK-004.5:** Add npm scripts to package.json - 5min
-- [ ] **TASK-004.6:** Create .vscode/settings.json - 10min
-- [ ] **TASK-004.7:** Create .vscode/extensions.json - 5min
-- [ ] **TASK-004.8:** Run lint and fix any issues - 10min
-- [ ] **TASK-004.9:** Manual verification: lint and format commands work - 5min
+- [x] **TASK-004.1:** Install ESLint and plugins - 5min
+- [x] **TASK-004.2:** Create .eslintrc.cjs with rules - 15min
+- [x] **TASK-004.3:** Install Prettier - 5min
+- [x] **TASK-004.4:** Create .prettierrc - 5min
+- [x] **TASK-004.5:** Add npm scripts to package.json - 5min
+- [x] **TASK-004.6:** Create .vscode/settings.json - 10min
+- [x] **TASK-004.7:** Create .vscode/extensions.json - 5min
+- [x] **TASK-004.8:** Run lint and fix any issues - 10min
+- [x] **TASK-004.9:** Manual verification: lint and format commands work - 5min
 
 ---
 
