@@ -2,7 +2,7 @@
 
 **Project:** Weselna Familiada  
 **Version:** 2.0  
-**Last Updated:** 2026-04-03  
+**Last Updated:** 2026-04-03 (US-006 Done)  
 **Product Owner:** Aleksander Ginalski  
 **Repository:** https://github.com/AleksanderGinalworking/Weselna_familiada
 
@@ -95,26 +95,26 @@ EPIC-003: Weselna Familiada M3 - Final Round (Optional)
 **I want to** have Vite + React + TypeScript configured  
 **So that** I can develop with hot reload and type safety
 
-**Status:** 📋 Planned  
+**Status:** ✅ Done  
 **Story Points:** 3  
 **Priority:** P0
 
 **Acceptance Criteria:**
 
-- [ ] Project runs with `npm run dev`
-- [ ] TypeScript compilation works without errors
-- [ ] Vite hot reload works
-- [ ] Basic App.tsx renders "Weselna Familiada" title
+- [x] Project runs with `npm run dev`
+- [x] TypeScript compilation works without errors
+- [x] Vite hot reload works
+- [x] Basic App.tsx renders "Weselna Familiada" title
 
 **Tasks:**
 
-- [ ] **TASK-002.1:** Initialize Vite project with React + TypeScript template - 10min
-- [ ] **TASK-002.2:** Configure tsconfig.json with strict mode - 15min
-- [ ] **TASK-002.3:** Create src/main.tsx entry point - 10min
-- [ ] **TASK-002.4:** Create src/App.tsx with basic structure - 10min
-- [ ] **TASK-002.5:** Create index.html - 10min
-- [ ] **TASK-002.6:** Verify hot reload works - 5min
-- [ ] **TASK-002.7:** Manual verification: app runs and shows title - 5min
+- [x] **TASK-002.1:** Initialize Vite project with React + TypeScript template - 10min
+- [x] **TASK-002.2:** Configure tsconfig.json with strict mode - 15min
+- [x] **TASK-002.3:** Create src/main.tsx entry point - 10min
+- [x] **TASK-002.4:** Create src/App.tsx with basic structure - 10min
+- [x] **TASK-002.5:** Create index.html - 10min
+- [x] **TASK-002.6:** Verify hot reload works - 5min
+- [x] **TASK-002.7:** Manual verification: app runs and shows title - 5min
 
 ---
 
@@ -212,24 +212,24 @@ EPIC-003: Weselna Familiada M3 - Final Round (Optional)
 **I want to** have well-defined TypeScript types  
 **So that** the game state is type-safe throughout the application
 
-**Status:** 📋 Planned  
+**Status:** ✅ Done  
 **Story Points:** 2  
 **Priority:** P0
 
 **Acceptance Criteria:**
 
-- [ ] GameConfig type matches pytania.json structure
-- [ ] GameState type covers all runtime state needs
-- [ ] RoundState type handles all round phases
-- [ ] All types exported from src/types/index.ts
+- [x] GameConfig type matches pytania.json structure
+- [x] GameState type covers all runtime state needs
+- [x] RoundState type handles all round phases
+- [x] All types exported from src/types/index.ts
 
 **Tasks:**
 
-- [ ] **TASK-006.1:** Create src/types/game.ts with all type definitions - 30min
-- [ ] **TASK-006.2:** Create src/types/index.ts exporting all types - 5min
-- [ ] **TASK-006.3:** Verify types compile without errors - 5min
-- [ ] **TASK-006.4:** Write type tests (/qa) - 15min
-- [ ] **TASK-006.5:** Manual verification: types work with sample data - 10min
+- [x] **TASK-006.1:** Create src/types/game.ts with all type definitions - 30min
+- [x] **TASK-006.2:** Create src/types/index.ts exporting all types - 5min
+- [x] **TASK-006.3:** Verify types compile without errors - 5min
+- [x] **TASK-006.4:** Write type tests (/qa) - 15min
+- [x] **TASK-006.5:** Manual verification: types work with sample data - 10min
 
 ---
 
