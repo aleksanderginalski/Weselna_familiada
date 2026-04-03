@@ -1,5 +1,3 @@
-# Agent: /qa
-
 ---
 name: qa
 description: Generate and optimize tests. Use after manual verification.

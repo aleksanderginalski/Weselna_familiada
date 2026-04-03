@@ -1,5 +1,3 @@
-# Agent: /docs
-
 ---
 name: docs
 description: Update project documentation after US completion. Use after /qa.

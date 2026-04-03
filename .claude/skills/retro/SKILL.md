@@ -1,5 +1,3 @@
-# Agent: /retro
-
 ---
 name: retro
 description: Opcjonalna retrospektywa po US. Ulepsza instrukcje agentów.

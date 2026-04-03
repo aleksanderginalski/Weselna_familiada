@@ -1,5 +1,3 @@
-# Agent: /planning
-
 ---
 name: planning
 description: Weryfikacja US i generowanie Task instruction dla /dev. Używaj przed każdym developmentem.

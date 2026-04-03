@@ -1,5 +1,3 @@
-# Agent: /pm (Project Manager)
-
 ---
 name: pm
 description: Start sesji. Router do właściwych agentów. Sprawdza git status. Używaj na początku każdej pracy nad US.
