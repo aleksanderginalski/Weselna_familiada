@@ -139,6 +139,12 @@ MIT License — zobacz [LICENSE](./LICENSE)
 
 ## Latest
 
+**v0.5.0** — Testing framework (US-005)
+- `package.json` — added `test:watch` script (`vitest --watch`) to complete testing setup
+- `src/test/setup.ts` — jest-dom matchers configured for all tests
+- `vite.config.ts` — Vitest configured (globals, jsdom environment, coverage via v8)
+- 1 test added (TC-016)
+
 **v0.4.0** — Linting and formatting (US-004)
 - `.prettierrc` — Prettier config (singleQuote, semi, tabWidth: 2, trailingComma: all, printWidth: 100)
 - `.eslintrc.cjs` — added `prettier` to extends to prevent ESLint/Prettier rule conflicts

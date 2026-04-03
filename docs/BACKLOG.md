@@ -2,7 +2,7 @@
 
 **Project:** Weselna Familiada  
 **Version:** 2.0  
-**Last Updated:** 2026-04-03 (US-004 Done)  
+**Last Updated:** 2026-04-03 (US-005 Done)  
 **Product Owner:** Aleksander Ginalski  
 **Repository:** https://github.com/AleksanderGinalworking/Weselna_familiada
 
@@ -183,26 +183,26 @@ EPIC-003: Weselna Familiada M3 - Final Round (Optional)
 **I want to** have Vitest configured with React Testing Library  
 **So that** I can write and run tests
 
-**Status:** 📋 Planned  
+**Status:** ✅ Done  
 **Story Points:** 2  
 **Priority:** P0
 
 **Acceptance Criteria:**
 
-- [ ] Vitest installed and configured
-- [ ] React Testing Library installed
-- [ ] npm scripts: `test`, `test:watch`, `test:coverage`
-- [ ] Sample test passes
+- [x] Vitest installed and configured
+- [x] React Testing Library installed
+- [x] npm scripts: `test`, `test:watch`, `test:coverage`
+- [x] Sample test passes
 
 **Tasks:**
 
-- [ ] **TASK-005.1:** Install Vitest and dependencies - 5min
-- [ ] **TASK-005.2:** Install React Testing Library - 5min
-- [ ] **TASK-005.3:** Create vitest.config.ts - 10min
-- [ ] **TASK-005.4:** Create src/test/setup.ts for test configuration - 10min
-- [ ] **TASK-005.5:** Add npm scripts to package.json - 5min
-- [ ] **TASK-005.6:** Write sample test for App.tsx (/qa) - 15min
-- [ ] **TASK-005.7:** Manual verification: tests run and pass - 5min
+- [x] **TASK-005.1:** Install Vitest and dependencies - 5min
+- [x] **TASK-005.2:** Install React Testing Library - 5min
+- [x] **TASK-005.3:** Create vitest.config.ts - 10min
+- [x] **TASK-005.4:** Create src/test/setup.ts for test configuration - 10min
+- [x] **TASK-005.5:** Add npm scripts to package.json - 5min
+- [x] **TASK-005.6:** Write sample test for App.tsx (/qa) - 15min
+- [x] **TASK-005.7:** Manual verification: tests run and pass - 5min
 
 ---
 
