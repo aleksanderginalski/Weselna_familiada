@@ -1,41 +1,43 @@
-# Current Task — US-003
+# Current Task — US-004
 
 ## Context
-Configure Tailwind CSS with custom Familiada theme colors. Most config files already exist
-(tailwind.config.js, postcss.config.js, src/index.css) but colors diverge from the Design Brief
-and the app entry files (main.tsx, App.tsx) are missing — required to verify Tailwind classes
-actually render in the browser.
+ESLint is already configured (.eslintrc.cjs with React + TypeScript rules).
+VS Code settings (format on save) already exist.
+Missing: Prettier installation, .prettierrc config, `format` npm script,
+and eslint-config-prettier to prevent ESLint/Prettier rule conflicts.
+Branch: 34-us-004-configure-linting-and-formatting
 
 ## Read
-- docs/Weselna_familiada_design_brief.md  (source of truth for colors)
-- tailwind.config.js                       (needs color alignment)
-- src/index.css                            (Tailwind directives + custom classes)
-- postcss.config.js                        (already correct)
-- index.html                               (already references /src/main.tsx)
+- package.json
+- .eslintrc.cjs
+- .vscode/settings.json
 
 ## Tasks
-1. Align colors in tailwind.config.js with Design Brief hex values
-2. Create src/main.tsx — React 18 entry point that imports index.css and renders <App />
-3. Create src/App.tsx — minimal component that uses familiada-* Tailwind classes
-   (background, gold title, one .answer-row demo, one .score-display demo)
-   to visually confirm the theme works
+1. Install Prettier and eslint-config-prettier:
+   npm install --save-dev prettier eslint-config-prettier
+2. Create .prettierrc in project root with rules consistent with
+   existing codebase style (single quotes, 2 spaces, trailing commas,
+   100 char print width, semicolons)
+3. Update .eslintrc.cjs — add 'prettier' as last item in `extends`
+   array to disable ESLint rules that conflict with Prettier
+4. Add `format` script to package.json:
+   "format": "prettier --write src/**/*.{ts,tsx}"
+5. Run npm run lint and fix any issues in existing source files
+6. Run npm run format to apply Prettier to all src files
 
 ## Constraints
-- Colors must match Design Brief exactly: bg-dark #0a1628, bg-panel #1a2744, gold #fbbf24,
-  red #ef4444, border #334155
-- Keep all existing custom classes in index.css (answer-row, score-display, mistake-x,
-  operator-btn variants) — do NOT remove them
-- App.tsx is for verification only — keep it minimal (no game logic)
-- No `any` types, no console.log, no commented-out code
+- Do NOT modify existing ESLint rules — only add prettier to extends
+- Do NOT change VS Code settings (already correct)
+- Do NOT install eslint-plugin-prettier (causes performance issues,
+  eslint-config-prettier alone is the recommended approach)
+- Follow CLAUDE.md: no `any`, no console.log, functional components only
 
 ## After implementation
 - Run linter: npm run lint
 - Run tests: npm test
 - Manual verification steps (in Polish):
-  1. Uruchom `npm run dev`
-  2. Otwórz http://localhost:3000
-  3. Sprawdź: tło strony jest ciemnoniebieskie (#0a1628)
-  4. Sprawdź: tytuł "Weselna Familiada" wyświetla się w kolorze złotym
-  5. Sprawdź: rząd odpowiedzi (.answer-row) renderuje się z ciemnym tłem i obramowaniem
-  6. Sprawdź: wyświetlacz punktów (.score-display) renderuje się ze złotym obramowaniem
-  7. Otwórz DevTools — brak błędów w konsoli
+  1. Uruchom `npm run lint` — brak błędów
+  2. Uruchom `npm run format` — pliki w src/ sformatowane
+  3. Otwórz dowolny plik .tsx w VS Code, zrób celowy błąd formatowania
+     (np. podwójne cudzysłowy), zapisz — powinien się naprawić automatycznie
+  4. Uruchom `npm run lint:fix` — brak błędów
