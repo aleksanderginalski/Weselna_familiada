@@ -1,5 +1,3 @@
-# Agent: /discover
-
 ---
 name: discover
 description: Sesje strategiczne. Dyskusja o nowych pomysłach i kierunku. Kończy się aktualizacją dokumentów gdy powiesz gotowe.

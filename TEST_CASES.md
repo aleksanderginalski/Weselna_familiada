@@ -1,7 +1,7 @@
 # Weselna Familiada - Test Cases Documentation
 
-**Version:** 1.0  
-**Date:** 2025-01-XX  
+**Version:** 1.1  
+**Date:** 2026-04-03  
 **Author:** QA Agent  
 **Test Framework:** Vitest
 
@@ -67,6 +67,23 @@ beforeEach(() => {
 ---
 
 ## 3. Test Cases by Feature
+
+### FEATURE-001: Project Setup & Configuration
+
+#### TC-000: Project folder structure exists
+
+**Related US:** US-001  
+**Type:** Unit  
+**Priority:** Critical  
+**File:** `src/test/projectStructure.test.ts`
+
+**Test Steps:**
+1. Verify all required directories exist under `src/`
+2. Verify all required root-level files exist
+
+**Status:** ✅ Done
+
+---
 
 ### FEATURE-002: Game State Management
 
