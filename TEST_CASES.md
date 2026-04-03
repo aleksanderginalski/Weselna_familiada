@@ -1,6 +1,6 @@
 # Weselna Familiada - Test Cases Documentation
 
-**Version:** 1.1  
+**Version:** 1.2  
 **Date:** 2026-04-03  
 **Author:** QA Agent  
 **Test Framework:** Vitest
@@ -250,6 +250,65 @@ beforeEach(() => {
 **Test Steps:**
 1. Import `tailwind.config.js`
 2. Verify `answer-hidden`, `answer-revealed`, `gold-dark` tokens are defined
+
+**Status:** ✅ Done
+
+---
+
+#### TC-012: Linting — .prettierrc config file exists
+
+**Related US:** US-004  
+**Type:** Unit  
+**Priority:** Critical  
+**File:** `src/test/lintingConfig.test.ts`
+
+**Test Steps:**
+1. Check that `.prettierrc` file exists in project root
+
+**Status:** ✅ Done
+
+---
+
+#### TC-013: Linting — Prettier rules match project code style
+
+**Related US:** US-004  
+**Type:** Unit  
+**Priority:** High  
+**File:** `src/test/lintingConfig.test.ts`
+
+**Test Steps:**
+1. Parse `.prettierrc` as JSON
+2. Verify `singleQuote: true`, `semi: true`, `tabWidth: 2`, `trailingComma: 'all'`, `printWidth: 100`
+
+**Status:** ✅ Done
+
+---
+
+#### TC-014: Linting — ESLint extends prettier to prevent rule conflicts
+
+**Related US:** US-004  
+**Type:** Unit  
+**Priority:** Critical  
+**File:** `src/test/lintingConfig.test.ts`
+
+**Test Steps:**
+1. Read `.eslintrc.cjs` content
+2. Verify `'prettier'` is present in extends
+
+**Status:** ✅ Done
+
+---
+
+#### TC-015: Linting — package.json defines lint, lint:fix, and format scripts
+
+**Related US:** US-004  
+**Type:** Unit  
+**Priority:** High  
+**File:** `src/test/lintingConfig.test.ts`
+
+**Test Steps:**
+1. Parse `package.json`
+2. Verify `scripts.lint`, `scripts['lint:fix']`, and `scripts.format` are defined
 
 **Status:** ✅ Done
 
