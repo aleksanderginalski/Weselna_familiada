@@ -575,24 +575,24 @@ EPIC-003: Weselna Familiada M3 - Final Round (Optional)
 **I want to** have all controls in one organized panel  
 **So that** I can efficiently manage the game
 
-**Status:** 📋 Planned  
+**Status:** ✅ COMPLETED  
 **Story Points:** 2  
 **Priority:** P0
 
 **Acceptance Criteria:**
 
-- [ ] Panel shows current question at top
-- [ ] Answer controls, team panels, and round controls organized
-- [ ] "Otwórz Tablicę" button opens board in new window
-- [ ] Panel layout is intuitive and not cluttered
+- [x] Panel shows current question at top
+- [x] Answer controls, team panels, and round controls organized
+- [x] "Otwórz Tablicę" button opens board in new window
+- [x] Panel layout is intuitive and not cluttered
 
 **Tasks:**
 
-- [ ] **TASK-018.1:** Create src/components/operator/OperatorPanel.tsx - 25min
-- [ ] **TASK-018.2:** Add "Open Board" button with window.open() - 10min
-- [ ] **TASK-018.3:** Style panel for laptop screen - 15min
-- [ ] **TASK-018.4:** Write integration tests (/qa) - 20min
-- [ ] **TASK-018.5:** Manual verification: full operator workflow - 15min
+- [x] **TASK-018.1:** Create src/components/operator/OperatorPanel.tsx - 25min
+- [x] **TASK-018.2:** Add "Open Board" button with window.open() - 10min
+- [x] **TASK-018.3:** Style panel for laptop screen - 15min
+- [x] **TASK-018.4:** Write integration tests (/qa) - 20min
+- [x] **TASK-018.5:** Manual verification: full operator workflow - 15min
 
 ---
 

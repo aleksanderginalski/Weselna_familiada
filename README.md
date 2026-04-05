@@ -142,6 +142,13 @@ MIT License — zobacz [LICENSE](./LICENSE)
 
 ## Latest
 
+**v0.18.0** — Complete operator panel (US-018)
+
+- `src/components/operator/OperatorPanel.tsx` — assembles the full operator panel: sticky header with title "WESELNA FAMILIADA — Panel Operatora" and "Otwórz Tablicę" button (`window.open('/?view=board', '_blank')`); current question displayed below header; layout order: header → question → `RoundControls` → `AnswerControl` → `TeamControl`; question section hidden when no rounds loaded
+- `src/App.tsx` — replaced inline operator layout with `<OperatorPanel />`; added `useEffect` auto-fetching `/pytania.json` on mount and calling `loadGame` + `startGame` (temporary bootstrap until US-019 Lobby Screen)
+- `src/App.test.tsx` — updated to match new heading, added fetch mock, added tests for auto-load behavior
+- 4 tests added in `OperatorPanel.test.tsx`, 2 new tests in `App.test.tsx` (117 total)
+
 **v0.16.0** — Round control panel (US-017)
 
 - `src/components/operator/RoundControls.tsx` — round info bar (round number, total rounds, multiplier) + action buttons: "ZAKOŃCZ RUNDĘ" (calls `endRound(winner)`, visible when controlling team selected and phase ≠ summary) and "NASTĘPNA RUNDA" (calls `nextRound()`, visible in summary phase); winner resolved from `controllingTeam` with steal-aware logic (opposing team wins when steal phase is active and `stealFailed = false`); summary message "Drużyna X otrzymuje Y pkt" shown after round ends
