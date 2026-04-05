@@ -1,5 +1,6 @@
 import { GameBoard } from '@/components/board/GameBoard';
 import { AnswerControl } from '@/components/operator/AnswerControl';
+import { TeamControl } from '@/components/operator/TeamControl';
 import { useBroadcast } from '@/hooks/useBroadcast';
 
 const isBoard = new URLSearchParams(window.location.search).get('view') === 'board';
@@ -17,8 +18,9 @@ export function App() {
       <h1 className="font-display text-5xl text-familiada-gold text-glow-gold">
         Weselna Familiada
       </h1>
-      <div className="w-full max-w-2xl">
+      <div className="w-full max-w-2xl flex flex-col gap-6">
         <AnswerControl />
+        <TeamControl />
       </div>
     </div>
   );
