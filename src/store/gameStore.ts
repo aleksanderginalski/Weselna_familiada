@@ -15,6 +15,7 @@ const INITIAL_ROUND_STATE: RoundState = {
   revealedAnswers: [],
   mistakes: 0,
   stealAttempted: false,
+  stealFailed: false,
   roundScore: 0,
 };
 
@@ -95,6 +96,15 @@ export const useGameStore = create<GameState & StoreActions>((set) => ({
 
   markMistake: () =>
     set((state) => {
+      // During steal phase, the opposing team's wrong answer is tracked separately
+      if (state.currentRound.phase === 'steal') {
+        return {
+          currentRound: {
+            ...state.currentRound,
+            stealFailed: true,
+          },
+        };
+      }
       const newMistakes = state.currentRound.mistakes + 1;
       const shouldSteal =
         newMistakes >= MAX_MISTAKES && !state.currentRound.stealAttempted;
