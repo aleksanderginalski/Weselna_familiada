@@ -85,11 +85,15 @@ export const useGameStore = create<GameState & StoreActions>((set) => ({
     set((state) => {
       const answer = state.rounds[state.currentRoundIndex]?.answers[index];
       const points = answer?.points ?? 0;
+      // Answers revealed during summary phase are for show only — don't count towards score
+      const shouldAddPoints = state.currentRound.phase !== 'summary';
       return {
         currentRound: {
           ...state.currentRound,
           revealedAnswers: [...state.currentRound.revealedAnswers, index],
-          roundScore: state.currentRound.roundScore + points,
+          roundScore: shouldAddPoints
+            ? state.currentRound.roundScore + points
+            : state.currentRound.roundScore,
         },
       };
     }),
