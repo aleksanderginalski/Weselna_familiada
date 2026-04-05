@@ -53,3 +53,4 @@ debug/
 tmp/
 temp/
 *.tmp
+.claude/current_task.md

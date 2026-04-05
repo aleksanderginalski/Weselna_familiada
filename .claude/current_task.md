@@ -1,41 +1,34 @@
-# Current Task — US-010
+# Current Task — US-011
 
 ## Context
-Implement BroadcastChannel synchronization so the game board window instantly
-reflects all state changes made in the operator panel. Both windows run the same
-Vite app; they communicate via BroadcastChannel API (no server needed).
-US-009 (Zustand store) is complete — `gameStore.ts` and all `GameAction` types exist.
+Implementing the answer board display components for the projector view. Two components: `AnswerRow` (single answer row) and `AnswerBoard` (container combining all rows). These are the first visible game components — guests will see this on the projector. Types are already defined in `src/types/game.ts` and Tailwind theme is fully configured.
 
 ## Read
-- src/types/game.ts (GameAction union — needs REQUEST_SYNC added)
-- src/store/gameStore.ts (store shape: GameState & StoreActions)
-- CLAUDE.md (Key Patterns → BroadcastChannel, Window Detection)
+- `src/types/game.ts` — `AnswerData`, `AnswerDisplayProps`, `RoundData`
+- `src/store/gameStore.ts` — understand `revealedAnswers`, `currentRoundIndex`, `rounds`
+- `tailwind.config.js` — available custom colors and animations
+- `src/index.css` — existing component classes (`answer-row`, etc.)
+- `docs/wireframes.md` — S-002 Game Board layout (answer board section)
 
 ## Tasks
-1. Add `{ type: 'REQUEST_SYNC' }` to the `GameAction` union in `src/types/game.ts`
-2. Create `src/utils/broadcast.ts` with:
-   - `CHANNEL_NAME = 'familiada-game'` constant
-   - `createGameChannel(): BroadcastChannel`
-   - `sendSyncState(channel, state: GameState): void`
-   - `requestStateSync(channel): void`
-3. Create `src/hooks/useBroadcast.ts` with a `useBroadcast()` hook:
-   - Detects window role via `new URLSearchParams(window.location.search).get('view') === 'board'`
-   - **Board side:** sets `channel.onmessage` to apply `SYNC_STATE` via `useGameStore.setState(payload)`,
-     then sends `REQUEST_SYNC` for initial state on mount
-   - **Operator side:** subscribes to store via `useGameStore.subscribe()` and broadcasts state
-     after every change; also listens for `REQUEST_SYNC` and responds with current state
-   - Proper cleanup: unsubscribe + `channel.close()` on unmount
-   - Extract only `GameState` fields (config, rounds, status, currentRoundIndex, teams, currentRound)
-     when broadcasting — do not send store actions
+1. Create `src/components/board/AnswerRow.tsx` — single answer row component using `AnswerDisplayProps`. Hidden state: dark background + masked text `████████████████`. Revealed state: show answer text on left + points on right. Number (1-based index) always visible on the left edge. Use `familiada-*` Tailwind colors and `font-display`.
+2. Create `src/components/board/AnswerBoard.tsx` — container that reads `currentRoundIndex` and `rounds` from `useGameStore`, reads `revealedAnswers` from `currentRound`, renders a list of `AnswerRow` components. Handles 3–7 answers depending on the round data.
+3. Style both components with the retro Familiada theme: dark background (`familiada-bg-panel`), gold text for revealed answers (`familiada-gold`), `familiada-answer-hidden` background for hidden rows.
 
 ## Constraints
-- Do NOT modify gameStore.ts (keep store pure; broadcasting is the hook's responsibility)
-- No new dependencies — BroadcastChannel is a native browser API
-- Types must be explicit — no `any`
-- Each file max 60 lines
-- Follow naming conventions from CLAUDE.md
+- Use `AnswerDisplayProps` from `src/types/game.ts` for `AnswerRow` props — do not redefine the type
+- `AnswerBoard` reads from `useGameStore` directly (no props drilling)
+- No `any` types
+- Max file length: 300 lines, max function length: 50 lines
+- Functional components only
+- Do not create tests — that is `/qa` scope
 
 ## After implementation
-- Run linter: npm run lint
-- Run tests: npm test
-- List manual verification steps (in Polish)
+- Run linter: `npm run lint`
+- Run tests: `npm test`
+- Manual verification steps (in Polish):
+  1. Uruchom `npm run dev` i otwórz aplikację
+  2. Sprawdź czy komponent `AnswerBoard` renderuje się bez błędów w konsoli
+  3. Zweryfikuj czy ukryte odpowiedzi pokazują bloki `████████`
+  4. Zweryfikuj czy numery 1–N są widoczne po lewej stronie każdego wiersza
+  5. Ręcznie wywołaj `revealAnswer(0)` ze store i sprawdź czy odpowiedź odkrywa się z tekstem i punktami
