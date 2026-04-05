@@ -168,9 +168,9 @@ beforeEach(() => {
 **File:** `src/types/game.test.ts`
 
 **Test Steps:**
-1. Create one instance of every `GameAction` variant (9 total)
+1. Create one instance of every `GameAction` variant (10 total, including REQUEST_SYNC added in US-010)
 2. Process all via a switch statement
-3. Verify all 9 are handled
+3. Verify all 10 are handled
 
 **Status:** ✅ Done
 
@@ -640,7 +640,132 @@ beforeEach(() => {
 
 ---
 
-### FEATURE-003: Game Board Display
+### FEATURE-003: BroadcastChannel Synchronization
+
+#### TC-037: broadcast — CHANNEL_NAME equals 'familiada-game'
+
+**Related US:** US-010
+**Type:** Unit
+**Priority:** Critical
+**File:** `src/utils/broadcast.test.ts`
+
+**Test Steps:**
+1. Import `CHANNEL_NAME` from `broadcast.ts`
+2. Verify value is `'familiada-game'`
+
+**Status:** ✅ Done
+
+---
+
+#### TC-038: broadcast — createGameChannel creates channel with correct name
+
+**Related US:** US-010
+**Type:** Unit
+**Priority:** Critical
+**File:** `src/utils/broadcast.test.ts`
+
+**Test Steps:**
+1. Call `createGameChannel()`
+2. Verify returned channel `name` equals `CHANNEL_NAME`
+
+**Status:** ✅ Done
+
+---
+
+#### TC-039: broadcast — sendSyncState posts SYNC_STATE with payload
+
+**Related US:** US-010
+**Type:** Unit
+**Priority:** Critical
+**File:** `src/utils/broadcast.test.ts`
+
+**Test Steps:**
+1. Call `sendSyncState(channel, state)`
+2. Verify `postMessage` called with `{ type: 'SYNC_STATE', payload: state }`
+
+**Status:** ✅ Done
+
+---
+
+#### TC-040: broadcast — requestStateSync posts REQUEST_SYNC
+
+**Related US:** US-010
+**Type:** Unit
+**Priority:** Critical
+**File:** `src/utils/broadcast.test.ts`
+
+**Test Steps:**
+1. Call `requestStateSync(channel)`
+2. Verify `postMessage` called with `{ type: 'REQUEST_SYNC' }`
+
+**Status:** ✅ Done
+
+---
+
+#### TC-041: useBroadcast — board sends REQUEST_SYNC on mount
+
+**Related US:** US-010
+**Type:** Unit
+**Priority:** Critical
+**File:** `src/hooks/useBroadcast.test.ts`
+
+**Test Steps:**
+1. Render hook with `?view=board` in location search
+2. Verify channel `postMessage` called with `{ type: 'REQUEST_SYNC' }`
+
+**Status:** ✅ Done
+
+---
+
+#### TC-042: useBroadcast — board applies SYNC_STATE to store
+
+**Related US:** US-010
+**Type:** Unit
+**Priority:** Critical
+**File:** `src/hooks/useBroadcast.test.ts`
+
+**Test Steps:**
+1. Render hook with `?view=board`
+2. Simulate incoming `SYNC_STATE` message with `status: 'playing'`
+3. Verify `useGameStore.getState().status` equals `'playing'`
+
+**Status:** ✅ Done
+
+---
+
+#### TC-043: useBroadcast — operator broadcasts SYNC_STATE on store change
+
+**Related US:** US-010
+**Type:** Unit
+**Priority:** Critical
+**File:** `src/hooks/useBroadcast.test.ts`
+
+**Test Steps:**
+1. Render hook with default location (no `?view=board`)
+2. Call `startGame()` on store
+3. Verify `postMessage` called with `{ type: 'SYNC_STATE', payload: { status: 'playing', ... } }`
+
+**Status:** ✅ Done
+
+---
+
+#### TC-044: useBroadcast — operator responds to REQUEST_SYNC with current state
+
+**Related US:** US-010
+**Type:** Unit
+**Priority:** Critical
+**File:** `src/hooks/useBroadcast.test.ts`
+
+**Test Steps:**
+1. Render hook with default location
+2. Simulate incoming `REQUEST_SYNC` message
+3. Verify `postMessage` called with `{ type: 'SYNC_STATE', ... }`
+
+**Status:** ✅ Done
+
+---
+
+### FEATURE-004: Game Board Display
 
 #### TC-004: AnswerRow shows hidden state
 
