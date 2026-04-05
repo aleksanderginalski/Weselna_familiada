@@ -142,6 +142,13 @@ MIT License — zobacz [LICENSE](./LICENSE)
 
 ## Latest
 
+**v0.11.0** — Score display components (US-012)
+
+- `src/components/board/TeamScore.tsx` — team name and total score display; reads from Zustand store by `side` prop (`left` | `right`); retro Familiada styling
+- `src/components/board/RoundScore.tsx` — points to win this round (`roundScore × multiplier`); reads `currentRoundIndex` and `multipliers` from store
+- `src/components/board/AnswerSum.tsx` — sum of revealed answers (`roundScore`); updates live as answers are revealed
+- 8 tests added (TC-051 through TC-058)
+
 **v0.10.0** — Answer board components (US-011)
 
 - `src/components/board/AnswerRow.tsx` — single answer row: number on left, masked text (`████████`) when hidden, answer text + points when revealed; uses `AnswerDisplayProps` from types

@@ -402,24 +402,24 @@ EPIC-003: Weselna Familiada M3 - Final Round (Optional)
 **I want to** see team scores and round points  
 **So that** I know who is winning
 
-**Status:** 📋 Planned  
+**Status:** ✅ COMPLETED  
 **Story Points:** 3  
 **Priority:** P0
 
 **Acceptance Criteria:**
 
-- [ ] Team names displayed on left and right sides
-- [ ] Total scores visible for each team
-- [ ] Round points (sum × multiplier) displayed at top center
-- [ ] Sum of revealed answers shown below answer board
+- [x] Team names displayed on left and right sides
+- [x] Total scores visible for each team
+- [x] Round points (sum × multiplier) displayed at top center
+- [x] Sum of revealed answers shown below answer board
 
 **Tasks:**
 
-- [ ] **TASK-012.1:** Create src/components/board/TeamScore.tsx - 20min
-- [ ] **TASK-012.2:** Create src/components/board/RoundScore.tsx - 20min
-- [ ] **TASK-012.3:** Create src/components/board/AnswerSum.tsx - 15min
-- [ ] **TASK-012.4:** Write component tests (/qa) - 25min
-- [ ] **TASK-012.5:** Manual verification: scores display correctly - 10min
+- [x] **TASK-012.1:** Create src/components/board/TeamScore.tsx - 20min
+- [x] **TASK-012.2:** Create src/components/board/RoundScore.tsx - 20min
+- [x] **TASK-012.3:** Create src/components/board/AnswerSum.tsx - 15min
+- [x] **TASK-012.4:** Write component tests (/qa) - 25min
+- [x] **TASK-012.5:** Manual verification: scores display correctly - 10min
 
 ---
 
