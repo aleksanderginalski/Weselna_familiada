@@ -609,26 +609,26 @@ EPIC-003: Weselna Familiada M3 - Final Round (Optional)
 **I want to** configure the game before starting  
 **So that** I can set team names and game mode
 
-**Status:** 📋 Planned  
+**Status:** ✅ COMPLETED  
 **Story Points:** 3  
 **Priority:** P1
 
 **Acceptance Criteria:**
 
-- [ ] Lobby screen shows before game starts
-- [ ] Team names can be edited
-- [ ] Game mode selection (fixed rounds vs score threshold)
-- [ ] Number of rounds or winning score configurable
-- [ ] "Start Game" button begins the game
+- [x] Lobby screen shows before game starts
+- [x] Team names can be edited
+- [x] Game mode selection (fixed rounds vs score threshold)
+- [x] Number of rounds or winning score configurable
+- [x] "Start Game" button begins the game
 
 **Tasks:**
 
-- [ ] **TASK-019.1:** Create src/components/screens/LobbyScreen.tsx - 30min
-- [ ] **TASK-019.2:** Add form for team name editing - 15min
-- [ ] **TASK-019.3:** Add game mode configuration - 15min
-- [ ] **TASK-019.4:** Connect to store's loadGame and startGame actions - 10min
-- [ ] **TASK-019.5:** Write component tests (/qa) - 25min
-- [ ] **TASK-019.6:** Manual verification: configuration works - 10min
+- [x] **TASK-019.1:** Create src/components/screens/LobbyScreen.tsx - 30min
+- [x] **TASK-019.2:** Add form for team name editing - 15min
+- [x] **TASK-019.3:** Add game mode configuration - 15min
+- [x] **TASK-019.4:** Connect to store's loadGame and startGame actions - 10min
+- [x] **TASK-019.5:** Write component tests (/qa) - 25min
+- [x] **TASK-019.6:** Manual verification: configuration works - 10min
 
 ---
 
