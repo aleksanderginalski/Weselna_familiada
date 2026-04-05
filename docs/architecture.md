@@ -96,8 +96,9 @@ interface RoundState {
   phase: 'showdown' | 'guessing' | 'steal' | 'summary';
   controllingTeam: 'left' | 'right' | null;
   revealedAnswers: number[];
-  mistakes: number;
+  mistakes: number;          // 0–3, tracks controlling team's mistakes only
   stealAttempted: boolean;
+  stealFailed: boolean;      // true when opposing team guesses wrong during steal phase
   roundScore: number;
 }
 ```

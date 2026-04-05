@@ -61,6 +61,8 @@ export interface RoundState {
   mistakes: number;
   /** Whether steal attempt has been made */
   stealAttempted: boolean;
+  /** Whether the steal attempt failed (stealing team gave wrong answer) */
+  stealFailed: boolean;
   /** Sum of revealed answer points (before multiplier) */
   roundScore: number;
 }

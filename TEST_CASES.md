@@ -993,6 +993,120 @@ beforeEach(() => {
 
 ---
 
+### FEATURE-004: Game Board Display (continued)
+
+#### TC-059: MistakeIndicator — renders nothing during showdown phase
+
+**Related US:** US-013
+**Type:** Component
+**Priority:** Critical
+**File:** `src/components/board/MistakeIndicator.test.tsx`
+
+**Test Steps:**
+1. Call `loadGame` + `startGame` (no team selected)
+2. Render `<MistakeIndicator side="left" />`
+3. Verify container is empty
+
+**Status:** ✅ Done
+
+---
+
+#### TC-060: MistakeIndicator — renders 3 empty slots when controlling team has no mistakes
+
+**Related US:** US-013
+**Type:** Component
+**Priority:** Critical
+**File:** `src/components/board/MistakeIndicator.test.tsx`
+
+**Test Steps:**
+1. Call `loadGame`, `startGame`, `selectTeam('left')`
+2. Render `<MistakeIndicator side="left" />`
+3. Verify 3 `.mistake-x` slots, all `empty`, none `active`
+
+**Status:** ✅ Done
+
+---
+
+#### TC-061: MistakeIndicator — shows filled X marks matching mistake count
+
+**Related US:** US-013
+**Type:** Component
+**Priority:** Critical
+**File:** `src/components/board/MistakeIndicator.test.tsx`
+
+**Test Steps:**
+1. Call `loadGame`, `startGame`, `selectTeam('left')`, `markMistake()` × 2
+2. Render `<MistakeIndicator side="left" />`
+3. Verify 2 `.mistake-x.active` and 1 `.mistake-x.empty`
+
+**Status:** ✅ Done
+
+---
+
+#### TC-062: MistakeIndicator — renders nothing on opposing side outside steal phase
+
+**Related US:** US-013
+**Type:** Component
+**Priority:** High
+**File:** `src/components/board/MistakeIndicator.test.tsx`
+
+**Test Steps:**
+1. Call `loadGame`, `startGame`, `selectTeam('left')` (guessing phase, no steal yet)
+2. Render `<MistakeIndicator side="right" />`
+3. Verify container is empty
+
+**Status:** ✅ Done
+
+---
+
+#### TC-063: MistakeIndicator — renders outline steal slot on opposing side during steal phase
+
+**Related US:** US-013
+**Type:** Component
+**Priority:** Critical
+**File:** `src/components/board/MistakeIndicator.test.tsx`
+
+**Test Steps:**
+1. Call `loadGame`, `startGame`, `selectTeam('left')`, `markMistake()` × 3 (triggers steal)
+2. Render `<MistakeIndicator side="right" />`
+3. Verify X element is present with `text-transparent` class (outline only)
+
+**Status:** ✅ Done
+
+---
+
+#### TC-064: MistakeIndicator — shows filled steal slot when steal failed
+
+**Related US:** US-013
+**Type:** Component
+**Priority:** Critical
+**File:** `src/components/board/MistakeIndicator.test.tsx`
+
+**Test Steps:**
+1. Call `loadGame`, `startGame`, `selectTeam('left')`, `markMistake()` × 4
+2. Render `<MistakeIndicator side="right" />`
+3. Verify X element has `bg-familiada-red` class
+
+**Status:** ✅ Done
+
+---
+
+#### TC-065: markMistake — sets stealFailed to true when called during steal phase
+
+**Related US:** US-013
+**Type:** Unit
+**Priority:** Critical
+**File:** `src/store/gameStore.test.ts`
+
+**Test Steps:**
+1. Set `phase: 'steal'`, `mistakes: 3`
+2. Call `markMistake()`
+3. Verify `stealFailed: true`, `mistakes` unchanged at 3, `phase` unchanged at `'steal'`
+
+**Status:** ✅ Done
+
+---
+
 ## 4. Test Data
 
 ### 4.1 Mock Game Data
