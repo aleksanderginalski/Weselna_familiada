@@ -865,6 +865,134 @@ beforeEach(() => {
 
 ---
 
+#### TC-051: TeamScore — displays team name and zero score on game start
+
+**Related US:** US-012
+**Type:** Component
+**Priority:** Critical
+**File:** `src/components/board/TeamScore.test.tsx`
+
+**Test Steps:**
+1. Call `loadGame` + `startGame`
+2. Render `<TeamScore side="left" />`
+3. Verify team name and score "0" are visible
+
+**Status:** ✅ Done
+
+---
+
+#### TC-052: TeamScore — displays right team name
+
+**Related US:** US-012
+**Type:** Component
+**Priority:** High
+**File:** `src/components/board/TeamScore.test.tsx`
+
+**Test Steps:**
+1. Call `loadGame` + `startGame`
+2. Render `<TeamScore side="right" />`
+3. Verify right team name is visible
+
+**Status:** ✅ Done
+
+---
+
+#### TC-053: TeamScore — updates score after endRound with multiplier
+
+**Related US:** US-012
+**Type:** Component
+**Priority:** Critical
+**File:** `src/components/board/TeamScore.test.tsx`
+
+**Test Steps:**
+1. Call `loadGame`, `startGame`, `revealAnswer(0)`, `endRound('left')`
+2. Render `<TeamScore side="left" />`
+3. Verify score equals roundScore × multiplier
+
+**Status:** ✅ Done
+
+---
+
+#### TC-054: RoundScore — displays 0 and correct multiplier on game start
+
+**Related US:** US-012
+**Type:** Component
+**Priority:** Critical
+**File:** `src/components/board/RoundScore.test.tsx`
+
+**Test Steps:**
+1. Call `loadGame` + `startGame` with multiplier 3
+2. Render `<RoundScore />`
+3. Verify "0" and "x3 mnożnik" are visible
+
+**Status:** ✅ Done
+
+---
+
+#### TC-055: RoundScore — updates points to win when answer is revealed
+
+**Related US:** US-012
+**Type:** Component
+**Priority:** Critical
+**File:** `src/components/board/RoundScore.test.tsx`
+
+**Test Steps:**
+1. Call `loadGame`, `startGame`, `revealAnswer(0)` (30 pts, multiplier 3)
+2. Render `<RoundScore />`
+3. Verify "90" is displayed
+
+**Status:** ✅ Done
+
+---
+
+#### TC-056: RoundScore — uses correct multiplier for second round
+
+**Related US:** US-012
+**Type:** Component
+**Priority:** High
+**File:** `src/components/board/RoundScore.test.tsx`
+
+**Test Steps:**
+1. Call `loadGame`, `startGame`, `nextRound`, `revealAnswer(0)` (50 pts, multiplier 2)
+2. Render `<RoundScore />`
+3. Verify "100" and "x2 mnożnik" are displayed
+
+**Status:** ✅ Done
+
+---
+
+#### TC-057: AnswerSum — displays Suma label and 0 on game start
+
+**Related US:** US-012
+**Type:** Component
+**Priority:** Critical
+**File:** `src/components/board/AnswerSum.test.tsx`
+
+**Test Steps:**
+1. Call `loadGame` + `startGame`
+2. Render `<AnswerSum />`
+3. Verify "Suma:" label and "0" are visible
+
+**Status:** ✅ Done
+
+---
+
+#### TC-058: AnswerSum — updates sum when answers are revealed
+
+**Related US:** US-012
+**Type:** Component
+**Priority:** Critical
+**File:** `src/components/board/AnswerSum.test.tsx`
+
+**Test Steps:**
+1. Call `loadGame`, `startGame`, `revealAnswer(0)`, `revealAnswer(1)` (30 + 20 = 50 pts)
+2. Render `<AnswerSum />`
+3. Verify "50" is displayed
+
+**Status:** ✅ Done
+
+---
+
 ## 4. Test Data
 
 ### 4.1 Mock Game Data
