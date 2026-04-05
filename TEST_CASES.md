@@ -767,33 +767,101 @@ beforeEach(() => {
 
 ### FEATURE-004: Game Board Display
 
-#### TC-004: AnswerRow shows hidden state
+#### TC-045: AnswerRow — shows number, mask, and hides points when not revealed
 
-**Related US:** US-005  
-**Type:** Component  
-**Priority:** High
+**Related US:** US-011
+**Type:** Component
+**Priority:** Critical
+**File:** `src/components/board/AnswerRow.test.tsx`
 
 **Test Steps:**
-1. Render AnswerRow with isRevealed=false
-2. Verify masked text is shown
-3. Verify points are hidden
+1. Render `AnswerRow` with `isRevealed=false`, `index=0`
+2. Verify number "1" is shown
+3. Verify `████████████████████` mask is shown
+4. Verify answer text and points are absent
 
-**Status:** 📋 Planned
+**Status:** ✅ Done
 
 ---
 
-#### TC-005: AnswerRow shows revealed state
+#### TC-046: AnswerRow — shows number, answer text, and points when revealed
 
-**Related US:** US-005  
-**Type:** Component  
-**Priority:** High
+**Related US:** US-011
+**Type:** Component
+**Priority:** Critical
+**File:** `src/components/board/AnswerRow.test.tsx`
 
 **Test Steps:**
-1. Render AnswerRow with isRevealed=true
-2. Verify answer text is shown
-3. Verify points are visible
+1. Render `AnswerRow` with `isRevealed=true`, `index=2`
+2. Verify number "3" is shown
+3. Verify answer text is visible
+4. Verify points are visible
+5. Verify mask is absent
 
-**Status:** 📋 Planned
+**Status:** ✅ Done
+
+---
+
+#### TC-047: AnswerRow — applies revealed CSS class only when revealed
+
+**Related US:** US-011
+**Type:** Component
+**Priority:** High
+**File:** `src/components/board/AnswerRow.test.tsx`
+
+**Test Steps:**
+1. Render with `isRevealed=false` — verify no `revealed` class
+2. Rerender with `isRevealed=true` — verify `revealed` class present
+
+**Status:** ✅ Done
+
+---
+
+#### TC-048: AnswerBoard — renders nothing when no round is loaded
+
+**Related US:** US-011
+**Type:** Component
+**Priority:** High
+**File:** `src/components/board/AnswerBoard.test.tsx`
+
+**Test Steps:**
+1. Render `AnswerBoard` with empty store (no `loadGame` called)
+2. Verify component renders null
+
+**Status:** ✅ Done
+
+---
+
+#### TC-049: AnswerBoard — renders all answer rows after game starts
+
+**Related US:** US-011
+**Type:** Component
+**Priority:** Critical
+**File:** `src/components/board/AnswerBoard.test.tsx`
+
+**Test Steps:**
+1. Call `loadGame` + `startGame` with 3-answer round
+2. Render `AnswerBoard`
+3. Verify 3 masked rows and numbers 1–3 are shown
+
+**Status:** ✅ Done
+
+---
+
+#### TC-050: AnswerBoard — shows revealed answer text and hides mask after revealAnswer
+
+**Related US:** US-011
+**Type:** Component
+**Priority:** Critical
+**File:** `src/components/board/AnswerBoard.test.tsx`
+
+**Test Steps:**
+1. Call `loadGame`, `startGame`, `revealAnswer(1)`
+2. Render `AnswerBoard`
+3. Verify answer text and points for index 1 are visible
+4. Verify remaining 2 rows still show mask
+
+**Status:** ✅ Done
 
 ---
 
