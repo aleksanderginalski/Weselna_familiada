@@ -142,6 +142,12 @@ MIT License — zobacz [LICENSE](./LICENSE)
 
 ## Latest
 
+**v0.14.0** — Answer control panel (US-015)
+
+- `src/components/operator/AnswerControl.tsx` — operator panel component: lists all answers for the current round with number, text, and points; each answer has an "ODKRYJ" button that calls `revealAnswer(index)` from the store; revealed answers show "✓ odkryta" indicator with green background instead of the button
+- `src/App.tsx` — integrated `AnswerControl` into the operator panel placeholder
+- 5 tests added (TC-069 through TC-073)
+
 **v0.13.0** — Complete game board view (US-014)
 
 - `src/components/board/GameBoard.tsx` — assembles all board components in wireframe layout: `RoundScore` top center, `TeamScore` + `MistakeIndicator` on each side, `AnswerBoard` center, `AnswerSum` bottom center; fullscreen (`h-screen w-screen`) for projector display
