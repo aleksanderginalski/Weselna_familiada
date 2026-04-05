@@ -429,27 +429,27 @@ EPIC-003: Weselna Familiada M3 - Final Round (Optional)
 **I want to** see X marks when a team makes mistakes  
 **So that** I understand the game state
 
-**Status:** 📋 Planned  
+**Status:** ✅ COMPLETED  
 **Story Points:** 3  
 **Priority:** P0
 
 **Acceptance Criteria:**
 
-- [ ] Both sides are symmetrical: the controlling team's side shows 3 small mistake slots, the opposite side shows 1 tall steal slot
-- [ ] Controlling team side: active mistakes show red X, empty slots show outline only
-- [ ] Steal slot (opposite side): same width as small slots, height equals 3 small slots combined; shows filled red X when steal failed
-- [ ] Steal slot is only visible during steal phase (`phase === 'steal'`)
-- [ ] When no team is controlling (showdown phase), both sides show no indicators
-- [ ] `RoundState` extended with `stealFailed: boolean` field
-- [ ] `markMistake()` called during steal phase sets `stealFailed: true` instead of incrementing `mistakes`
+- [x] Both sides are symmetrical: the controlling team's side shows 3 small mistake slots, the opposite side shows 1 tall steal slot
+- [x] Controlling team side: active mistakes show red X, empty slots show outline only
+- [x] Steal slot (opposite side): same width as small slots, height equals 3 small slots combined; shows filled red X when steal failed
+- [x] Steal slot is only visible during steal phase (`phase === 'steal'`)
+- [x] When no team is controlling (showdown phase), both sides show no indicators
+- [x] `RoundState` extended with `stealFailed: boolean` field
+- [x] `markMistake()` called during steal phase sets `stealFailed: true` instead of incrementing `mistakes`
 
 **Tasks:**
 
-- [ ] **TASK-013.1:** Add `stealFailed: boolean` to `RoundState` in src/types/game.ts and update store - 20min
-- [ ] **TASK-013.2:** Create src/components/board/MistakeIndicator.tsx - 25min
-- [ ] **TASK-013.3:** Style X indicators with Familiada red theme (3 small slots + 1 tall steal slot) - 15min
-- [ ] **TASK-013.4:** Write component tests (/qa) - 20min
-- [ ] **TASK-013.5:** Manual verification: mistakes display correctly - 10min
+- [x] **TASK-013.1:** Add `stealFailed: boolean` to `RoundState` in src/types/game.ts and update store - 20min
+- [x] **TASK-013.2:** Create src/components/board/MistakeIndicator.tsx - 25min
+- [x] **TASK-013.3:** Style X indicators with Familiada red theme (3 small slots + 1 tall steal slot) - 15min
+- [x] **TASK-013.4:** Write component tests (/qa) - 20min
+- [x] **TASK-013.5:** Manual verification: mistakes display correctly - 10min
 
 ---
 

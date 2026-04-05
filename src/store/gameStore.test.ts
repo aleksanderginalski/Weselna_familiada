@@ -48,6 +48,7 @@ beforeEach(() => {
       revealedAnswers: [],
       mistakes: 0,
       stealAttempted: false,
+      stealFailed: false,
       roundScore: 0,
     },
   });
@@ -135,6 +136,25 @@ describe('gameStore', () => {
       useGameStore.getState().markMistake();
       const state = useGameStore.getState();
 
+      expect(state.currentRound.mistakes).toBe(3);
+      expect(state.currentRound.phase).toBe('steal');
+    });
+
+    it('should set stealFailed to true when called during steal phase', () => {
+      useGameStore.getState().loadGame(mockGameData);
+      useGameStore.getState().startGame();
+      useGameStore.setState({
+        ...useGameStore.getState(),
+        currentRound: {
+          ...useGameStore.getState().currentRound,
+          phase: 'steal',
+          mistakes: 3,
+        },
+      });
+      useGameStore.getState().markMistake();
+      const state = useGameStore.getState();
+
+      expect(state.currentRound.stealFailed).toBe(true);
       expect(state.currentRound.mistakes).toBe(3);
       expect(state.currentRound.phase).toBe('steal');
     });

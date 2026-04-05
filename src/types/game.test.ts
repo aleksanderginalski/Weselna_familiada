@@ -59,6 +59,7 @@ const initialRoundState: RoundState = {
   revealedAnswers: [],
   mistakes: 0,
   stealAttempted: false,
+  stealFailed: false,
   roundScore: 0,
 };
 
@@ -133,6 +134,7 @@ describe('RoundState', () => {
     expect(initialRoundState.revealedAnswers).toEqual([]);
     expect(initialRoundState.mistakes).toBe(0);
     expect(initialRoundState.stealAttempted).toBe(false);
+    expect(initialRoundState.stealFailed).toBe(false);
     expect(initialRoundState.roundScore).toBe(0);
   });
 
