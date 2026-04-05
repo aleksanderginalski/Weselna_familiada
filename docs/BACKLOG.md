@@ -459,24 +459,24 @@ EPIC-003: Weselna Familiada M3 - Final Round (Optional)
 **I want to** open a complete game board in a new window  
 **So that** I can display it on the projector
 
-**Status:** 📋 Planned  
+**Status:** ✅ Done  
 **Story Points:** 2  
 **Priority:** P0
 
 **Acceptance Criteria:**
 
-- [ ] GameBoard component assembles all board elements
-- [ ] Board fills entire window (fullscreen-friendly)
-- [ ] Layout matches wireframe (teams on sides, answers center, X on sides)
-- [ ] Board listens to BroadcastChannel for state updates
+- [x] GameBoard component assembles all board elements
+- [x] Board fills entire window (fullscreen-friendly)
+- [x] Layout matches wireframe (teams on sides, answers center, X on sides)
+- [x] Board listens to BroadcastChannel for state updates
 
 **Tasks:**
 
-- [ ] **TASK-014.1:** Create src/components/board/GameBoard.tsx - 25min
-- [ ] **TASK-014.2:** Connect board to BroadcastChannel receiver - 15min
-- [ ] **TASK-014.3:** Test layout at 1920x1080 resolution - 10min
-- [ ] **TASK-014.4:** Write integration tests (/qa) - 20min
-- [ ] **TASK-014.5:** Manual verification: board displays correctly on projector - 15min
+- [x] **TASK-014.1:** Create src/components/board/GameBoard.tsx - 25min
+- [x] **TASK-014.2:** Connect board to BroadcastChannel receiver - 15min
+- [x] **TASK-014.3:** Test layout at 1920x1080 resolution - 10min
+- [x] **TASK-014.4:** Write integration tests (/qa) - 20min
+- [x] **TASK-014.5:** Manual verification: board displays correctly on projector - 15min
 
 ---
 
