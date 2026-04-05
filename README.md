@@ -142,6 +142,13 @@ MIT License — zobacz [LICENSE](./LICENSE)
 
 ## Latest
 
+**v0.15.0** — Team control panel (US-016)
+
+- `src/components/operator/TeamPanel.tsx` — single team card component: radio selection, team name, total score, mistake slots (3 for guessing team, 1 steal slot for opposing team), status text with phase-aware variants (`TeamStatus`: guessing / waiting / stealing / grayed)
+- `src/components/operator/TeamControl.tsx` — orchestrates both `TeamPanel` instances + BŁĄD button; locks radio buttons during steal phase to prevent `selectTeam` resetting game phase; shows steal banner and "Punkty dla X" message after failed steal; BŁĄD button visually disabled in showdown/summary/post-steal phases
+- `src/App.tsx` — integrated `TeamControl` into the operator panel below `AnswerControl`
+- 9 tests added (TC-074 through TC-082)
+
 **v0.14.0** — Answer control panel (US-015)
 
 - `src/components/operator/AnswerControl.tsx` — operator panel component: lists all answers for the current round with number, text, and points; each answer has an "ODKRYJ" button that calls `revealAnswer(index)` from the store; revealed answers show "✓ odkryta" indicator with green background instead of the button
