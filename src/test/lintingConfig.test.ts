@@ -73,4 +73,31 @@ describe('CI Configuration', () => {
     expect(readme).toContain('ci.yml/badge.svg');
     expect(readme).toContain('actions/workflows/ci.yml');
   });
+
+  it('should have build job that depends on ci job and runs npm run build', () => {
+    const content = readFileSync(resolve(root, '.github/workflows/ci.yml'), 'utf-8');
+
+    expect(content).toContain('build:');
+    expect(content).toContain('needs: ci');
+    expect(content).toContain('npm run build');
+  });
+
+  it('should upload build artifact with 1-day retention', () => {
+    const content = readFileSync(resolve(root, '.github/workflows/ci.yml'), 'utf-8');
+
+    expect(content).toContain('upload-artifact');
+    expect(content).toContain('build-dist');
+    expect(content).toContain('retention-days: 1');
+  });
+});
+
+describe('TypeScript Configuration', () => {
+  it('should exclude test files from production compilation', () => {
+    const content = readFileSync(resolve(root, 'tsconfig.json'), 'utf-8');
+
+    expect(content).toContain('"exclude"');
+    expect(content).toContain('src/**/*.test.ts');
+    expect(content).toContain('src/**/*.test.tsx');
+    expect(content).toContain('src/test/**/*');
+  });
 });
