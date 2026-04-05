@@ -428,50 +428,215 @@ beforeEach(() => {
 
 ### FEATURE-002: Game State Management
 
-#### TC-001: Load game from JSON
+#### TC-023: loadGame — sets config, rounds, and team names from JSON data
 
-**Related US:** US-007  
+**Related US:** US-009  
 **Type:** Unit  
-**Priority:** Critical
+**Priority:** Critical  
+**File:** `src/store/gameStore.test.ts`
 
 **Test Steps:**
-1. Call loadGame with valid JSON data
-2. Verify config is set correctly
-3. Verify rounds are loaded
+1. Call `loadGame` with valid `GameDataFile`
+2. Verify `config`, `rounds`, `teams.left.name`, `teams.right.name`, `totalScore`, `status`, `currentRoundIndex`
 
-**Status:** 📋 Planned
+**Status:** ✅ Done
 
 ---
 
-#### TC-002: Reveal answer updates state
+#### TC-024: startGame — sets status to playing and resets round
 
-**Related US:** US-007  
+**Related US:** US-009  
 **Type:** Unit  
-**Priority:** Critical
+**Priority:** Critical  
+**File:** `src/store/gameStore.test.ts`
 
 **Test Steps:**
-1. Load game with test data
-2. Call revealAnswer(0)
-3. Verify revealedAnswers contains 0
-4. Verify roundScore is updated
+1. Call `loadGame` then `startGame`
+2. Verify `status: 'playing'`, `currentRoundIndex: 0`, `phase: 'showdown'`
 
-**Status:** 📋 Planned
+**Status:** ✅ Done
 
 ---
 
-#### TC-003: Three mistakes trigger steal
+#### TC-025: selectTeam — sets controllingTeam and transitions to guessing phase
 
-**Related US:** US-007  
+**Related US:** US-009  
 **Type:** Unit  
-**Priority:** Critical
+**Priority:** Critical  
+**File:** `src/store/gameStore.test.ts`
 
 **Test Steps:**
-1. Load game, select team
-2. Call markMistake() three times
-3. Verify phase changes to 'steal'
-4. Verify controlling team switches
+1. Call `loadGame`, `startGame`, `selectTeam('left')`
+2. Verify `controllingTeam: 'left'`, `phase: 'guessing'`
 
-**Status:** 📋 Planned
+**Status:** ✅ Done
+
+---
+
+#### TC-026: revealAnswer — accumulates revealedAnswers and roundScore
+
+**Related US:** US-009  
+**Type:** Unit  
+**Priority:** Critical  
+**File:** `src/store/gameStore.test.ts`
+
+**Test Steps:**
+1. Call `revealAnswer(0)` and `revealAnswer(1)`
+2. Verify `revealedAnswers: [0, 1]`, `roundScore: 50`
+
+**Status:** ✅ Done
+
+---
+
+#### TC-027: revealAnswer — treats missing answer index as 0 points
+
+**Related US:** US-009  
+**Type:** Unit  
+**Priority:** High  
+**File:** `src/store/gameStore.test.ts`
+
+**Test Steps:**
+1. Call `revealAnswer(99)` (out of bounds)
+2. Verify `roundScore: 0`, index still added to `revealedAnswers`
+
+**Status:** ✅ Done
+
+---
+
+#### TC-028: markMistake — increments mistakes without phase change before threshold
+
+**Related US:** US-009  
+**Type:** Unit  
+**Priority:** High  
+**File:** `src/store/gameStore.test.ts`
+
+**Test Steps:**
+1. Call `markMistake` twice
+2. Verify `mistakes: 2`, `phase` unchanged
+
+**Status:** ✅ Done
+
+---
+
+#### TC-029: markMistake — third mistake triggers steal phase
+
+**Related US:** US-009  
+**Type:** Unit  
+**Priority:** Critical  
+**File:** `src/store/gameStore.test.ts`
+
+**Test Steps:**
+1. Call `markMistake` three times
+2. Verify `mistakes: 3`, `phase: 'steal'`
+
+**Status:** ✅ Done
+
+---
+
+#### TC-030: markMistake — does not re-trigger steal if stealAttempted is true
+
+**Related US:** US-009  
+**Type:** Unit  
+**Priority:** High  
+**File:** `src/store/gameStore.test.ts`
+
+**Test Steps:**
+1. Set `mistakes: 2`, `stealAttempted: true`, `phase: 'guessing'`
+2. Call `markMistake`
+3. Verify `phase` remains `'guessing'`
+
+**Status:** ✅ Done
+
+---
+
+#### TC-031: endRound — adds roundScore × multiplier to winner and sets phase to summary
+
+**Related US:** US-009  
+**Type:** Unit  
+**Priority:** Critical  
+**File:** `src/store/gameStore.test.ts`
+
+**Test Steps:**
+1. Reveal answer (30 pts), call `endRound('left')` with multiplier 1
+2. Verify `teams.left.totalScore: 30`, `phase: 'summary'`
+
+**Status:** ✅ Done
+
+---
+
+#### TC-032: endRound — applies correct multiplier from currentRoundIndex
+
+**Related US:** US-009  
+**Type:** Unit  
+**Priority:** High  
+**File:** `src/store/gameStore.test.ts`
+
+**Test Steps:**
+1. Set `currentRoundIndex: 1` (multiplier 2), reveal answer (50 pts)
+2. Call `endRound('right')`
+3. Verify `teams.right.totalScore: 100`
+
+**Status:** ✅ Done
+
+---
+
+#### TC-033: endRound — sets stealAttempted to true when phase is steal
+
+**Related US:** US-009  
+**Type:** Unit  
+**Priority:** High  
+**File:** `src/store/gameStore.test.ts`
+
+**Test Steps:**
+1. Set `phase: 'steal'`, call `endRound('right')`
+2. Verify `stealAttempted: true`
+
+**Status:** ✅ Done
+
+---
+
+#### TC-034: nextRound — increments index and resets currentRound
+
+**Related US:** US-009  
+**Type:** Unit  
+**Priority:** Critical  
+**File:** `src/store/gameStore.test.ts`
+
+**Test Steps:**
+1. Call `nextRound`
+2. Verify `currentRoundIndex: 1`, `phase: 'showdown'`, `roundScore: 0`, `revealedAnswers: []`
+
+**Status:** ✅ Done
+
+---
+
+#### TC-035: nextRound — sets status to finished after last round in fixed mode
+
+**Related US:** US-009  
+**Type:** Unit  
+**Priority:** Critical  
+**File:** `src/store/gameStore.test.ts`
+
+**Test Steps:**
+1. Call `nextRound` until past `numberOfRounds`
+2. Verify `status: 'finished'`
+
+**Status:** ✅ Done
+
+---
+
+#### TC-036: resetGame — resets scores and status while preserving team names and rounds
+
+**Related US:** US-009  
+**Type:** Unit  
+**Priority:** Critical  
+**File:** `src/store/gameStore.test.ts`
+
+**Test Steps:**
+1. Play a round, call `resetGame`
+2. Verify `status: 'lobby'`, `totalScore: 0`, team names intact, rounds intact, `phase: 'showdown'`
+
+**Status:** ✅ Done
 
 ---
 

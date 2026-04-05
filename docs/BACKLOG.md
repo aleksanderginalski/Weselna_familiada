@@ -299,7 +299,7 @@ EPIC-003: Weselna Familiada M3 - Final Round (Optional)
 **Priority:** P0 (Critical)  
 **Sprint:** Sprint 2  
 **Total Points:** 8  
-**Status:** 📋 Planned
+**Status:** 🔄 In Progress
 
 ### US-009: Implement Zustand store for game state
 
@@ -307,27 +307,27 @@ EPIC-003: Weselna Familiada M3 - Final Round (Optional)
 **I want to** have centralized game state management  
 **So that** both windows can share the same game state
 
-**Status:** 📋 Planned  
+**Status:** ✅ COMPLETED  
 **Story Points:** 5  
 **Priority:** P0
 
 **Acceptance Criteria:**
 
-- [ ] Zustand store holds complete GameState
-- [ ] Store has actions: loadGame, startGame, selectTeam, revealAnswer, markMistake, nextRound, resetGame
-- [ ] Actions update state immutably
-- [ ] Store can be initialized from pytania.json data
+- [x] Zustand store holds complete GameState
+- [x] Store has actions: loadGame, startGame, selectTeam, revealAnswer, markMistake, nextRound, resetGame
+- [x] Actions update state immutably
+- [x] Store can be initialized from pytania.json data
 
 **Tasks:**
 
-- [ ] **TASK-009.1:** Install Zustand - 5min
-- [ ] **TASK-009.2:** Create src/store/gameStore.ts with initial state - 30min
-- [ ] **TASK-009.3:** Implement loadGame action to parse JSON config - 20min
-- [ ] **TASK-009.4:** Implement round control actions (selectTeam, revealAnswer, markMistake) - 30min
-- [ ] **TASK-009.5:** Implement game flow actions (nextRound, resetGame) - 20min
-- [ ] **TASK-009.6:** Add automatic steal logic when mistakes reach 3 - 15min
-- [ ] **TASK-009.7:** Write unit tests for all store actions (/qa) - 45min
-- [ ] **TASK-009.8:** Manual verification: actions work correctly - 15min
+- [x] **TASK-009.1:** Install Zustand - 5min
+- [x] **TASK-009.2:** Create src/store/gameStore.ts with initial state - 30min
+- [x] **TASK-009.3:** Implement loadGame action to parse JSON config - 20min
+- [x] **TASK-009.4:** Implement round control actions (selectTeam, revealAnswer, markMistake) - 30min
+- [x] **TASK-009.5:** Implement game flow actions (nextRound, resetGame) - 20min
+- [x] **TASK-009.6:** Add automatic steal logic when mistakes reach 3 - 15min
+- [x] **TASK-009.7:** Write unit tests for all store actions (/qa) - 45min
+- [x] **TASK-009.8:** Manual verification: actions work correctly - 15min
 
 ---
 
