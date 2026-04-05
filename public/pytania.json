@@ -1,9 +1,9 @@
 {
   "config": {
     "mode": "fixed",
-    "numberOfRounds": 4,
+    "numberOfRounds": 7,
     "winningScore": 300,
-    "multipliers": [1, 2, 3, 3],
+    "multipliers": [1, 1, 2, 2, 3, 3, 3],
     "teams": {
       "left": {
         "name": "Drużyna Pana Młodego"
@@ -15,46 +15,75 @@
   },
   "rounds": [
     {
-      "question": "Czego ludzie boją się na weselu?",
+      "question": "Co powinno zostać posprzątane w domu przed świętami?",
       "answers": [
-        { "text": "Brzydkiej pogody", "points": 31 },
-        { "text": "Kradzieży", "points": 14 },
-        { "text": "Wysokich cen", "points": 11 },
-        { "text": "Zgubienia dokumentów", "points": 8 },
-        { "text": "Że zabraknie alkoholu", "points": 20 },
-        { "text": "Kłótni rodzinnej", "points": 16 }
+        { "text": "Kuchnia", "points": 25 },
+        { "text": "Okna", "points": 20 },
+        { "text": "Łazienka", "points": 18 },
+        { "text": "Podłogi", "points": 17 },
+        { "text": "Kurz na meblach", "points": 12 },
+        { "text": "Lodówka", "points": 8 }
       ]
     },
     {
-      "question": "Co zabiera Pan Młody w podróż poślubną?",
+      "question": "Jaka pieśń wielkanocna jest najlepsza?",
       "answers": [
-        { "text": "Żonę", "points": 35 },
-        { "text": "Pieniądze", "points": 25 },
-        { "text": "Dokumenty", "points": 18 },
-        { "text": "Ubrania", "points": 12 },
-        { "text": "Aparat fotograficzny", "points": 10 }
+        { "text": "Wesoły nam dzień dziś nastał", "points": 32 },
+        { "text": "Chrystus zmartwychwstan jest", "points": 24 },
+        { "text": "Alleluja, Jezus żyje", "points": 16 },
+        { "text": "Zwycięzca śmierci", "points": 14 },
+        { "text": "Otrzyjcie już łzy płaczący", "points": 14 }
       ]
     },
     {
-      "question": "Co robi gość weselny gdy się nudzi?",
+      "question": "Wielkanocne danie to:",
       "answers": [
-        { "text": "Pije alkohol", "points": 32 },
-        { "text": "Rozmawia z innymi", "points": 22 },
-        { "text": "Tańczy", "points": 18 },
-        { "text": "Przegląda telefon", "points": 15 },
-        { "text": "Wychodzi na papierosa", "points": 8 },
-        { "text": "Idzie spać", "points": 5 }
+        { "text": "Żurek / barszcz biały", "points": 30 },
+        { "text": "Jajka", "points": 25 },
+        { "text": "Sałatka jarzynowa", "points": 18 },
+        { "text": "Biała kiełbasa", "points": 15 },
+        { "text": "Mazurek", "points": 12 }
       ]
     },
     {
-      "question": "Co Para Młoda dostaje w prezencie ślubnym?",
+      "question": "Jakich tematów powinno unikać się przy rodzinnym stole?",
       "answers": [
-        { "text": "Pieniądze w kopercie", "points": 40 },
-        { "text": "Sprzęt AGD", "points": 20 },
-        { "text": "Pościel/ręczniki", "points": 15 },
-        { "text": "Zastawa stołowa", "points": 12 },
-        { "text": "Obrazy/dekoracje", "points": 8 },
-        { "text": "Voucher na podróż", "points": 5 }
+        { "text": "Polityka", "points": 35 },
+        { "text": "Pieniądze", "points": 20 },
+        { "text": "Religia", "points": 18 },
+        { "text": "Praca / zarobki", "points": 15 },
+        { "text": "Życie prywatne", "points": 12 }
+      ]
+    },
+    {
+      "question": "Co robi maturzysta zamiast się uczyć?",
+      "answers": [
+        { "text": "Przegląda telefon", "points": 30 },
+        { "text": "Ogląda seriale/YouTube", "points": 22 },
+        { "text": "Sprząta", "points": 18 },
+        { "text": "Spotyka się ze znajomymi", "points": 15 },
+        { "text": "Śpi", "points": 15 }
+      ]
+    },
+    {
+      "question": "Co najbardziej stresuje przed maturą?",
+      "answers": [
+        { "text": "Brak nauki", "points": 32 },
+        { "text": "Trudne pytania", "points": 22 },
+        { "text": "Czas na egzaminie", "points": 18 },
+        { "text": "Wyniki / przyszłość", "points": 16 },
+        { "text": "Komisja", "points": 12 }
+      ]
+    },
+    {
+      "question": "Co trzeba załatwić przed ślubem?",
+      "answers": [
+        { "text": "Sala weselna", "points": 25 },
+        { "text": "Suknia ślubna", "points": 20 },
+        { "text": "Zaproszenia", "points": 18 },
+        { "text": "Jedzenie / catering", "points": 15 },
+        { "text": "Zespół / DJ", "points": 12 },
+        { "text": "Fotograf", "points": 10 }
       ]
     }
   ]
