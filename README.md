@@ -142,6 +142,12 @@ MIT License — zobacz [LICENSE](./LICENSE)
 
 ## Latest
 
+**v0.8.0** — Zustand game state store (US-009)
+
+- `src/store/gameStore.ts` — centralized game state store with 8 actions: `loadGame`, `startGame`, `selectTeam`, `revealAnswer`, `markMistake`, `endRound`, `nextRound`, `resetGame`
+- Automatic steal phase triggered on 3rd mistake; multiplier applied per round on `endRound`
+- 14 tests added (TC-023 through TC-036)
+
 **v0.7.0** — Build verification CI job (US-008)
 
 - `.github/workflows/ci.yml` — added `build` job with `needs: ci`; runs `npm run build` and uploads `dist/` as artifact (retention: 1 day)
