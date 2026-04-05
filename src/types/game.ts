@@ -97,7 +97,8 @@ export type GameAction =
   | { type: 'END_ROUND'; payload: { winner: TeamSide } }
   | { type: 'NEXT_ROUND' }
   | { type: 'RESET_GAME' }
-  | { type: 'SYNC_STATE'; payload: GameState };
+  | { type: 'SYNC_STATE'; payload: GameState }
+  | { type: 'REQUEST_SYNC' };
 
 // ============================================
 // Component Props Types

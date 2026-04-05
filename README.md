@@ -142,6 +142,14 @@ MIT License — zobacz [LICENSE](./LICENSE)
 
 ## Latest
 
+**v0.9.0** — BroadcastChannel synchronization (US-010)
+
+- `src/utils/broadcast.ts` — channel helpers: `createGameChannel`, `sendSyncState`, `requestStateSync`
+- `src/hooks/useBroadcast.ts` — `useBroadcast()` hook: operator broadcasts state on every store change; board applies incoming state and requests initial sync on mount
+- `src/types/game.ts` — added `REQUEST_SYNC` to `GameAction` union (10 variants total)
+- `src/App.tsx` — `useBroadcast()` mounted to activate synchronization
+- 8 tests added (TC-037 through TC-044)
+
 **v0.8.0** — Zustand game state store (US-009)
 
 - `src/store/gameStore.ts` — centralized game state store with 8 actions: `loadGame`, `startGame`, `selectTeam`, `revealAnswer`, `markMistake`, `endRound`, `nextRound`, `resetGame`

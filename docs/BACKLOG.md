@@ -337,25 +337,25 @@ EPIC-003: Weselna Familiada M3 - Final Round (Optional)
 **I want to** have the game board update instantly when I perform actions  
 **So that** guests see changes in real-time
 
-**Status:** 📋 Planned  
+**Status:** ✅ COMPLETED  
 **Story Points:** 3  
 **Priority:** P0
 
 **Acceptance Criteria:**
 
-- [ ] BroadcastChannel created with name 'familiada-game'
-- [ ] All store actions broadcast state changes
-- [ ] Board window receives and applies state updates
-- [ ] Initial state sync when board window opens
+- [x] BroadcastChannel created with name 'familiada-game'
+- [x] All store actions broadcast state changes
+- [x] Board window receives and applies state updates
+- [x] Initial state sync when board window opens
 
 **Tasks:**
 
-- [ ] **TASK-010.1:** Create src/utils/broadcast.ts with channel helpers - 20min
-- [ ] **TASK-010.2:** Create src/hooks/useBroadcast.ts hook - 20min
-- [ ] **TASK-010.3:** Integrate broadcast with Zustand store middleware - 25min
-- [ ] **TASK-010.4:** Handle initial state sync when board window opens - 15min
-- [ ] **TASK-010.5:** Write unit tests for broadcast utilities (/qa) - 30min
-- [ ] **TASK-010.6:** Manual verification: two windows stay in sync - 15min
+- [x] **TASK-010.1:** Create src/utils/broadcast.ts with channel helpers - 20min
+- [x] **TASK-010.2:** Create src/hooks/useBroadcast.ts hook - 20min
+- [x] **TASK-010.3:** Integrate broadcast with Zustand store middleware - 25min
+- [x] **TASK-010.4:** Handle initial state sync when board window opens - 15min
+- [x] **TASK-010.5:** Write unit tests for broadcast utilities (/qa) - 30min
+- [x] **TASK-010.6:** Manual verification: two windows stay in sync - 15min
 
 ---
 

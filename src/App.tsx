@@ -1,7 +1,10 @@
 // Theme verification component — demonstrates Familiada custom Tailwind classes.
 // Will be replaced by the real game UI in later User Stories.
 
+import { useBroadcast } from '@/hooks/useBroadcast';
+
 export function App() {
+  useBroadcast();
   return (
     <div className="min-h-screen bg-familiada-bg-dark flex flex-col items-center justify-center gap-8 p-8">
       <h1 className="font-display text-5xl text-familiada-gold text-glow-gold">

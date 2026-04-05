@@ -190,6 +190,7 @@ describe('GameAction', () => {
       { type: 'NEXT_ROUND' },
       { type: 'RESET_GAME' },
       { type: 'SYNC_STATE', payload: mockGameState },
+      { type: 'REQUEST_SYNC' },
     ];
 
     const handled: string[] = [];
@@ -221,6 +222,9 @@ describe('GameAction', () => {
           handled.push(action.type);
           break;
         case 'SYNC_STATE':
+          handled.push(action.type);
+          break;
+        case 'REQUEST_SYNC':
           handled.push(action.type);
           break;
       }
