@@ -175,6 +175,25 @@ describe('gameStore', () => {
     });
   });
 
+  describe('revealAnswer — summary phase', () => {
+    it('should not update roundScore when phase is summary', () => {
+      useGameStore.getState().loadGame(mockGameData);
+      useGameStore.getState().startGame();
+      useGameStore.setState({
+        ...useGameStore.getState(),
+        currentRound: {
+          ...useGameStore.getState().currentRound,
+          phase: 'summary',
+          roundScore: 30,
+        },
+      });
+      useGameStore.getState().revealAnswer(1); // Answer 2 = 20 pts — must not be added
+
+      expect(useGameStore.getState().currentRound.roundScore).toBe(30);
+      expect(useGameStore.getState().currentRound.revealedAnswers).toEqual([1]);
+    });
+  });
+
   describe('endRound', () => {
     it('should add roundScore × multiplier to winner totalScore and set phase to summary', () => {
       useGameStore.getState().loadGame(mockGameData);
@@ -196,6 +215,45 @@ describe('gameStore', () => {
       useGameStore.getState().endRound('right');
 
       expect(useGameStore.getState().teams.right.totalScore).toBe(100);
+    });
+
+    it('should set status to finished when score mode winning threshold is reached', () => {
+      useGameStore.setState({
+        ...useGameStore.getState(),
+        status: 'playing',
+        config: {
+          mode: 'score',
+          winningScore: 30,
+          multipliers: [1],
+          teams: { left: { name: 'A' }, right: { name: 'B' } },
+        },
+        rounds: [{ question: 'Q', answers: [{ text: 'A1', points: 30 }] }],
+        teams: { left: { name: 'A', totalScore: 0 }, right: { name: 'B', totalScore: 0 } },
+      });
+      useGameStore.getState().revealAnswer(0);
+      useGameStore.getState().endRound('left');
+
+      expect(useGameStore.getState().status).toBe('finished');
+      expect(useGameStore.getState().teams.left.totalScore).toBe(30);
+    });
+
+    it('should not set status to finished when score mode threshold is not yet reached', () => {
+      useGameStore.setState({
+        ...useGameStore.getState(),
+        status: 'playing',
+        config: {
+          mode: 'score',
+          winningScore: 100,
+          multipliers: [1],
+          teams: { left: { name: 'A' }, right: { name: 'B' } },
+        },
+        rounds: [{ question: 'Q', answers: [{ text: 'A1', points: 30 }] }],
+        teams: { left: { name: 'A', totalScore: 0 }, right: { name: 'B', totalScore: 0 } },
+      });
+      useGameStore.getState().revealAnswer(0);
+      useGameStore.getState().endRound('left');
+
+      expect(useGameStore.getState().status).toBe('playing');
     });
 
     it('should set stealAttempted to true when ending a steal phase', () => {

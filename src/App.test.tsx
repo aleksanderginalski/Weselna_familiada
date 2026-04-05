@@ -53,4 +53,21 @@ describe('App', () => {
 
     expect(screen.queryByText('ROZPOCZNIJ GRĘ')).not.toBeInTheDocument();
   });
+
+  it('should render winner screen when status is finished', () => {
+    useGameStore.getState().loadGame(MOCK_GAME_DATA);
+    useGameStore.setState({
+      ...useGameStore.getState(),
+      status: 'finished',
+      teams: {
+        left: { name: 'Lewa', totalScore: 100 },
+        right: { name: 'Prawa', totalScore: 50 },
+      },
+    });
+
+    render(<App />);
+
+    expect(screen.getByText('WYGRYWA')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'NOWA GRA' })).toBeInTheDocument();
+  });
 });

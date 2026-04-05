@@ -1,6 +1,6 @@
 # Weselna Familiada - Test Cases Documentation
 
-**Version:** 1.3  
+**Version:** 1.4  
 **Date:** 2026-04-05  
 **Author:** QA Agent  
 **Test Framework:** Vitest
@@ -1473,6 +1473,136 @@ beforeEach(() => {
 2. Render `<RoundControls />`
 3. Verify button shows "wygrywa Drużyna B" (opposing team)
 4. Click button, verify `teams.right.totalScore > 0` and `teams.left.totalScore === 0`
+
+**Status:** ✅ Done
+
+---
+
+### FEATURE-006: Game Flow & Scoring
+
+#### TC-088: revealAnswer — does not update roundScore when phase is summary
+
+**Related US:** US-020 / bugfix
+**Type:** Unit
+**Priority:** Critical
+**File:** `src/store/gameStore.test.ts`
+
+**Test Steps:**
+1. Load game, start, set `phase: 'summary'`, `roundScore: 30`
+2. Call `revealAnswer(1)` (20 pts answer)
+3. Verify `roundScore` stays 30, `revealedAnswers` contains the index
+
+**Status:** ✅ Done
+
+---
+
+#### TC-089: endRound — sets status to finished when score mode winning threshold is reached
+
+**Related US:** US-021
+**Type:** Unit
+**Priority:** Critical
+**File:** `src/store/gameStore.test.ts`
+
+**Test Steps:**
+1. Set mode: 'score', winningScore: 30, multiplier: 1, answer worth 30 pts
+2. Call `revealAnswer(0)`, `endRound('left')`
+3. Verify `status: 'finished'`, `teams.left.totalScore: 30`
+
+**Status:** ✅ Done
+
+---
+
+#### TC-090: endRound — does not set status to finished when score mode threshold is not yet reached
+
+**Related US:** US-021
+**Type:** Unit
+**Priority:** Critical
+**File:** `src/store/gameStore.test.ts`
+
+**Test Steps:**
+1. Set mode: 'score', winningScore: 100, answer worth 30 pts
+2. Call `revealAnswer(0)`, `endRound('left')`
+3. Verify `status: 'playing'`
+
+**Status:** ✅ Done
+
+---
+
+#### TC-091: WinnerScreen — displays winner name, scores, and NOWA GRA button when left team wins
+
+**Related US:** US-020
+**Type:** Component
+**Priority:** Critical
+**File:** `src/components/screens/WinnerScreen.test.tsx`
+
+**Test Steps:**
+1. Set teams: left 300 pts, right 150 pts; status: 'finished'
+2. Render `<WinnerScreen />`
+3. Verify "WYGRYWA", "Drużyna A", "300 PKT", "Drużyna B: 150 pkt", "NOWA GRA" button
+
+**Status:** ✅ Done
+
+---
+
+#### TC-092: WinnerScreen — displays right team as winner when right score is higher
+
+**Related US:** US-020
+**Type:** Component
+**Priority:** High
+**File:** `src/components/screens/WinnerScreen.test.tsx`
+
+**Test Steps:**
+1. Set teams: left 100 pts, right 250 pts; status: 'finished'
+2. Render `<WinnerScreen />`
+3. Verify "Drużyna B", "250 PKT", "Drużyna A: 100 pkt"
+
+**Status:** ✅ Done
+
+---
+
+#### TC-093: WinnerScreen — displays REMIS when both teams have equal scores
+
+**Related US:** US-020
+**Type:** Component
+**Priority:** High
+**File:** `src/components/screens/WinnerScreen.test.tsx`
+
+**Test Steps:**
+1. Set teams: left 200 pts, right 200 pts; status: 'finished'
+2. Render `<WinnerScreen />`
+3. Verify "REMIS!" visible, "200 PKT" visible, "WYGRYWA" not visible
+
+**Status:** ✅ Done
+
+---
+
+#### TC-094: WinnerScreen — transitions status to lobby when NOWA GRA is clicked
+
+**Related US:** US-020
+**Type:** Component
+**Priority:** Critical
+**File:** `src/components/screens/WinnerScreen.test.tsx`
+
+**Test Steps:**
+1. Set finished state, render `<WinnerScreen />`
+2. Click "NOWA GRA"
+3. Verify `useGameStore.getState().status === 'lobby'`
+
+**Status:** ✅ Done
+
+---
+
+#### TC-095: App — renders winner screen when status is finished
+
+**Related US:** US-020
+**Type:** Component
+**Priority:** Critical
+**File:** `src/App.test.tsx`
+
+**Test Steps:**
+1. Load game, set `status: 'finished'` with scores
+2. Render `<App />`
+3. Verify "WYGRYWA" heading and "NOWA GRA" button are in the document
 
 **Status:** ✅ Done
 
