@@ -246,26 +246,26 @@ EPIC-003: Weselna Familiada M3 - Final Round (Optional)
 **I want to** have automated checks on every push and PR  
 **So that** code quality is enforced before merge
 
-**Status:** 📋 Planned  
+**Status:** ✅ COMPLETED  
 **Story Points:** 3  
 **Priority:** P0
 
 **Acceptance Criteria:**
 
-- [ ] GitHub Actions workflow runs on push and PR
-- [ ] Workflow runs linting
-- [ ] Workflow runs tests
-- [ ] Workflow fails if lint or tests fail
-- [ ] Status badge in README
+- [x] GitHub Actions workflow runs on push and PR
+- [x] Workflow runs linting
+- [x] Workflow runs tests
+- [x] Workflow fails if lint or tests fail
+- [x] Status badge in README
 
 **Tasks:**
 
-- [ ] **TASK-007.1:** Create .github/workflows/ci.yml - 20min
-- [ ] **TASK-007.2:** Configure lint job - 15min
-- [ ] **TASK-007.3:** Configure test job - 15min
-- [ ] **TASK-007.4:** Add status badge to README.md - 5min
-- [ ] **TASK-007.5:** Push and verify workflow runs - 10min
-- [ ] **TASK-007.6:** Manual verification: workflow passes/fails correctly - 10min
+- [x] **TASK-007.1:** Create .github/workflows/ci.yml - 20min
+- [x] **TASK-007.2:** Configure lint job - 15min
+- [x] **TASK-007.3:** Configure test job - 15min
+- [x] **TASK-007.4:** Add status badge to README.md - 5min
+- [x] **TASK-007.5:** Push and verify workflow runs - 10min
+- [x] **TASK-007.6:** Manual verification: workflow passes/fails correctly - 10min
 
 ---
 

@@ -142,6 +142,12 @@ MIT License — zobacz [LICENSE](./LICENSE)
 
 ## Latest
 
+**v0.6.0** — GitHub Actions CI (US-007)
+
+- `.github/workflows/ci.yml` — CI workflow: runs lint + tests on every push and PR
+- `README.md` — added CI status badge
+- 3 tests added (TC-017 through TC-019)
+
 **v0.5.0** — Testing framework (US-005)
 
 - `package.json` — added `test:watch` script (`vitest --watch`) to complete testing setup
