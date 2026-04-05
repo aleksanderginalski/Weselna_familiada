@@ -1107,6 +1107,57 @@ beforeEach(() => {
 
 ---
 
+#### TC-066: GameBoard — renders all board sections when game is loaded
+
+**Related US:** US-014
+**Type:** Component
+**Priority:** Critical
+**File:** `src/components/board/GameBoard.test.tsx`
+
+**Test Steps:**
+1. Call `loadGame` + `startGame`
+2. Render `<GameBoard />`
+3. Verify both team names are present (TeamScore)
+4. Verify "Do wygrania" label is present (RoundScore)
+5. Verify answer row numbers 1 and 2 are present (AnswerBoard)
+6. Verify "Suma:" label is present (AnswerSum)
+
+**Status:** ✅ Done
+
+---
+
+#### TC-067: GameBoard — renders fullscreen container
+
+**Related US:** US-014
+**Type:** Component
+**Priority:** High
+**File:** `src/components/board/GameBoard.test.tsx`
+
+**Test Steps:**
+1. Render `<GameBoard />`
+2. Query `.h-screen.w-screen` element
+3. Verify element is in the document
+
+**Status:** ✅ Done
+
+---
+
+#### TC-068: GameBoard — opposing team score stays at 0 after round won by other team
+
+**Related US:** US-014
+**Type:** Component
+**Priority:** High
+**File:** `src/components/board/GameBoard.test.tsx`
+
+**Test Steps:**
+1. Call `loadGame`, `startGame`, `selectTeam('left')`, `revealAnswer(0)`, `endRound('left')`
+2. Render `<GameBoard />`
+3. Verify right team name and score "0" are visible
+
+**Status:** ✅ Done
+
+---
+
 ## 4. Test Data
 
 ### 4.1 Mock Game Data
