@@ -329,6 +329,53 @@ beforeEach(() => {
 
 ---
 
+#### TC-017: CI — GitHub Actions workflow file exists
+
+**Related US:** US-007  
+**Type:** Unit  
+**Priority:** Critical  
+**File:** `src/test/lintingConfig.test.ts`
+
+**Test Steps:**
+1. Check that `.github/workflows/ci.yml` exists in project root
+
+**Status:** ✅ Done
+
+---
+
+#### TC-018: CI — workflow triggers and steps are configured correctly
+
+**Related US:** US-007  
+**Type:** Unit  
+**Priority:** Critical  
+**File:** `src/test/lintingConfig.test.ts`
+
+**Test Steps:**
+1. Read `.github/workflows/ci.yml`
+2. Verify workflow name is `CI`
+3. Verify triggers: `push` and `pull_request`
+4. Verify steps run `npm run lint` and `npm test`
+
+**Status:** ✅ Done
+
+---
+
+#### TC-019: CI — README has CI status badge
+
+**Related US:** US-007  
+**Type:** Unit  
+**Priority:** High  
+**File:** `src/test/lintingConfig.test.ts`
+
+**Test Steps:**
+1. Read `README.md`
+2. Verify badge SVG URL for `ci.yml` is present
+3. Verify badge links to the Actions workflow
+
+**Status:** ✅ Done
+
+---
+
 ### FEATURE-002: Game State Management
 
 #### TC-001: Load game from JSON
