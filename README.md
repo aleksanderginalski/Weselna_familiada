@@ -142,6 +142,12 @@ MIT License — zobacz [LICENSE](./LICENSE)
 
 ## Latest
 
+**v0.7.0** — Build verification CI job (US-008)
+
+- `.github/workflows/ci.yml` — added `build` job with `needs: ci`; runs `npm run build` and uploads `dist/` as artifact (retention: 1 day)
+- `tsconfig.json` — added `exclude` for test files to prevent `tsc` from compiling Vitest/Node.js test code during production build
+- 3 tests added (TC-020 through TC-022)
+
 **v0.6.0** — GitHub Actions CI (US-007)
 
 - `.github/workflows/ci.yml` — CI workflow: runs lint + tests on every push and PR

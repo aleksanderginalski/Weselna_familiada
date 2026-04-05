@@ -1,7 +1,7 @@
 # Weselna Familiada - Test Cases Documentation
 
-**Version:** 1.2  
-**Date:** 2026-04-03  
+**Version:** 1.3  
+**Date:** 2026-04-05  
 **Author:** QA Agent  
 **Test Framework:** Vitest
 
@@ -371,6 +371,56 @@ beforeEach(() => {
 1. Read `README.md`
 2. Verify badge SVG URL for `ci.yml` is present
 3. Verify badge links to the Actions workflow
+
+**Status:** ✅ Done
+
+---
+
+#### TC-020: CI — build job depends on ci job and runs npm run build
+
+**Related US:** US-008  
+**Type:** Unit  
+**Priority:** Critical  
+**File:** `src/test/lintingConfig.test.ts`
+
+**Test Steps:**
+1. Read `.github/workflows/ci.yml`
+2. Verify `build:` job is defined
+3. Verify `needs: ci` dependency is set
+4. Verify `npm run build` is called
+
+**Status:** ✅ Done
+
+---
+
+#### TC-021: CI — build artifact uploaded with 1-day retention
+
+**Related US:** US-008  
+**Type:** Unit  
+**Priority:** High  
+**File:** `src/test/lintingConfig.test.ts`
+
+**Test Steps:**
+1. Read `.github/workflows/ci.yml`
+2. Verify `upload-artifact` action is present
+3. Verify artifact name is `build-dist`
+4. Verify `retention-days: 1` is set
+
+**Status:** ✅ Done
+
+---
+
+#### TC-022: TypeScript — test files excluded from production compilation
+
+**Related US:** US-008  
+**Type:** Unit  
+**Priority:** Critical  
+**File:** `src/test/lintingConfig.test.ts`
+
+**Test Steps:**
+1. Read `tsconfig.json`
+2. Verify `exclude` field is present
+3. Verify `src/**/*.test.ts`, `src/**/*.test.tsx`, `src/test/**/*` are excluded
 
 **Status:** ✅ Done
 
