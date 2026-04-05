@@ -1158,6 +1158,90 @@ beforeEach(() => {
 
 ---
 
+### FEATURE-005: Operator Panel
+
+#### TC-069: AnswerControl — renders nothing when no round is loaded
+
+**Related US:** US-015
+**Type:** Component
+**Priority:** High
+**File:** `src/components/operator/AnswerControl.test.tsx`
+
+**Test Steps:**
+1. Render `<AnswerControl />` with empty store (no `loadGame` called)
+2. Verify component renders null
+
+**Status:** ✅ Done
+
+---
+
+#### TC-070: AnswerControl — displays all answers with number, text, points and ODKRYJ buttons
+
+**Related US:** US-015
+**Type:** Component
+**Priority:** Critical
+**File:** `src/components/operator/AnswerControl.test.tsx`
+
+**Test Steps:**
+1. Call `loadGame` + `startGame` with 3-answer round
+2. Render `<AnswerControl />`
+3. Verify numbers 1–3, all answer texts, all point values are visible
+4. Verify 3 "ODKRYJ" buttons are present
+
+**Status:** ✅ Done
+
+---
+
+#### TC-071: AnswerControl — replaces ODKRYJ button with revealed indicator after clicking
+
+**Related US:** US-015
+**Type:** Component
+**Priority:** Critical
+**File:** `src/components/operator/AnswerControl.test.tsx`
+
+**Test Steps:**
+1. Call `loadGame` + `startGame`, render `<AnswerControl />`
+2. Click first "ODKRYJ" button
+3. Verify only 2 "ODKRYJ" buttons remain
+4. Verify "✓ odkryta" indicator is shown
+
+**Status:** ✅ Done
+
+---
+
+#### TC-072: AnswerControl — calls revealAnswer with correct index on button click
+
+**Related US:** US-015
+**Type:** Component
+**Priority:** Critical
+**File:** `src/components/operator/AnswerControl.test.tsx`
+
+**Test Steps:**
+1. Call `loadGame` + `startGame`, render `<AnswerControl />`
+2. Click second "ODKRYJ" button (index 1)
+3. Verify `revealedAnswers` in store contains `1`
+
+**Status:** ✅ Done
+
+---
+
+#### TC-073: AnswerControl — marks already-revealed answers from store on initial render
+
+**Related US:** US-015
+**Type:** Component
+**Priority:** High
+**File:** `src/components/operator/AnswerControl.test.tsx`
+
+**Test Steps:**
+1. Call `loadGame`, `startGame`, `revealAnswer(2)`
+2. Render `<AnswerControl />`
+3. Verify 2 "ODKRYJ" buttons (not 3) are shown
+4. Verify "✓ odkryta" indicator is shown for the pre-revealed answer
+
+**Status:** ✅ Done
+
+---
+
 ## 4. Test Data
 
 ### 4.1 Mock Game Data

@@ -6,6 +6,5 @@ describe('App', () => {
     render(<App />);
 
     expect(screen.getByRole('heading', { name: 'Weselna Familiada' })).toBeInTheDocument();
-    expect(screen.getByText('Panel Operatora — wkrótce')).toBeInTheDocument();
   });
 });
