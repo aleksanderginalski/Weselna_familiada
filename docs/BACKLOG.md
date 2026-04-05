@@ -520,26 +520,26 @@ EPIC-003: Weselna Familiada M3 - Final Round (Optional)
 **I want to** select which team is answering and mark mistakes  
 **So that** I can manage the game flow
 
-**Status:** 📋 Planned  
+**Status:** ✅ COMPLETED  
 **Story Points:** 3  
 **Priority:** P0
 
 **Acceptance Criteria:**
 
-- [ ] Both teams shown with names and total scores
-- [ ] Radio button or toggle to select controlling team
-- [ ] "BŁĄD" (Mistake) button for current team
-- [ ] Mistake count displayed for each team
-- [ ] Status text shows what happens on next mistake
+- [x] Both teams shown with names and total scores
+- [x] Radio button or toggle to select controlling team
+- [x] "BŁĄD" (Mistake) button for current team
+- [x] Mistake count displayed for each team
+- [x] Status text shows what happens on next mistake
 
 **Tasks:**
 
-- [ ] **TASK-016.1:** Create src/components/operator/TeamPanel.tsx - 30min
-- [ ] **TASK-016.2:** Implement team selection logic - 15min
-- [ ] **TASK-016.3:** Implement mistake button with automatic steal logic - 20min
-- [ ] **TASK-016.4:** Add status text for game state - 10min
-- [ ] **TASK-016.5:** Write component tests (/qa) - 25min
-- [ ] **TASK-016.6:** Manual verification: team controls work - 10min
+- [x] **TASK-016.1:** Create src/components/operator/TeamPanel.tsx - 30min
+- [x] **TASK-016.2:** Implement team selection logic - 15min
+- [x] **TASK-016.3:** Implement mistake button with automatic steal logic - 20min
+- [x] **TASK-016.4:** Add status text for game state - 10min
+- [x] **TASK-016.5:** Write component tests (/qa) - 25min
+- [x] **TASK-016.6:** Manual verification: team controls work - 10min
 
 ---
 
