@@ -493,24 +493,24 @@ EPIC-003: Weselna Familiada M3 - Final Round (Optional)
 **I want to** see all answers and reveal them individually  
 **So that** I can control what guests see
 
-**Status:** 📋 Planned  
+**Status:** ✅ COMPLETED  
 **Story Points:** 3  
 **Priority:** P0
 
 **Acceptance Criteria:**
 
-- [ ] All answers visible with text and points
-- [ ] Each answer has "ODKRYJ" (Reveal) button
-- [ ] Revealed answers are visually marked
-- [ ] Buttons disabled for already revealed answers
+- [x] All answers visible with text and points
+- [x] Each answer has "ODKRYJ" (Reveal) button
+- [x] Revealed answers are visually marked
+- [x] Buttons disabled for already revealed answers
 
 **Tasks:**
 
-- [ ] **TASK-015.1:** Create src/components/operator/AnswerControl.tsx - 30min
-- [ ] **TASK-015.2:** Connect reveal buttons to store actions - 15min
-- [ ] **TASK-015.3:** Add visual feedback for revealed state - 10min
-- [ ] **TASK-015.4:** Write component tests (/qa) - 25min
-- [ ] **TASK-015.5:** Manual verification: reveal buttons work - 10min
+- [x] **TASK-015.1:** Create src/components/operator/AnswerControl.tsx - 30min
+- [x] **TASK-015.2:** Connect reveal buttons to store actions - 15min
+- [x] **TASK-015.3:** Add visual feedback for revealed state - 10min
+- [x] **TASK-015.4:** Write component tests (/qa) - 25min
+- [x] **TASK-015.5:** Manual verification: reveal buttons work - 10min
 
 ---
 

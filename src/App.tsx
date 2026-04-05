@@ -1,4 +1,5 @@
 import { GameBoard } from '@/components/board/GameBoard';
+import { AnswerControl } from '@/components/operator/AnswerControl';
 import { useBroadcast } from '@/hooks/useBroadcast';
 
 const isBoard = new URLSearchParams(window.location.search).get('view') === 'board';
@@ -10,13 +11,15 @@ export function App() {
     return <GameBoard />;
   }
 
-  // Operator panel placeholder — will be replaced in US-015+
+  // Operator panel placeholder — will be replaced in upcoming US
   return (
-    <div className="min-h-screen bg-familiada-bg-dark flex flex-col items-center justify-center gap-8 p-8">
+    <div className="min-h-screen bg-familiada-bg-dark flex flex-col items-center gap-8 p-8">
       <h1 className="font-display text-5xl text-familiada-gold text-glow-gold">
         Weselna Familiada
       </h1>
-      <p className="font-body text-familiada-text-secondary">Panel Operatora — wkrótce</p>
+      <div className="w-full max-w-2xl">
+        <AnswerControl />
+      </div>
     </div>
   );
 }
