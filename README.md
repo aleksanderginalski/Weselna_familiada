@@ -142,6 +142,12 @@ MIT License — zobacz [LICENSE](./LICENSE)
 
 ## Latest
 
+**v0.13.0** — Complete game board view (US-014)
+
+- `src/components/board/GameBoard.tsx` — assembles all board components in wireframe layout: `RoundScore` top center, `TeamScore` + `MistakeIndicator` on each side, `AnswerBoard` center, `AnswerSum` bottom center; fullscreen (`h-screen w-screen`) for projector display
+- `src/App.tsx` — routes to `GameBoard` when `?view=board` URL param is present; operator panel placeholder otherwise
+- 3 tests added (TC-066 through TC-068)
+
 **v0.12.0** — Mistake indicator component (US-013)
 
 - `src/components/board/MistakeIndicator.tsx` — symmetrical mistake indicator: controlling team's side shows 3 small X slots (filled red when mistake, outline when empty); opposing side shows 1 tall steal slot (same width, 3× height) only during steal phase, filled red when steal failed
