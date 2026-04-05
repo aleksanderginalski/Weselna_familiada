@@ -142,6 +142,12 @@ MIT License — zobacz [LICENSE](./LICENSE)
 
 ## Latest
 
+**v0.12.0** — Mistake indicator component (US-013)
+
+- `src/components/board/MistakeIndicator.tsx` — symmetrical mistake indicator: controlling team's side shows 3 small X slots (filled red when mistake, outline when empty); opposing side shows 1 tall steal slot (same width, 3× height) only during steal phase, filled red when steal failed
+- `src/types/game.ts` — `RoundState` extended with `stealFailed: boolean`; `markMistake()` in steal phase sets `stealFailed: true` instead of incrementing `mistakes`
+- 7 tests added (TC-059 through TC-065)
+
 **v0.11.0** — Score display components (US-012)
 
 - `src/components/board/TeamScore.tsx` — team name and total score display; reads from Zustand store by `side` prop (`left` | `right`); retro Familiada styling
