@@ -85,11 +85,15 @@ export const useGameStore = create<GameState & StoreActions>((set) => ({
     set((state) => {
       const answer = state.rounds[state.currentRoundIndex]?.answers[index];
       const points = answer?.points ?? 0;
+      // Answers revealed during summary phase are for show only — don't count towards score
+      const shouldAddPoints = state.currentRound.phase !== 'summary';
       return {
         currentRound: {
           ...state.currentRound,
           revealedAnswers: [...state.currentRound.revealedAnswers, index],
-          roundScore: state.currentRound.roundScore + points,
+          roundScore: shouldAddPoints
+            ? state.currentRound.roundScore + points
+            : state.currentRound.roundScore,
         },
       };
     }),
@@ -121,12 +125,21 @@ export const useGameStore = create<GameState & StoreActions>((set) => ({
     set((state) => {
       const multiplier = state.config.multipliers[state.currentRoundIndex] ?? 1;
       const pointsEarned = state.currentRound.roundScore * multiplier;
+      const newScore = state.teams[winner].totalScore + pointsEarned;
+
+      // Score mode: game ends immediately when a team reaches the winning score
+      const isScoreModeWin =
+        state.config.mode === 'score' &&
+        state.config.winningScore !== undefined &&
+        newScore >= state.config.winningScore;
+
       return {
+        status: isScoreModeWin ? 'finished' : state.status,
         teams: {
           ...state.teams,
           [winner]: {
             ...state.teams[winner],
-            totalScore: state.teams[winner].totalScore + pointsEarned,
+            totalScore: newScore,
           },
         },
         currentRound: {

@@ -638,24 +638,24 @@ EPIC-003: Weselna Familiada M3 - Final Round (Optional)
 **I want to** see a celebration when a team wins  
 **So that** the game has a satisfying conclusion
 
-**Status:** 📋 Planned  
+**Status:** ✅ COMPLETED  
 **Story Points:** 2  
 **Priority:** P1
 
 **Acceptance Criteria:**
 
-- [ ] Winner screen displays when game ends
-- [ ] Winning team name prominently shown
-- [ ] Final scores for both teams visible
-- [ ] "Nowa Gra" button returns to lobby
+- [x] Winner screen displays when game ends
+- [x] Winning team name prominently shown
+- [x] Final scores for both teams visible
+- [x] "Nowa Gra" button returns to lobby
 
 **Tasks:**
 
-- [ ] **TASK-020.1:** Create src/components/screens/WinnerScreen.tsx - 20min
-- [ ] **TASK-020.2:** Add celebration styling - 15min
-- [ ] **TASK-020.3:** Connect reset button to store - 10min
-- [ ] **TASK-020.4:** Write component tests (/qa) - 20min
-- [ ] **TASK-020.5:** Manual verification: winner screen displays correctly - 10min
+- [x] **TASK-020.1:** Create src/components/screens/WinnerScreen.tsx - 20min
+- [x] **TASK-020.2:** Add celebration styling - 15min
+- [x] **TASK-020.3:** Connect reset button to store - 10min
+- [x] **TASK-020.4:** Write component tests (/qa) - 20min
+- [x] **TASK-020.5:** Manual verification: winner screen displays correctly - 10min
 
 ---
 
@@ -665,25 +665,25 @@ EPIC-003: Weselna Familiada M3 - Final Round (Optional)
 **I want to** automatically detect when a team wins  
 **So that** the game ends at the right time
 
-**Status:** 📋 Planned  
+**Status:** ✅ COMPLETED  
 **Story Points:** 3  
 **Priority:** P0
 
 **Acceptance Criteria:**
 
-- [ ] Fixed mode: game ends after all rounds, highest score wins
-- [ ] Score mode: game ends when team reaches winning score
-- [ ] Tie handling for fixed mode (co-winners)
-- [ ] Game status changes to 'finished' when win detected
+- [x] Fixed mode: game ends after all rounds, highest score wins
+- [x] Score mode: game ends when team reaches winning score
+- [x] Tie handling for fixed mode (co-winners)
+- [x] Game status changes to 'finished' when win detected
 
 **Tasks:**
 
-- [ ] **TASK-021.1:** Add win detection logic to store - 25min
-- [ ] **TASK-021.2:** Implement fixed mode end condition - 15min
-- [ ] **TASK-021.3:** Implement score threshold end condition - 15min
-- [ ] **TASK-021.4:** Handle edge cases (ties) - 15min
-- [ ] **TASK-021.5:** Write unit tests for win detection (/qa) - 30min
-- [ ] **TASK-021.6:** Manual verification: game ends correctly - 10min
+- [x] **TASK-021.1:** Add win detection logic to store - 25min
+- [x] **TASK-021.2:** Implement fixed mode end condition - 15min
+- [x] **TASK-021.3:** Implement score threshold end condition - 15min
+- [x] **TASK-021.4:** Handle edge cases (ties) - 15min
+- [x] **TASK-021.5:** Write unit tests for win detection (/qa) - 30min
+- [x] **TASK-021.6:** Manual verification: game ends correctly - 10min
 
 ---
 

@@ -142,6 +142,13 @@ MIT License — zobacz [LICENSE](./LICENSE)
 
 ## Latest
 
+**v0.21.0** — Winner screen and win condition detection (US-020 + US-021)
+
+- `src/components/screens/WinnerScreen.tsx` — full-screen celebration shown when `status === 'finished'`; determines winner by comparing `teams.left.totalScore` vs `teams.right.totalScore`; handles tie case with "REMIS!" display; shows winning team name and score prominently, losing team score below; "NOWA GRA" button calls `resetGame()` and returns to lobby
+- `src/store/gameStore.ts` — `endRound()` now detects score mode win: sets `status: 'finished'` when winner's new total score reaches or exceeds `winningScore`; `revealAnswer()` no longer adds to `roundScore` when phase is `'summary'` (answers revealed after round end are for show only)
+- `src/App.tsx` — added `status === 'finished'` routing: operator view and board view both show `<WinnerScreen />` when game ends
+- 8 tests added in `WinnerScreen.test.tsx`, `gameStore.test.ts`, `App.test.tsx` (131 total, TC-088 through TC-095)
+
 **v0.19.0** — Game configuration lobby screen (US-019)
 
 - `src/components/screens/LobbyScreen.tsx` — lobby screen shown before game starts; fetches `/pytania.json` on mount and pre-fills team names and mode from config; operator can edit left/right team names, select game mode (fixed rounds or score threshold), and configure number of rounds or winning score; "ROZPOCZNIJ GRĘ" button disabled when any team name is empty; calls `loadGame` + `startGame` on submit
