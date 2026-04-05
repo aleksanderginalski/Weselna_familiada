@@ -1,34 +1,41 @@
-# Current Task — US-007
+# Current Task — US-010
 
 ## Context
-Set up GitHub Actions CI workflow that runs linting and tests automatically
-on every push and pull request. Add a status badge to README.md.
-Dependencies already in place: ESLint (US-004), Vitest (US-005).
+Implement BroadcastChannel synchronization so the game board window instantly
+reflects all state changes made in the operator panel. Both windows run the same
+Vite app; they communicate via BroadcastChannel API (no server needed).
+US-009 (Zustand store) is complete — `gameStore.ts` and all `GameAction` types exist.
 
 ## Read
-- package.json (scripts: lint, test, build — node version)
-- .eslintrc.cjs (lint config)
-- vite.config.ts (vitest config)
-- README.md (where to add badge)
+- src/types/game.ts (GameAction union — needs REQUEST_SYNC added)
+- src/store/gameStore.ts (store shape: GameState & StoreActions)
+- CLAUDE.md (Key Patterns → BroadcastChannel, Window Detection)
 
 ## Tasks
-1. Create `.github/workflows/ci.yml` with:
-   - trigger: push (all branches) + pull_request (all branches)
-   - single job `ci` running on `ubuntu-latest`
-   - steps: checkout → setup Node.js 20 → npm ci → lint → test
-2. Add CI status badge to README.md directly below the `# Weselna Familiada` heading
+1. Add `{ type: 'REQUEST_SYNC' }` to the `GameAction` union in `src/types/game.ts`
+2. Create `src/utils/broadcast.ts` with:
+   - `CHANNEL_NAME = 'familiada-game'` constant
+   - `createGameChannel(): BroadcastChannel`
+   - `sendSyncState(channel, state: GameState): void`
+   - `requestStateSync(channel): void`
+3. Create `src/hooks/useBroadcast.ts` with a `useBroadcast()` hook:
+   - Detects window role via `new URLSearchParams(window.location.search).get('view') === 'board'`
+   - **Board side:** sets `channel.onmessage` to apply `SYNC_STATE` via `useGameStore.setState(payload)`,
+     then sends `REQUEST_SYNC` for initial state on mount
+   - **Operator side:** subscribes to store via `useGameStore.subscribe()` and broadcasts state
+     after every change; also listens for `REQUEST_SYNC` and responds with current state
+   - Proper cleanup: unsubscribe + `channel.close()` on unmount
+   - Extract only `GameState` fields (config, rounds, status, currentRoundIndex, teams, currentRound)
+     when broadcasting — do not send store actions
 
 ## Constraints
-- Use `npm ci` (not `npm install`) for deterministic installs
-- Node version: 20 (matches Node.js 18+ requirement from README, use 20 LTS)
-- Use `actions/checkout@v4` and `actions/setup-node@v4`
-- Badge format: GitHub Actions badge for workflow named `CI`
-- Badge links to the Actions tab of the repo
-- Repo: https://github.com/AleksanderGinalworking/Weselna_familiada
-- Do NOT add a build job — that is US-008 scope
-- No test coverage upload — keep it simple
+- Do NOT modify gameStore.ts (keep store pure; broadcasting is the hook's responsibility)
+- No new dependencies — BroadcastChannel is a native browser API
+- Types must be explicit — no `any`
+- Each file max 60 lines
+- Follow naming conventions from CLAUDE.md
 
 ## After implementation
 - Run linter: npm run lint
-- Run tests: npm test -- --run
+- Run tests: npm test
 - List manual verification steps (in Polish)
