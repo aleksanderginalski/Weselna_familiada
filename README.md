@@ -142,6 +142,13 @@ MIT License — zobacz [LICENSE](./LICENSE)
 
 ## Latest
 
+**v0.19.0** — Game configuration lobby screen (US-019)
+
+- `src/components/screens/LobbyScreen.tsx` — lobby screen shown before game starts; fetches `/pytania.json` on mount and pre-fills team names and mode from config; operator can edit left/right team names, select game mode (fixed rounds or score threshold), and configure number of rounds or winning score; "ROZPOCZNIJ GRĘ" button disabled when any team name is empty; calls `loadGame` + `startGame` on submit
+- `src/App.tsx` — removed temporary auto-fetch bootstrap; added `status`-based routing: `status === 'lobby'` → `<LobbyScreen />`, otherwise → `<OperatorPanel />`; board view (`?view=board`) is unaffected
+- `src/App.test.tsx` — updated to match new routing (lobby screen shown by default, operator panel shown when status is playing)
+- 6 tests added in `LobbyScreen.test.tsx` (123 total)
+
 **v0.18.0** — Complete operator panel (US-018)
 
 - `src/components/operator/OperatorPanel.tsx` — assembles the full operator panel: sticky header with title "WESELNA FAMILIADA — Panel Operatora" and "Otwórz Tablicę" button (`window.open('/?view=board', '_blank')`); current question displayed below header; layout order: header → question → `RoundControls` → `AnswerControl` → `TeamControl`; question section hidden when no rounds loaded

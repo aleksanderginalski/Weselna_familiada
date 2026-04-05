@@ -24,29 +24,33 @@ afterEach(() => {
 });
 
 describe('App', () => {
-  it('should render operator panel when not in board view', () => {
+  it('should render lobby screen when status is lobby', async () => {
     render(<App />);
 
-    expect(screen.getByRole('heading', { name: /WESELNA FAMILIADA — Panel Operatora/i })).toBeInTheDocument();
+    // LobbyScreen fetches pytania.json and shows the form after loading
+    await waitFor(() => {
+      expect(screen.getByRole('heading', { name: /WESELNA FAMILIADA/i })).toBeInTheDocument();
+    });
+    expect(screen.getByText('ROZPOCZNIJ GRĘ')).toBeInTheDocument();
   });
 
-  it('should fetch pytania.json and load game data on mount', async () => {
+  it('should render operator panel when status is playing', () => {
+    useGameStore.getState().loadGame(MOCK_GAME_DATA);
+    useGameStore.getState().startGame();
+
     render(<App />);
 
-    await waitFor(() => {
-      expect(fetch).toHaveBeenCalledWith('/pytania.json');
-    });
-
-    await waitFor(() => {
-      expect(useGameStore.getState().rounds).toHaveLength(1);
-    });
+    expect(
+      screen.getByRole('heading', { name: /WESELNA FAMILIADA — Panel Operatora/i }),
+    ).toBeInTheDocument();
   });
 
-  it('should display question after game data is loaded', async () => {
+  it('should not render lobby screen when status is playing', () => {
+    useGameStore.getState().loadGame(MOCK_GAME_DATA);
+    useGameStore.getState().startGame();
+
     render(<App />);
 
-    await waitFor(() => {
-      expect(screen.getByText('Pytanie testowe?')).toBeInTheDocument();
-    });
+    expect(screen.queryByText('ROZPOCZNIJ GRĘ')).not.toBeInTheDocument();
   });
 });

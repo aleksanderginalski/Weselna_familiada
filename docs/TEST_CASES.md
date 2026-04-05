@@ -20,11 +20,12 @@
 | src/components/operator/TeamControl.test.tsx | 5 | ✅ |
 | src/components/operator/RoundControls.test.tsx | 5 | ✅ |
 | src/components/operator/OperatorPanel.test.tsx | 4 | ✅ |
+| src/components/screens/LobbyScreen.test.tsx | 6 | ✅ |
 | src/App.test.tsx | 3 | ✅ |
 | src/test/lintingConfig.test.ts | 11 | ✅ |
 | src/test/tailwindTheme.test.ts | 2 | ✅ |
 | src/test/projectStructure.test.ts | 18 | ✅ |
-| **TOTAL** | **117** | ✅ |
+| **TOTAL** | **123** | ✅ |
 
 ---
 
@@ -41,12 +42,27 @@
 
 ---
 
+## src/components/screens/LobbyScreen.test.tsx
+
+**Component:** `LobbyScreen`
+
+| # | Test | Type |
+|---|------|------|
+| 1 | should show loading state then render form with pre-filled values from JSON | happy path |
+| 2 | should show error message when fetch fails | error state |
+| 3 | should show winningScore field when score mode is selected | conditional render |
+| 4 | should disable Start Game button when a team name is empty | boundary |
+| 5 | should call loadGame and startGame with edited config when Start Game is clicked | interaction |
+| 6 | should pass winningScore config when score mode selected before starting | interaction |
+
+---
+
 ## src/App.test.tsx
 
 **Component:** `App`
 
 | # | Test | Type |
 |---|------|------|
-| 1 | should render operator panel when not in board view | happy path |
-| 2 | should fetch pytania.json and load game data on mount | happy path |
-| 3 | should display question after game data is loaded | happy path |
+| 1 | should render lobby screen when status is lobby | happy path |
+| 2 | should render operator panel when status is playing | happy path |
+| 3 | should not render lobby screen when status is playing | boundary |
