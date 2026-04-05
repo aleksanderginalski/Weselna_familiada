@@ -2,7 +2,7 @@
 
 **Project:** Weselna Familiada  
 **Version:** 2.0  
-**Last Updated:** 2026-04-03 (US-005 Done)  
+**Last Updated:** 2026-04-05 (US-008 Done)  
 **Product Owner:** Aleksander Ginalski  
 **Repository:** https://github.com/AleksanderGinalworking/Weselna_familiada
 
@@ -275,22 +275,22 @@ EPIC-003: Weselna Familiada M3 - Final Round (Optional)
 **I want to** verify that production build works  
 **So that** I catch build errors early
 
-**Status:** 📋 Planned  
+**Status:** ✅ COMPLETED  
 **Story Points:** 2  
 **Priority:** P1
 
 **Acceptance Criteria:**
 
-- [ ] Build job added to CI workflow
-- [ ] Build artifacts uploaded (optional)
-- [ ] Build fails if TypeScript errors exist
+- [x] Build job added to CI workflow
+- [x] Build artifacts uploaded (optional)
+- [x] Build fails if TypeScript errors exist
 
 **Tasks:**
 
-- [ ] **TASK-008.1:** Add build job to ci.yml - 15min
-- [ ] **TASK-008.2:** Configure artifact upload (optional) - 10min
-- [ ] **TASK-008.3:** Test build failure scenario - 10min
-- [ ] **TASK-008.4:** Manual verification: build job works correctly - 10min
+- [x] **TASK-008.1:** Add build job to ci.yml - 15min
+- [x] **TASK-008.2:** Configure artifact upload (optional) - 10min
+- [x] **TASK-008.3:** Test build failure scenario - 10min
+- [x] **TASK-008.4:** Manual verification: build job works correctly - 10min
 
 ---
 
