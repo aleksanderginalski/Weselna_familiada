@@ -549,23 +549,23 @@ EPIC-003: Weselna Familiada M3 - Final Round (Optional)
 **I want to** see current round info and advance to next round  
 **So that** I can manage game progression
 
-**Status:** 📋 Planned  
+**Status:** ✅ Done  
 **Story Points:** 2  
 **Priority:** P0
 
 **Acceptance Criteria:**
 
-- [ ] Current round number and total rounds displayed
-- [ ] Current multiplier shown
-- [ ] "NASTĘPNA RUNDA" button visible
-- [ ] Button triggers score assignment and round transition
+- [x] Current round number and total rounds displayed
+- [x] Current multiplier shown
+- [x] "NASTĘPNA RUNDA" button visible
+- [x] Button triggers score assignment and round transition
 
 **Tasks:**
 
-- [ ] **TASK-017.1:** Create src/components/operator/RoundControls.tsx - 20min
-- [ ] **TASK-017.2:** Implement next round logic with score assignment - 20min
-- [ ] **TASK-017.3:** Write component tests (/qa) - 20min
-- [ ] **TASK-017.4:** Manual verification: round controls work - 10min
+- [x] **TASK-017.1:** Create src/components/operator/RoundControls.tsx - 20min
+- [x] **TASK-017.2:** Implement next round logic with score assignment - 20min
+- [x] **TASK-017.3:** Write component tests (/qa) - 20min
+- [x] **TASK-017.4:** Manual verification: round controls work - 10min
 
 ---
 

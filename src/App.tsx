@@ -1,5 +1,6 @@
 import { GameBoard } from '@/components/board/GameBoard';
 import { AnswerControl } from '@/components/operator/AnswerControl';
+import { RoundControls } from '@/components/operator/RoundControls';
 import { TeamControl } from '@/components/operator/TeamControl';
 import { useBroadcast } from '@/hooks/useBroadcast';
 
@@ -21,6 +22,7 @@ export function App() {
       <div className="w-full max-w-2xl flex flex-col gap-6">
         <AnswerControl />
         <TeamControl />
+        <RoundControls />
       </div>
     </div>
   );

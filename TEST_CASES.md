@@ -1394,6 +1394,90 @@ beforeEach(() => {
 
 ---
 
+#### TC-083: RoundControls — displays round number, total rounds, and multiplier
+
+**Related US:** US-017
+**Type:** Component
+**Priority:** Critical
+**File:** `src/components/operator/RoundControls.test.tsx`
+
+**Test Steps:**
+1. Load game with 4 rounds and multipliers [1, 2, 3, 3], start game
+2. Render `<RoundControls />`
+3. Verify "Runda 1 z 4" and "Mnożnik: x1" are visible
+4. Verify no action buttons present in showdown phase without controlling team
+
+**Status:** ✅ Done
+
+---
+
+#### TC-084: RoundControls — shows ZAKOŃCZ RUNDĘ button when controlling team is selected
+
+**Related US:** US-017
+**Type:** Component
+**Priority:** Critical
+**File:** `src/components/operator/RoundControls.test.tsx`
+
+**Test Steps:**
+1. Call `selectTeam('left')`, render `<RoundControls />`
+2. Verify "ZAKOŃCZ RUNDĘ — wygrywa Drużyna A" button is visible
+3. Verify "NASTĘPNA RUNDA" button is not present
+
+**Status:** ✅ Done
+
+---
+
+#### TC-085: RoundControls — calls endRound with controlling team and shows summary
+
+**Related US:** US-017
+**Type:** Component
+**Priority:** Critical
+**File:** `src/components/operator/RoundControls.test.tsx`
+
+**Test Steps:**
+1. Call `selectTeam('right')`, render `<RoundControls />`
+2. Click "ZAKOŃCZ RUNDĘ" button
+3. Verify `currentRound.phase` is 'summary'
+4. Verify summary message "Drużyna B otrzymuje ... pkt" is visible
+5. Verify "NASTĘPNA RUNDA" button appears; "ZAKOŃCZ RUNDĘ" disappears
+
+**Status:** ✅ Done
+
+---
+
+#### TC-086: RoundControls — advances to next round with updated multiplier
+
+**Related US:** US-017
+**Type:** Component
+**Priority:** High
+**File:** `src/components/operator/RoundControls.test.tsx`
+
+**Test Steps:**
+1. Call `selectTeam('left')`, `endRound('left')`, render `<RoundControls />`
+2. Click "NASTĘPNA RUNDA"
+3. Verify "Runda 2 z 4" and "Mnożnik: x2" are visible
+
+**Status:** ✅ Done
+
+---
+
+#### TC-087: RoundControls — assigns points to opposing team when steal succeeds
+
+**Related US:** US-017
+**Type:** Component
+**Priority:** Critical
+**File:** `src/components/operator/RoundControls.test.tsx`
+
+**Test Steps:**
+1. Call `selectTeam('left')`, `revealAnswer(0)` (30 pts), `markMistake()` × 3 to trigger steal
+2. Render `<RoundControls />`
+3. Verify button shows "wygrywa Drużyna B" (opposing team)
+4. Click button, verify `teams.right.totalScore > 0` and `teams.left.totalScore === 0`
+
+**Status:** ✅ Done
+
+---
+
 ## 4. Test Data
 
 ### 4.1 Mock Game Data
