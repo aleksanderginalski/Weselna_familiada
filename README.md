@@ -142,6 +142,12 @@ MIT License — zobacz [LICENSE](./LICENSE)
 
 ## Latest
 
+**v0.16.0** — Round control panel (US-017)
+
+- `src/components/operator/RoundControls.tsx` — round info bar (round number, total rounds, multiplier) + action buttons: "ZAKOŃCZ RUNDĘ" (calls `endRound(winner)`, visible when controlling team selected and phase ≠ summary) and "NASTĘPNA RUNDA" (calls `nextRound()`, visible in summary phase); winner resolved from `controllingTeam` with steal-aware logic (opposing team wins when steal phase is active and `stealFailed = false`); summary message "Drużyna X otrzymuje Y pkt" shown after round ends
+- `src/App.tsx` — integrated `RoundControls` into the operator panel below `TeamControl`
+- 5 tests added (TC-083 through TC-087)
+
 **v0.15.0** — Team control panel (US-016)
 
 - `src/components/operator/TeamPanel.tsx` — single team card component: radio selection, team name, total score, mistake slots (3 for guessing team, 1 steal slot for opposing team), status text with phase-aware variants (`TeamStatus`: guessing / waiting / stealing / grayed)
