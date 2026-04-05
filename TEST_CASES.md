@@ -1242,6 +1242,158 @@ beforeEach(() => {
 
 ---
 
+#### TC-074: TeamPanel — displays team name, score, active/empty mistake slots, and status when guessing with 2 mistakes
+
+**Related US:** US-016
+**Type:** Component
+**Priority:** Critical
+**File:** `src/components/operator/TeamPanel.test.tsx`
+
+**Test Steps:**
+1. Render `<TeamPanel>` with `teamStatus='guessing'`, `mistakes=2`, `maxMistakes=3`, `totalScore=100`
+2. Verify team name, score "100", status "Kolejny błąd = przejęcie" are visible
+3. Verify 2 `.mistake-x.active` and 1 `.mistake-x.empty` elements
+4. Verify radio is checked
+
+**Status:** ✅ Done
+
+---
+
+#### TC-075: TeamPanel — shows correct status text for each teamStatus variant
+
+**Related US:** US-016
+**Type:** Component
+**Priority:** High
+**File:** `src/components/operator/TeamPanel.test.tsx`
+
+**Test Steps:**
+1. Render with `teamStatus='waiting'` → verify "Czeka"
+2. Rerender with `teamStatus='stealing'`, `mistakes=0` → verify "Przejęcie — jedna szansa"
+3. Rerender with `teamStatus='stealing'`, `mistakes=1` → verify "Błąd! Runda skończona"
+4. Rerender with `teamStatus='grayed'` → verify "Przejęcie przez przeciwnika"
+
+**Status:** ✅ Done
+
+---
+
+#### TC-076: TeamPanel — calls onSelect when radio is clicked
+
+**Related US:** US-016
+**Type:** Component
+**Priority:** Critical
+**File:** `src/components/operator/TeamPanel.test.tsx`
+
+**Test Steps:**
+1. Render with `teamStatus='waiting'` and mock `onSelect`
+2. Click the radio input
+3. Verify `onSelect` was called once
+
+**Status:** ✅ Done
+
+---
+
+#### TC-077: TeamPanel — disables radio when isSelectDisabled is true
+
+**Related US:** US-016
+**Type:** Component
+**Priority:** High
+**File:** `src/components/operator/TeamPanel.test.tsx`
+
+**Test Steps:**
+1. Render with `isSelectDisabled=true`
+2. Verify radio input has `disabled` attribute
+
+**Status:** ✅ Done
+
+---
+
+#### TC-078: TeamControl — displays both team names and disables BŁĄD button in showdown phase
+
+**Related US:** US-016
+**Type:** Component
+**Priority:** Critical
+**File:** `src/components/operator/TeamControl.test.tsx`
+
+**Test Steps:**
+1. Call `loadGame` + `startGame` (no team selected)
+2. Render `<TeamControl />`
+3. Verify both team names visible
+4. Verify BŁĄD button is disabled
+5. Verify "Wybierz drużynę, która odpowiada" text is shown
+
+**Status:** ✅ Done
+
+---
+
+#### TC-079: TeamControl — highlights guessing team and shows 1 steal slot for opposing team after selectTeam
+
+**Related US:** US-016
+**Type:** Component
+**Priority:** Critical
+**File:** `src/components/operator/TeamControl.test.tsx`
+
+**Test Steps:**
+1. Call `selectTeam('left')`
+2. Render `<TeamControl />`
+3. Verify left radio is checked, right radio is not
+4. Verify total 4 mistake slots (3 for left + 1 for right)
+5. Verify BŁĄD button is enabled
+
+**Status:** ✅ Done
+
+---
+
+#### TC-080: TeamControl — shows steal phase UI after 3 mistakes
+
+**Related US:** US-016
+**Type:** Component
+**Priority:** Critical
+**File:** `src/components/operator/TeamControl.test.tsx`
+
+**Test Steps:**
+1. Call `selectTeam('left')`, `markMistake()` × 3
+2. Render `<TeamControl />`
+3. Verify steal banner with team B name is visible
+4. Verify all radios are disabled
+5. Verify BŁĄD button is still enabled for steal attempt
+
+**Status:** ✅ Done
+
+---
+
+#### TC-081: TeamControl — shows steal failed message and disables BŁĄD after failed steal
+
+**Related US:** US-016
+**Type:** Component
+**Priority:** Critical
+**File:** `src/components/operator/TeamControl.test.tsx`
+
+**Test Steps:**
+1. Call `selectTeam('left')`, `markMistake()` × 4
+2. Render `<TeamControl />`
+3. Verify "Punkty dla: Drużyna A" message is shown
+4. Verify BŁĄD button is disabled
+
+**Status:** ✅ Done
+
+---
+
+#### TC-082: TeamControl — calls markMistake when BŁĄD is clicked in guessing phase
+
+**Related US:** US-016
+**Type:** Component
+**Priority:** Critical
+**File:** `src/components/operator/TeamControl.test.tsx`
+
+**Test Steps:**
+1. Call `selectTeam('right')`, render `<TeamControl />`
+2. Click BŁĄD button
+3. Verify `currentRound.mistakes` equals 1
+
+**Status:** ✅ Done
+
+---
+
 ## 4. Test Data
 
 ### 4.1 Mock Game Data
