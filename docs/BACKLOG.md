@@ -372,27 +372,27 @@ EPIC-003: Weselna Familiada M3 - Final Round (Optional)
 **I want to** see answers displayed on a board  
 **So that** I can follow the game progress
 
-**Status:** 📋 Planned  
+**Status:** ✅ COMPLETED  
 **Story Points:** 5  
 **Priority:** P0
 
 **Acceptance Criteria:**
 
-- [ ] Board displays 3-7 answer rows depending on round
-- [ ] Hidden answers show masked text (████████)
-- [ ] Revealed answers show text and points
-- [ ] Answer rows have retro TV-show styling
-- [ ] Numbers (1-7) are visible on the left side
+- [x] Board displays 3-7 answer rows depending on round
+- [x] Hidden answers show masked text (████████)
+- [x] Revealed answers show text and points
+- [x] Answer rows have retro TV-show styling
+- [x] Numbers (1-7) are visible on the left side
 
 **Tasks:**
 
-- [ ] **TASK-011.1:** Create src/components/board/AnswerRow.tsx - 30min
-- [ ] **TASK-011.2:** Create src/components/board/AnswerBoard.tsx combining rows - 20min
-- [ ] **TASK-011.3:** Style answers with Familiada retro theme - 30min
-- [ ] **TASK-011.4:** Add revealed/hidden state styling - 15min
-- [ ] **TASK-011.5:** Write component tests for AnswerRow (/qa) - 30min
-- [ ] **TASK-011.6:** Write component tests for AnswerBoard (/qa) - 20min
-- [ ] **TASK-011.7:** Manual verification: answers display correctly - 10min
+- [x] **TASK-011.1:** Create src/components/board/AnswerRow.tsx - 30min
+- [x] **TASK-011.2:** Create src/components/board/AnswerBoard.tsx combining rows - 20min
+- [x] **TASK-011.3:** Style answers with Familiada retro theme - 30min
+- [x] **TASK-011.4:** Add revealed/hidden state styling - 15min
+- [x] **TASK-011.5:** Write component tests for AnswerRow (/qa) - 30min
+- [x] **TASK-011.6:** Write component tests for AnswerBoard (/qa) - 20min
+- [x] **TASK-011.7:** Manual verification: answers display correctly - 10min
 
 ---
 

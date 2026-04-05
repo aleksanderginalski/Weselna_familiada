@@ -142,6 +142,12 @@ MIT License — zobacz [LICENSE](./LICENSE)
 
 ## Latest
 
+**v0.10.0** — Answer board components (US-011)
+
+- `src/components/board/AnswerRow.tsx` — single answer row: number on left, masked text (`████████`) when hidden, answer text + points when revealed; uses `AnswerDisplayProps` from types
+- `src/components/board/AnswerBoard.tsx` — container reading from Zustand store (`currentRoundIndex`, `rounds`, `revealedAnswers`); renders 3–7 `AnswerRow` components; returns null when no round loaded
+- 6 tests added (TC-045 through TC-050)
+
 **v0.9.0** — BroadcastChannel synchronization (US-010)
 
 - `src/utils/broadcast.ts` — channel helpers: `createGameChannel`, `sendSyncState`, `requestStateSync`
