@@ -1,29 +1,29 @@
+import { useEffect } from 'react';
 import { GameBoard } from '@/components/board/GameBoard';
-import { AnswerControl } from '@/components/operator/AnswerControl';
-import { RoundControls } from '@/components/operator/RoundControls';
-import { TeamControl } from '@/components/operator/TeamControl';
+import { OperatorPanel } from '@/components/operator/OperatorPanel';
 import { useBroadcast } from '@/hooks/useBroadcast';
+import { useGameStore } from '@/store/gameStore';
+import { GameDataFile } from '@/types/game';
 
 const isBoard = new URLSearchParams(window.location.search).get('view') === 'board';
 
 export function App() {
   useBroadcast();
+  const loadGame = useGameStore((state) => state.loadGame);
+  const startGame = useGameStore((state) => state.startGame);
+
+  useEffect(() => {
+    fetch('/pytania.json')
+      .then((res) => res.json())
+      .then((data: GameDataFile) => {
+        loadGame(data);
+        startGame();
+      });
+  }, [loadGame, startGame]);
 
   if (isBoard) {
     return <GameBoard />;
   }
 
-  // Operator panel placeholder — will be replaced in upcoming US
-  return (
-    <div className="min-h-screen bg-familiada-bg-dark flex flex-col items-center gap-8 p-8">
-      <h1 className="font-display text-5xl text-familiada-gold text-glow-gold">
-        Weselna Familiada
-      </h1>
-      <div className="w-full max-w-2xl flex flex-col gap-6">
-        <AnswerControl />
-        <TeamControl />
-        <RoundControls />
-      </div>
-    </div>
-  );
+  return <OperatorPanel />;
 }

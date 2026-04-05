@@ -1,0 +1,51 @@
+import { useGameStore } from '@/store/gameStore';
+import { AnswerControl } from './AnswerControl';
+import { RoundControls } from './RoundControls';
+import { TeamControl } from './TeamControl';
+
+function handleOpenBoard() {
+  window.open('/?view=board', '_blank');
+}
+
+export function OperatorPanel() {
+  const rounds = useGameStore((state) => state.rounds);
+  const currentRoundIndex = useGameStore((state) => state.currentRoundIndex);
+
+  const currentQuestion = rounds[currentRoundIndex]?.question;
+
+  return (
+    <div className="min-h-screen bg-familiada-bg-dark flex flex-col">
+      {/* Header */}
+      <header className="flex items-center justify-between px-6 py-3 bg-familiada-bg-panel border-b-2 border-familiada-border">
+        <h1 className="font-display text-xl text-familiada-gold text-glow-gold tracking-wide">
+          WESELNA FAMILIADA — Panel Operatora
+        </h1>
+        <button
+          onClick={handleOpenBoard}
+          className="operator-btn bg-familiada-gold text-familiada-bg-dark hover:bg-yellow-400 font-bold"
+        >
+          Otwórz Tablicę
+        </button>
+      </header>
+
+      {/* Main content */}
+      <main className="flex-1 flex flex-col gap-4 px-6 py-4 max-w-4xl w-full mx-auto">
+        {/* Current question */}
+        {currentQuestion && (
+          <div className="bg-familiada-bg-panel border-2 border-familiada-border rounded-lg px-4 py-3">
+            <span className="text-familiada-text-secondary text-xs uppercase tracking-wide font-bold">
+              Pytanie
+            </span>
+            <p className="text-familiada-text-primary font-body text-lg mt-1">
+              {currentQuestion}
+            </p>
+          </div>
+        )}
+
+        <RoundControls />
+        <AnswerControl />
+        <TeamControl />
+      </main>
+    </div>
+  );
+}
