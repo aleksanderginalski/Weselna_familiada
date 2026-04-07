@@ -14,22 +14,31 @@
 | S-002 | Game Board | Projector display for guests | MVP |
 | S-003 | Operator Panel | Game controls for host | MVP |
 | S-004 | Winner Screen | End game celebration | MVP |
+| S-005 | Final Round Board | Projector view during final round | US-026 |
+| S-006 | Final Round Operator | Operator controls during final round | US-026 |
 
 ---
 
 ## 2. User Flow
 
 ```
-┌─────────────┐     ┌─────────────┐     ┌─────────────┐
-│   LOBBY     │────►│   PLAYING   │────►│   WINNER    │
-│  (config)   │     │  (rounds)   │     │ (celebrate) │
-└─────────────┘     └─────────────┘     └─────────────┘
-                           │
-                           │ "Nowa Gra"
-                           ▼
-                    ┌─────────────┐
-                    │   LOBBY     │
-                    └─────────────┘
+┌─────────────┐     ┌─────────────┐     ┌──────────────────────┐
+│   LOBBY     │────►│   PLAYING   │────►│  last round summary  │
+│  (config)   │     │  (rounds)   │     │  in RoundControls:   │
+└─────────────┘     └─────────────┘     │  [OGŁOŚ ZWYCIĘSTWO]  │
+                                        │  [RUNDA FINAŁOWA]    │
+                                        └──────────┬───────────┘
+                                                   │
+                              ┌────────────────────┴──────────────────────┐
+                              │                                           │
+                              ▼                                           ▼
+                    ┌─────────────────┐                       ┌──────────────────┐
+                    │    WINNER       │                       │  FINAL ROUND     │
+                    │  (celebrate)    │                       │  (S-005 + S-006) │
+                    └─────────────────┘                       └────────┬─────────┘
+                              ▲                                        │
+                              │                               finishFinalRound()
+                              └────────────────────────────────────────┘
 ```
 
 ---
@@ -207,7 +216,70 @@
 
 ---
 
-## 7. Responsive Notes
+## 7. S-005: Final Round Board (US-026)
+
+**Purpose:** Projector view during the final round
+
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│  00:15                    RUNDA FINAŁOWA                               │
+├────────────────────────────────────────────────────────────────────────┤
+│  Gracz A                   Pkt A  Pkt B          Gracz B              │
+│ ──────────────────────────────────────────────────────────────────────│
+│  MARCHEWKA                  28     ?                                   │
+│                              ?     ?                                   │
+│                              ?     ?                                   │
+│                              ?     ?                                   │
+│                              ?     ?                                   │
+│ ──────────────────────────────────────────────────────────────────────│
+│                           SUMA: 28                                     │
+└────────────────────────────────────────────────────────────────────────┘
+```
+
+**Key elements:**
+- Timer top-left (hidden when 0 and not running)
+- Fixed-width points columns — layout never shifts
+- All text in gold color
+- Player A text hidden while Player B answers (`playerAHidden`)
+- `?` = unrevealed, `…` = revealed but points pending, number = fully visible
+
+---
+
+## 8. S-006: Final Round Operator (US-026)
+
+**Purpose:** Operator controls during final round
+
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│  RUNDA FINAŁOWA — Panel Operatora                                      │
+│  ┌────────────────────────────────────────────────────────────────────┐│
+│  │  Timer — Gracz A          00:15                                    ││
+│  │  [START]  [+5s]  [-5s]                                             ││
+│  └────────────────────────────────────────────────────────────────────┘│
+│                                                                        │
+│  P1: Co kojarzy się z królikiem?                                       │
+│    [Uszy (35)] [Marchewka (28)] [Biały kolor (20)] …                   │
+│    Gracz A: [___________] [ODKRYJ]   Gracz B: [___________] [ODKRYJ]  │
+│                                                                        │
+│  P2–P5: (same layout)                                                  │
+│                                                                        │
+│  ────────────────────────────────────────────────────────────────────  │
+│  Suma finałowa: 0 pkt                                                  │
+│  [GOTOWY DO SPRAWDZANIA]                                               │
+└────────────────────────────────────────────────────────────────────────┘
+```
+
+**Phase progression:**
+1. `answeringA` → START timer, player A answers verbally
+2. Operator clicks "GOTOWY DO SPRAWDZANIA" → `revealingA`
+3. Operator reveals each answer (correct/wrong/skipped) one by one
+4. All 5 revealed → "UKRYJ ODPOWIEDZI GRACZA A" → `answeringB`
+5. Player B answers → reveal answers → `revealingB`
+6. All 10 revealed → "ZAKOŃCZ RUNDĘ FINAŁOWĄ" → `finished`
+
+---
+
+## 9. Responsive Notes
 
 ### Game Board (Projector)
 - Optimized for 1920x1080
@@ -218,6 +290,11 @@
 - Works on 1366x768 minimum
 - Scrollable if needed
 - Touch-friendly button sizes (44px minimum)
+
+### Final Round Board
+- Fixed-width point columns (80px each) — no layout shift as text appears
+- Timer shown only when running or when seconds > 0
+- WinnerScreen on board: no "Nowa Gra" button; team name and score 2× larger than operator view
 
 ---
 

@@ -142,6 +142,23 @@ MIT License — zobacz [LICENSE](./LICENSE)
 
 ## Latest
 
+**v0.26.0** — Final round mode (US-026)
+
+- `public/pytania-final.json` — new file with 5 final round questions (each with up to 5 weighted answers)
+- `public/sounds/dzwonki-familiada.mp3`, `czas-final-familiada.mp3` — two new sound files now wired
+- `src/types/game.ts` — `GameStatus` extended with `'finalRound'`; new types: `FinalRoundState`, `FinalRoundAnswer`, `FinalRoundPhase`, `FinalRoundDataFile`, `FinalRoundQuestionData`; `GameState` extended with `showingWinner: boolean` and `finalRound?: FinalRoundState`
+- `src/store/gameStore.ts` — 9 new actions: `declareWinner`, `startFinalRound`, `startTimer`, `stopTimer`, `adjustTimer`, `tickTimer`, `advanceToRevealPhase`, `revealFinalAnswer`, `showFinalAnswerPoints`, `hidePlayerAAnswers`, `finishFinalRound`; `endRound()` now detects fixed-mode game end immediately (no longer requires `nextRound()`); `resetGame()` clears `finalRound` and `showingWinner`
+- `src/hooks/useSound.ts` — added `playFinalRound` (`przed-finalem-familiada.mp3`), `playBell` (`dzwonki-familiada.mp3`), `playTimerEnd` (`czas-final-familiada.mp3`)
+- `src/hooks/useBroadcast.ts` — `extractGameState` now includes `finalRound` and `showingWinner` so the board window receives final round state
+- `src/components/operator/RoundControls.tsx` — after last round summary, shows "OGŁOŚ ZWYCIĘSTWO" and "RUNDA FINAŁOWA" buttons in place of "NASTĘPNA RUNDA"
+- `src/components/operator/FinalRoundOperator.tsx` — operator view during final round: question list with correct-answer buttons and wrong-answer text input per player, phase control buttons ("GOTOWY DO SPRAWDZANIA", "UKRYJ ODPOWIEDZI GRACZA A", "ZAKOŃCZ RUNDĘ FINAŁOWĄ")
+- `src/components/operator/FinalRoundTimerPanel.tsx` — countdown timer with START/STOP, +5s/-5s controls; plays `czas-final-familiada.mp3` when timer hits 0
+- `src/components/operator/FinalRoundQuestionRow.tsx` — single question row with answer reveal flow: bell on text reveal, sound + points after ~1s delay; skipped answers play wrong sound immediately with no bell
+- `src/components/board/FinalRoundBoard.tsx` — projector view during final round: 5-row × 4-column grid (Player A text | Pts A | Pts B | Player B text), fixed column widths, all text gold, timer in top-left corner, SUMA footer
+- `src/components/screens/WinnerScreen.tsx` — when `finalRound` is present: shows simplified screen (team name + score only, no "WYGRYWA" or loser score); score = (team score + final sum) × 15 + 25 000 bonus if sum ≥ 200; board window shows no "Nowa Gra" button; text 2× larger on board
+- `src/App.tsx` — added `finalRound` and `showingWinner` routing
+- 21 tests added: TC-104 through TC-124 (161 total)
+
 **v0.22.0** — Sound effects for game events (US-022)
 
 - `src/hooks/useSound.ts` — new hook wrapping Howler.js; Howl instances created once at module level; exposes `playCorrect`, `playWrong`, `playNextRound`, `playIntro`, `playWin`, `isMuted`, `toggleMute`; all play functions are gated by `isMuted` from Zustand store

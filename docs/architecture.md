@@ -78,13 +78,29 @@ interface AnswerData {
 interface GameState {
   config: GameConfig;
   rounds: RoundData[];
-  status: 'lobby' | 'playing' | 'finished';
+  status: 'lobby' | 'playing' | 'finished' | 'finalRound';
   currentRoundIndex: number;
   teams: {
     left: TeamState;
     right: TeamState;
   };
   currentRound: RoundState;
+  // Set to true when operator clicks "OGŁOŚ ZWYCIĘSTWO" — triggers WinnerScreen on both windows
+  showingWinner: boolean;
+  // Present only when a final round has been started
+  finalRound?: FinalRoundState;
+}
+
+interface FinalRoundState {
+  questions: FinalRoundQuestionData[];   // 5 questions from pytania-final.json
+  playerA: FinalRoundAnswer[];           // 5 answer slots
+  playerB: FinalRoundAnswer[];           // 5 answer slots
+  playerAHidden: boolean;                // hides Player A text while Player B answers
+  phase: 'answeringA' | 'revealingA' | 'answeringB' | 'revealingB' | 'finished';
+  timerRunning: boolean;
+  timerSecondsLeft: number;
+  playerAInitialTimer: number;           // 15s
+  playerBInitialTimer: number;           // 20s
 }
 
 interface TeamState {
