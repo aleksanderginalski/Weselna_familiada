@@ -41,7 +41,7 @@ export interface GameDataFile {
 // Game State Types (runtime state)
 // ============================================
 
-export type GameStatus = 'lobby' | 'playing' | 'finished';
+export type GameStatus = 'lobby' | 'playing' | 'finished' | 'finalRound';
 export type RoundPhase = 'showdown' | 'guessing' | 'steal' | 'summary';
 export type TeamSide = 'left' | 'right';
 
@@ -84,6 +84,64 @@ export interface GameState {
 
   // Current round state
   currentRound: RoundState;
+
+  // Set to true when operator explicitly clicks "OGŁOŚ ZWYCIĘSTWO"
+  showingWinner: boolean;
+
+  // Present only when a final round has been started
+  finalRound?: FinalRoundState;
+}
+
+// ============================================
+// Final Round Types
+// ============================================
+
+export interface FinalRoundAnswerData {
+  text: string;
+  points: number;
+}
+
+export interface FinalRoundQuestionData {
+  question: string;
+  answers: FinalRoundAnswerData[];
+}
+
+export interface FinalRoundDataFile {
+  questions: FinalRoundQuestionData[];
+}
+
+export type FinalAnswerType = 'correct' | 'wrong' | 'skipped' | 'pending';
+
+export type FinalRoundPhase = 'answeringA' | 'revealingA' | 'answeringB' | 'revealingB' | 'finished';
+
+/** A single answer slot for one player on one question in the final round */
+export interface FinalRoundAnswer {
+  /** Text shown on the board (answer text, wrong text, "---", or empty) */
+  text: string;
+  /** Points earned (0 for wrong/skipped, actual value for correct) */
+  points: number;
+  /** Whether the text has been revealed on the board */
+  isRevealed: boolean;
+  /** Whether the points have been revealed on the board (delayed ~1s after isRevealed) */
+  pointsVisible: boolean;
+  type: FinalAnswerType;
+}
+
+export interface FinalRoundState {
+  questions: FinalRoundQuestionData[];
+  /** Player A's answers — 5 entries, one per question */
+  playerA: FinalRoundAnswer[];
+  /** Player B's answers — 5 entries, one per question */
+  playerB: FinalRoundAnswer[];
+  /** When true, player A's answer texts are hidden on the board (points remain visible) */
+  playerAHidden: boolean;
+  phase: FinalRoundPhase;
+  timerRunning: boolean;
+  timerSecondsLeft: number;
+  /** Default timer for player A (seconds) */
+  playerAInitialTimer: number;
+  /** Default timer for player B (seconds) */
+  playerBInitialTimer: number;
 }
 
 // ============================================

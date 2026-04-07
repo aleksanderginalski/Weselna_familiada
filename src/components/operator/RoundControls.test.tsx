@@ -66,6 +66,31 @@ describe('RoundControls', () => {
     expect(screen.getByText('Mnożnik: x2')).toBeInTheDocument();
   });
 
+  it('should show end-game choice buttons and hide NASTĘPNA RUNDA when last fixed round ends', async () => {
+    // TC-117
+    // 1-round game
+    useGameStore.setState({
+      ...useGameStore.getState(),
+      config: {
+        mode: 'fixed',
+        numberOfRounds: 1,
+        multipliers: [1],
+        teams: { left: { name: 'Drużyna A' }, right: { name: 'Drużyna B' } },
+      },
+      rounds: [{ question: 'Q', answers: [{ text: 'A', points: 10 }] }],
+      currentRoundIndex: 0,
+      status: 'playing',
+    });
+    useGameStore.getState().selectTeam('left');
+    render(<RoundControls />);
+
+    await userEvent.click(screen.getByRole('button', { name: /ZAKOŃCZ RUNDĘ/ }));
+
+    expect(screen.getByRole('button', { name: 'OGŁOŚ ZWYCIĘSTWO' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'RUNDA FINAŁOWA' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'NASTĘPNA RUNDA' })).not.toBeInTheDocument();
+  });
+
   it('should assign points to opposing team when steal succeeds', async () => {
     useGameStore.getState().selectTeam('left');
     useGameStore.getState().revealAnswer(0); // roundScore = 30

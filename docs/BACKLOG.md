@@ -843,31 +843,33 @@ EPIC-003: Weselna Familiada M3 - Final Round (Optional)
 **I want to** run a quick final round after main game  
 **So that** winning team can earn bonus points
 
-**Status:** 📋 Planned  
+**Status:** ✅ COMPLETED  
 **Story Points:** 8  
 **Priority:** P3
 
 **Acceptance Criteria:**
 
-- [ ] Final round option appears after game ends
-- [ ] Two players from winning team participate
-- [ ] First player answers 5 questions, then second player
-- [ ] Timer for each answer (optional)
-- [ ] Points accumulated based on matches
+- [x] Final round option appears after game ends (in RoundControls, after last round summary)
+- [x] Two players from winning team participate
+- [x] First player answers 5 questions, then second player
+- [x] Timer for each player (15s for Player A, 20s for Player B; adjustable with +5s/-5s)
+- [x] Points accumulated based on correct matches; final score = (team score + final sum) × 15; +25 000 bonus if final sum ≥ 200
 
 **Notes:**
-- Wire `public/sounds/przed-finalem-familiada.mp3` via `useSound` when entering final round
-- Wire `public/sounds/wygrana-familiada.mp3` as proper win sound on WinnerScreen (replacing US-022 placeholder `przed-finalem-familiada.mp3`)
+- End-game choice ("OGŁOŚ ZWYCIĘSTWO" / "RUNDA FINAŁOWA") appears inside RoundControls after the last round ends — no separate screen
+- Questions loaded from `public/pytania-final.json` (5 questions, each with up to 5 answers)
+- `wygrana-familiada.mp3` not yet available — win sound still uses `przed-finalem-familiada.mp3` as placeholder
+- Board window shows no "Nowa Gra" button; winner text and score are 2× larger on board
 
 **Tasks:**
 
-- [ ] **TASK-026.1:** Design final round flow - 30min
-- [ ] **TASK-026.2:** Create FinalRoundScreen component - 45min
-- [ ] **TASK-026.3:** Add final round types and state - 20min
-- [ ] **TASK-026.4:** Implement scoring and timer - 30min
-- [ ] **TASK-026.5:** Wire final round and win sounds in useSound.ts - 10min
-- [ ] **TASK-026.6:** Write comprehensive tests (/qa) - 45min
-- [ ] **TASK-026.7:** Manual verification: final round works - 15min
+- [x] **TASK-026.1:** Design final round flow
+- [x] **TASK-026.2:** Create `FinalRoundBoard.tsx`, `FinalRoundOperator.tsx`, `FinalRoundTimerPanel.tsx`, `FinalRoundQuestionRow.tsx`
+- [x] **TASK-026.3:** Add final round types (`FinalRoundState`, `FinalRoundAnswer`, `FinalRoundPhase`, etc.) to `game.ts`; extend `GameStatus` with `'finalRound'`
+- [x] **TASK-026.4:** Implement scoring, timer, and all store actions (`startFinalRound`, `tickTimer`, `revealFinalAnswer`, `finishFinalRound`, etc.)
+- [x] **TASK-026.5:** Wire `playFinalRound`, `playBell`, `playTimerEnd` in `useSound.ts`
+- [x] **TASK-026.6:** Write 21 tests (TC-104 through TC-124)
+- [x] **TASK-026.7:** Manual verification: final round works end-to-end
 
 ---
 

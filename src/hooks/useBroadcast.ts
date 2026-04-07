@@ -13,6 +13,8 @@ function extractGameState(store: ReturnType<typeof useGameStore.getState>): Game
     currentRoundIndex: store.currentRoundIndex,
     teams: store.teams,
     currentRound: store.currentRound,
+    showingWinner: store.showingWinner,
+    finalRound: store.finalRound,
   };
 }
 

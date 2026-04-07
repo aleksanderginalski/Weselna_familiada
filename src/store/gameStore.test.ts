@@ -338,4 +338,221 @@ describe('gameStore', () => {
       expect(state.currentRound.phase).toBe('showdown');
     });
   });
+
+  describe('endRound — fixed mode end detection', () => {
+    it('should set status to finished when last fixed round ends', () => {
+      // TC-104
+      useGameStore.setState({
+        ...useGameStore.getState(),
+        status: 'playing',
+        config: {
+          mode: 'fixed',
+          numberOfRounds: 1,
+          multipliers: [1],
+          teams: { left: { name: 'A' }, right: { name: 'B' } },
+        },
+        rounds: [{ question: 'Q', answers: [{ text: 'A', points: 10 }] }],
+        teams: { left: { name: 'A', totalScore: 0 }, right: { name: 'B', totalScore: 0 } },
+        currentRoundIndex: 0,
+      });
+      useGameStore.getState().selectTeam('left');
+      useGameStore.getState().endRound('left');
+
+      expect(useGameStore.getState().status).toBe('finished');
+    });
+
+    it('should not set status to finished when there are more rounds remaining', () => {
+      // TC-105
+      useGameStore.getState().loadGame(mockGameData); // 2 rounds
+      useGameStore.getState().startGame();
+      useGameStore.getState().selectTeam('left');
+      useGameStore.getState().endRound('left');
+
+      expect(useGameStore.getState().status).toBe('playing');
+    });
+  });
+
+  describe('declareWinner', () => {
+    it('should set showingWinner to true', () => {
+      // TC-106
+      useGameStore.getState().declareWinner();
+
+      expect(useGameStore.getState().showingWinner).toBe(true);
+    });
+  });
+
+  describe('startFinalRound', () => {
+    it('should set status to finalRound and initialize playerA/B with 5 pending answers', () => {
+      // TC-107
+      const data = {
+        questions: [
+          { question: 'Q1', answers: [{ text: 'A', points: 10 }] },
+          { question: 'Q2', answers: [{ text: 'B', points: 20 }] },
+          { question: 'Q3', answers: [{ text: 'C', points: 30 }] },
+          { question: 'Q4', answers: [{ text: 'D', points: 40 }] },
+          { question: 'Q5', answers: [{ text: 'E', points: 50 }] },
+        ],
+      };
+      useGameStore.getState().startFinalRound(data);
+      const state = useGameStore.getState();
+
+      expect(state.status).toBe('finalRound');
+      expect(state.finalRound).toBeDefined();
+      expect(state.finalRound!.phase).toBe('answeringA');
+      expect(state.finalRound!.playerA).toHaveLength(5);
+      expect(state.finalRound!.playerB).toHaveLength(5);
+      expect(state.finalRound!.playerA[0].type).toBe('pending');
+      expect(state.finalRound!.timerSecondsLeft).toBe(15);
+    });
+  });
+
+  describe('timer actions', () => {
+    beforeEach(() => {
+      useGameStore.getState().startFinalRound({
+        questions: Array.from({ length: 5 }, (_, i) => ({
+          question: `Q${i}`,
+          answers: [{ text: 'A', points: 10 }],
+        })),
+      });
+    });
+
+    it('should start and stop the timer', () => {
+      // TC-108
+      useGameStore.getState().startTimer();
+      expect(useGameStore.getState().finalRound!.timerRunning).toBe(true);
+
+      useGameStore.getState().stopTimer();
+      expect(useGameStore.getState().finalRound!.timerRunning).toBe(false);
+    });
+
+    it('should adjust timer by delta, respecting minimum of 5', () => {
+      // TC-109
+      useGameStore.getState().adjustTimer(5);
+      expect(useGameStore.getState().finalRound!.timerSecondsLeft).toBe(20);
+
+      useGameStore.getState().adjustTimer(-100); // Would go below 5
+      expect(useGameStore.getState().finalRound!.timerSecondsLeft).toBe(5);
+    });
+
+    it('should decrement timer on tick and stop when reaching 0', () => {
+      // TC-110
+      useGameStore.getState().startTimer();
+      useGameStore.setState({
+        finalRound: { ...useGameStore.getState().finalRound!, timerSecondsLeft: 2 },
+      });
+      useGameStore.getState().tickTimer();
+      expect(useGameStore.getState().finalRound!.timerSecondsLeft).toBe(1);
+
+      useGameStore.getState().tickTimer();
+      expect(useGameStore.getState().finalRound!.timerSecondsLeft).toBe(0);
+      expect(useGameStore.getState().finalRound!.timerRunning).toBe(false);
+    });
+  });
+
+  describe('advanceToRevealPhase', () => {
+    it('should move from answeringA to revealingA and stop timer', () => {
+      // TC-111
+      useGameStore.getState().startFinalRound({
+        questions: Array.from({ length: 5 }, (_, i) => ({
+          question: `Q${i}`,
+          answers: [{ text: 'A', points: 10 }],
+        })),
+      });
+      useGameStore.getState().startTimer();
+      useGameStore.getState().advanceToRevealPhase();
+      const fr = useGameStore.getState().finalRound!;
+
+      expect(fr.phase).toBe('revealingA');
+      expect(fr.timerRunning).toBe(false);
+    });
+  });
+
+  describe('revealFinalAnswer and showFinalAnswerPoints', () => {
+    beforeEach(() => {
+      useGameStore.getState().startFinalRound({
+        questions: Array.from({ length: 5 }, (_, i) => ({
+          question: `Q${i}`,
+          answers: [{ text: 'A', points: 10 }],
+        })),
+      });
+    });
+
+    it('should reveal an answer for player A at the given index', () => {
+      // TC-112
+      const answer = { text: 'Uszy', points: 35, isRevealed: true, pointsVisible: false, type: 'correct' as const };
+      useGameStore.getState().revealFinalAnswer(0, 'A', answer);
+      const fr = useGameStore.getState().finalRound!;
+
+      expect(fr.playerA[0].text).toBe('Uszy');
+      expect(fr.playerA[0].isRevealed).toBe(true);
+      expect(fr.playerA[0].pointsVisible).toBe(false);
+    });
+
+    it('should make points visible for the given index after showFinalAnswerPoints', () => {
+      // TC-113
+      const answer = { text: 'Uszy', points: 35, isRevealed: true, pointsVisible: false, type: 'correct' as const };
+      useGameStore.getState().revealFinalAnswer(0, 'A', answer);
+      useGameStore.getState().showFinalAnswerPoints(0, 'A');
+
+      expect(useGameStore.getState().finalRound!.playerA[0].pointsVisible).toBe(true);
+    });
+  });
+
+  describe('hidePlayerAAnswers', () => {
+    it('should hide player A answers, advance to answeringB and reset timer to playerB initial', () => {
+      // TC-114
+      useGameStore.getState().startFinalRound({
+        questions: Array.from({ length: 5 }, (_, i) => ({
+          question: `Q${i}`,
+          answers: [{ text: 'A', points: 10 }],
+        })),
+      });
+      useGameStore.getState().advanceToRevealPhase(); // move to revealingA
+      useGameStore.getState().hidePlayerAAnswers();
+      const fr = useGameStore.getState().finalRound!;
+
+      expect(fr.playerAHidden).toBe(true);
+      expect(fr.phase).toBe('answeringB');
+      expect(fr.timerSecondsLeft).toBe(20);
+      expect(fr.timerRunning).toBe(false);
+    });
+  });
+
+  describe('finishFinalRound', () => {
+    it('should set status to finished, showingWinner to true, and phase to finished', () => {
+      // TC-115
+      useGameStore.getState().startFinalRound({
+        questions: Array.from({ length: 5 }, (_, i) => ({
+          question: `Q${i}`,
+          answers: [{ text: 'A', points: 10 }],
+        })),
+      });
+      useGameStore.getState().finishFinalRound();
+      const state = useGameStore.getState();
+
+      expect(state.status).toBe('finished');
+      expect(state.showingWinner).toBe(true);
+      expect(state.finalRound!.phase).toBe('finished');
+    });
+  });
+
+  describe('resetGame — final round cleanup', () => {
+    it('should clear finalRound and showingWinner when resetting', () => {
+      // TC-116
+      useGameStore.getState().loadGame(mockGameData);
+      useGameStore.getState().startFinalRound({
+        questions: Array.from({ length: 5 }, (_, i) => ({
+          question: `Q${i}`,
+          answers: [{ text: 'A', points: 10 }],
+        })),
+      });
+      useGameStore.getState().declareWinner();
+      useGameStore.getState().resetGame();
+      const state = useGameStore.getState();
+
+      expect(state.finalRound).toBeUndefined();
+      expect(state.showingWinner).toBe(false);
+      expect(state.status).toBe('lobby');
+    });
+  });
 });

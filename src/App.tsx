@@ -1,4 +1,6 @@
+import { FinalRoundBoard } from '@/components/board/FinalRoundBoard';
 import { GameBoard } from '@/components/board/GameBoard';
+import { FinalRoundOperator } from '@/components/operator/FinalRoundOperator';
 import { OperatorPanel } from '@/components/operator/OperatorPanel';
 import { LobbyScreen } from '@/components/screens/LobbyScreen';
 import { WinnerScreen } from '@/components/screens/WinnerScreen';
@@ -10,18 +12,17 @@ const isBoard = new URLSearchParams(window.location.search).get('view') === 'boa
 export function App() {
   useBroadcast();
   const status = useGameStore((state) => state.status);
+  const showingWinner = useGameStore((state) => state.showingWinner);
 
   if (isBoard) {
-    return status === 'finished' ? <WinnerScreen /> : <GameBoard />;
+    if (status === 'finalRound') return <FinalRoundBoard />;
+    if (showingWinner) return <WinnerScreen />;
+    return <GameBoard />;
   }
 
-  if (status === 'lobby') {
-    return <LobbyScreen />;
-  }
-
-  if (status === 'finished') {
-    return <WinnerScreen />;
-  }
+  if (status === 'lobby') return <LobbyScreen />;
+  if (status === 'finalRound') return <FinalRoundOperator />;
+  if (showingWinner) return <WinnerScreen />;
 
   return <OperatorPanel />;
 }

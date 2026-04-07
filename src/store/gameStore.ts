@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 
 import {
+  FinalRoundAnswer,
+  FinalRoundDataFile,
   GameDataFile,
   GameState,
   RoundState,
@@ -8,6 +10,19 @@ import {
 } from '@/types/game';
 
 const MAX_MISTAKES = 3;
+const FINAL_ROUND_QUESTIONS = 5;
+const PLAYER_A_TIMER_SECS = 15;
+const PLAYER_B_TIMER_SECS = 20;
+
+function createPendingAnswers(): FinalRoundAnswer[] {
+  return Array.from({ length: FINAL_ROUND_QUESTIONS }, () => ({
+    text: '',
+    points: 0,
+    isRevealed: false,
+    pointsVisible: false,
+    type: 'pending' as const,
+  }));
+}
 
 const INITIAL_ROUND_STATE: RoundState = {
   phase: 'showdown',
@@ -36,6 +51,8 @@ const INITIAL_STATE: GameState = {
     right: { name: '', totalScore: 0 },
   },
   currentRound: INITIAL_ROUND_STATE,
+  showingWinner: false,
+  finalRound: undefined,
 };
 
 interface StoreActions {
@@ -48,6 +65,17 @@ interface StoreActions {
   nextRound: () => void;
   resetGame: () => void;
   toggleMute: () => void;
+  declareWinner: () => void;
+  startFinalRound: (data: FinalRoundDataFile) => void;
+  startTimer: () => void;
+  stopTimer: () => void;
+  adjustTimer: (deltaSecs: number) => void;
+  tickTimer: () => void;
+  advanceToRevealPhase: () => void;
+  revealFinalAnswer: (questionIndex: number, player: 'A' | 'B', answer: FinalRoundAnswer) => void;
+  showFinalAnswerPoints: (questionIndex: number, player: 'A' | 'B') => void;
+  hidePlayerAAnswers: () => void;
+  finishFinalRound: () => void;
 }
 
 interface SoundPreferences {
@@ -133,14 +161,19 @@ export const useGameStore = create<GameState & StoreActions & SoundPreferences>(
       const pointsEarned = state.currentRound.roundScore * multiplier;
       const newScore = state.teams[winner].totalScore + pointsEarned;
 
-      // Score mode: game ends immediately when a team reaches the winning score
+      // Score mode: game ends when a team reaches the winning score
       const isScoreModeWin =
         state.config.mode === 'score' &&
         state.config.winningScore !== undefined &&
         newScore >= state.config.winningScore;
 
+      // Fixed mode: game ends when this is the last round
+      const totalRounds = state.config.numberOfRounds ?? state.rounds.length;
+      const isFixedModeEnd =
+        state.config.mode === 'fixed' && state.currentRoundIndex + 1 >= totalRounds;
+
       return {
-        status: isScoreModeWin ? 'finished' : state.status,
+        status: isScoreModeWin || isFixedModeEnd ? 'finished' : state.status,
         teams: {
           ...state.teams,
           [winner]: {
@@ -179,7 +212,109 @@ export const useGameStore = create<GameState & StoreActions & SoundPreferences>(
         right: { name: state.teams.right.name, totalScore: 0 },
       },
       currentRound: INITIAL_ROUND_STATE,
+      showingWinner: false,
+      finalRound: undefined,
     })),
 
   toggleMute: () => set((state) => ({ isMuted: !state.isMuted })),
+
+  declareWinner: () => set({ showingWinner: true }),
+
+  startFinalRound: (data: FinalRoundDataFile) =>
+    set({
+      status: 'finalRound',
+      finalRound: {
+        questions: data.questions,
+        playerA: createPendingAnswers(),
+        playerB: createPendingAnswers(),
+        playerAHidden: false,
+        phase: 'answeringA',
+        timerRunning: false,
+        timerSecondsLeft: PLAYER_A_TIMER_SECS,
+        playerAInitialTimer: PLAYER_A_TIMER_SECS,
+        playerBInitialTimer: PLAYER_B_TIMER_SECS,
+      },
+    }),
+
+  startTimer: () =>
+    set((state) => ({
+      finalRound: state.finalRound ? { ...state.finalRound, timerRunning: true } : undefined,
+    })),
+
+  stopTimer: () =>
+    set((state) => ({
+      finalRound: state.finalRound ? { ...state.finalRound, timerRunning: false } : undefined,
+    })),
+
+  adjustTimer: (deltaSecs: number) =>
+    set((state) => {
+      if (!state.finalRound) return {};
+      const MIN_TIMER = 5;
+      const newSeconds = Math.max(MIN_TIMER, state.finalRound.timerSecondsLeft + deltaSecs);
+      return { finalRound: { ...state.finalRound, timerSecondsLeft: newSeconds } };
+    }),
+
+  tickTimer: () =>
+    set((state) => {
+      if (!state.finalRound || !state.finalRound.timerRunning) return {};
+      const newSeconds = state.finalRound.timerSecondsLeft - 1;
+      return {
+        finalRound: {
+          ...state.finalRound,
+          timerSecondsLeft: Math.max(0, newSeconds),
+          timerRunning: newSeconds > 0,
+        },
+      };
+    }),
+
+  advanceToRevealPhase: () =>
+    set((state) => {
+      if (!state.finalRound) return {};
+      const nextPhase = state.finalRound.phase === 'answeringA' ? 'revealingA' : 'revealingB';
+      return {
+        finalRound: { ...state.finalRound, phase: nextPhase, timerRunning: false },
+      };
+    }),
+
+  revealFinalAnswer: (questionIndex: number, player: 'A' | 'B', answer: FinalRoundAnswer) =>
+    set((state) => {
+      if (!state.finalRound) return {};
+      const key = player === 'A' ? 'playerA' : 'playerB';
+      const updated = [...state.finalRound[key]];
+      updated[questionIndex] = { ...answer, isRevealed: true, pointsVisible: false };
+      return { finalRound: { ...state.finalRound, [key]: updated } };
+    }),
+
+  showFinalAnswerPoints: (questionIndex: number, player: 'A' | 'B') =>
+    set((state) => {
+      if (!state.finalRound) return {};
+      const key = player === 'A' ? 'playerA' : 'playerB';
+      const updated = [...state.finalRound[key]];
+      updated[questionIndex] = { ...updated[questionIndex], pointsVisible: true };
+      return { finalRound: { ...state.finalRound, [key]: updated } };
+    }),
+
+  hidePlayerAAnswers: () =>
+    set((state) => {
+      if (!state.finalRound) return {};
+      return {
+        finalRound: {
+          ...state.finalRound,
+          playerAHidden: true,
+          phase: 'answeringB',
+          timerRunning: false,
+          timerSecondsLeft: state.finalRound.playerBInitialTimer,
+        },
+      };
+    }),
+
+  finishFinalRound: () =>
+    set((state) => {
+      if (!state.finalRound) return {};
+      return {
+        status: 'finished',
+        showingWinner: true,
+        finalRound: { ...state.finalRound, phase: 'finished', timerRunning: false },
+      };
+    }),
 }));

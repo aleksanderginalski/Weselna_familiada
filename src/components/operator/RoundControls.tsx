@@ -1,6 +1,6 @@
 import { useGameStore } from '@/store/gameStore';
 import { useSound } from '@/hooks/useSound';
-import { TeamSide } from '@/types/game';
+import { FinalRoundDataFile, TeamSide } from '@/types/game';
 
 function getOpposingTeam(side: TeamSide): TeamSide {
   return side === 'left' ? 'right' : 'left';
@@ -18,15 +18,23 @@ function resolveWinner(
   return controllingTeam;
 }
 
+async function fetchFinalRoundData(): Promise<FinalRoundDataFile> {
+  const response = await fetch('/pytania-final.json');
+  return response.json();
+}
+
 export function RoundControls() {
   const currentRoundIndex = useGameStore((state) => state.currentRoundIndex);
   const config = useGameStore((state) => state.config);
   const rounds = useGameStore((state) => state.rounds);
   const currentRound = useGameStore((state) => state.currentRound);
+  const status = useGameStore((state) => state.status);
   const teams = useGameStore((state) => state.teams);
   const endRound = useGameStore((state) => state.endRound);
   const nextRound = useGameStore((state) => state.nextRound);
-  const { playNextRound } = useSound();
+  const declareWinner = useGameStore((state) => state.declareWinner);
+  const startFinalRound = useGameStore((state) => state.startFinalRound);
+  const { playNextRound, playFinalRound } = useSound();
 
   const { phase, controllingTeam, stealFailed, roundScore } = currentRound;
 
@@ -44,10 +52,15 @@ export function RoundControls() {
   const pointsAwarded = roundScore * multiplier;
 
   const canEndRound = phase !== 'summary' && winner !== null;
-  const canNextRound = phase === 'summary';
+  // Game has finished — endRound() sets status:'finished' on the last round for both modes
+  const isGameFinished = status === 'finished' && phase === 'summary';
+  const canNextRound = phase === 'summary' && status === 'playing';
 
-  // When the next round would be the last one — the game will end and WinnerScreen plays its own sound
-  const isGameEnding = currentRoundIndex + 1 >= totalRounds;
+  async function handleFinalRound() {
+    const data = await fetchFinalRoundData();
+    playFinalRound();
+    startFinalRound(data);
+  }
 
   return (
     <div className="bg-familiada-bg-panel border-2 border-familiada-border rounded-lg p-4 flex flex-col gap-3">
@@ -80,13 +93,31 @@ export function RoundControls() {
         )}
         {canNextRound && (
           <button
-            onClick={() => { if (!isGameEnding) playNextRound(); nextRound(); }}
+            onClick={() => { playNextRound(); nextRound(); }}
             className="operator-btn bg-familiada-green text-familiada-bg-dark hover:bg-green-400 w-full"
           >
             NASTĘPNA RUNDA
           </button>
         )}
       </div>
+
+      {/* End-game choice — shown when last round has been completed */}
+      {isGameFinished && (
+        <div className="flex flex-col gap-2 pt-2 border-t border-familiada-border">
+          <button
+            onClick={declareWinner}
+            className="operator-btn-primary w-full"
+          >
+            OGŁOŚ ZWYCIĘSTWO
+          </button>
+          <button
+            onClick={handleFinalRound}
+            className="operator-btn w-full"
+          >
+            RUNDA FINAŁOWA
+          </button>
+        </div>
+      )}
     </div>
   );
 }
