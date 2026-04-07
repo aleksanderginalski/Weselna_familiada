@@ -1,4 +1,5 @@
 import { useGameStore } from '@/store/gameStore';
+import { useSound } from '@/hooks/useSound';
 import { TeamSide } from '@/types/game';
 import { TeamPanel, TeamStatus } from './TeamPanel';
 
@@ -26,6 +27,7 @@ export function TeamControl() {
   const stealFailed = useGameStore((state) => state.currentRound.stealFailed);
   const selectTeam = useGameStore((state) => state.selectTeam);
   const markMistake = useGameStore((state) => state.markMistake);
+  const { playWrong } = useSound();
 
   const isStealPhase = phase === 'steal';
   // Radios locked during steal — selectTeam would reset phase to 'guessing'
@@ -89,7 +91,7 @@ export function TeamControl() {
       {/* Mistake button section */}
       <div className="flex items-center gap-4 bg-familiada-bg-panel border-2 border-familiada-border rounded-lg px-4 py-3">
         <button
-          onClick={markMistake}
+          onClick={() => { playWrong(); markMistake(); }}
           disabled={isMistakeDisabled}
           className={[
             'operator-btn shrink-0 font-bold text-lg',

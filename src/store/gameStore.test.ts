@@ -295,6 +295,32 @@ describe('gameStore', () => {
     });
   });
 
+  describe('toggleMute', () => {
+    beforeEach(() => {
+      useGameStore.setState({ isMuted: false });
+    });
+
+    it('should default isMuted to false', () => {
+      // TC-099
+      expect(useGameStore.getState().isMuted).toBe(false);
+    });
+
+    it('should set isMuted to true on first toggle', () => {
+      // TC-100
+      useGameStore.getState().toggleMute();
+
+      expect(useGameStore.getState().isMuted).toBe(true);
+    });
+
+    it('should set isMuted back to false on second toggle', () => {
+      // TC-101
+      useGameStore.getState().toggleMute();
+      useGameStore.getState().toggleMute();
+
+      expect(useGameStore.getState().isMuted).toBe(false);
+    });
+  });
+
   describe('resetGame', () => {
     it('should reset scores and status to lobby while preserving team names and rounds', () => {
       useGameStore.getState().loadGame(mockGameData);

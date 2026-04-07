@@ -710,26 +710,33 @@ EPIC-003: Weselna Familiada M3 - Final Round (Optional)
 **I want to** hear sounds when answers are revealed and mistakes happen  
 **So that** the game feels like a TV show
 
-**Status:** 📋 Planned  
+**Status:** ✅ Completed  
 **Story Points:** 3  
 **Priority:** P2
 
 **Acceptance Criteria:**
 
-- [ ] Sound plays when answer is revealed
-- [ ] Sound plays when mistake happens
-- [ ] Sound plays when team wins
-- [ ] Sounds can be muted in operator panel
+- [x] Sound plays when answer is revealed (`dobra-odpowiedz-familiada.mp3`)
+- [x] Sound plays when mistake happens (`bledna-familiada.mp3`)
+- [x] Sound plays when "Następna Runda" is clicked (`przed-i-po-rundzie-familiada.mp3`)
+- [x] Sound plays when game starts / "Rozpocznij grę" is clicked (`intro-familiada.mp3`)
+- [x] Sound plays when team wins — **placeholder**: uses `przed-finalem-familiada.mp3`; proper win sound (`wygrana-familiada.mp3`) will be wired in US-026
+- [x] Sounds can be muted in operator panel
+
+**Notes:**
+- `public/sounds/przed-finalem-familiada.mp3` is in the folder but intentionally NOT wired for final round — reserved for US-026
+- Win sound placeholder: `przed-finalem-familiada.mp3` — will be replaced by `wygrana-familiada.mp3` in US-026
+- Sound on last round fixed: "NASTĘPNA RUNDA" does not play `przed-i-po-rundzie` when it would trigger game end (WinnerScreen plays its own sound instead)
 
 **Tasks:**
 
-- [ ] **TASK-022.1:** Install Howler.js - 5min
-- [ ] **TASK-022.2:** Find/create sound effect files - 30min
-- [ ] **TASK-022.3:** Create src/hooks/useSound.ts - 25min
-- [ ] **TASK-022.4:** Integrate sounds with game actions - 15min
-- [ ] **TASK-022.5:** Add mute toggle to operator panel - 10min
-- [ ] **TASK-022.6:** Write tests for useSound hook (/qa) - 20min
-- [ ] **TASK-022.7:** Manual verification: sounds play correctly - 10min
+- [x] **TASK-022.1:** Install Howler.js — already installed (`howler@2.2.4`)
+- [x] **TASK-022.2:** Provide sound effect files — files placed in `public/sounds/`
+- [x] **TASK-022.3:** Create src/hooks/useSound.ts
+- [x] **TASK-022.4:** Integrate sounds with game actions
+- [x] **TASK-022.5:** Add mute toggle to operator panel
+- [x] **TASK-022.6:** Write tests for useSound hook (/qa)
+- [x] **TASK-022.7:** Manual verification: sounds play correctly
 
 ---
 
@@ -848,14 +855,19 @@ EPIC-003: Weselna Familiada M3 - Final Round (Optional)
 - [ ] Timer for each answer (optional)
 - [ ] Points accumulated based on matches
 
+**Notes:**
+- Wire `public/sounds/przed-finalem-familiada.mp3` via `useSound` when entering final round
+- Wire `public/sounds/wygrana-familiada.mp3` as proper win sound on WinnerScreen (replacing US-022 placeholder `przed-finalem-familiada.mp3`)
+
 **Tasks:**
 
 - [ ] **TASK-026.1:** Design final round flow - 30min
 - [ ] **TASK-026.2:** Create FinalRoundScreen component - 45min
 - [ ] **TASK-026.3:** Add final round types and state - 20min
 - [ ] **TASK-026.4:** Implement scoring and timer - 30min
-- [ ] **TASK-026.5:** Write comprehensive tests (/qa) - 45min
-- [ ] **TASK-026.6:** Manual verification: final round works - 15min
+- [ ] **TASK-026.5:** Wire final round and win sounds in useSound.ts - 10min
+- [ ] **TASK-026.6:** Write comprehensive tests (/qa) - 45min
+- [ ] **TASK-026.7:** Manual verification: final round works - 15min
 
 ---
 

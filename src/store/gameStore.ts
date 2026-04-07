@@ -47,10 +47,16 @@ interface StoreActions {
   endRound: (winner: TeamSide) => void;
   nextRound: () => void;
   resetGame: () => void;
+  toggleMute: () => void;
 }
 
-export const useGameStore = create<GameState & StoreActions>((set) => ({
+interface SoundPreferences {
+  isMuted: boolean;
+}
+
+export const useGameStore = create<GameState & StoreActions & SoundPreferences>((set) => ({
   ...INITIAL_STATE,
+  isMuted: false,
 
   loadGame: (data: GameDataFile) =>
     set({
@@ -174,4 +180,6 @@ export const useGameStore = create<GameState & StoreActions>((set) => ({
       },
       currentRound: INITIAL_ROUND_STATE,
     })),
+
+  toggleMute: () => set((state) => ({ isMuted: !state.isMuted })),
 }));

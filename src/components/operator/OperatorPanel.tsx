@@ -1,4 +1,5 @@
 import { useGameStore } from '@/store/gameStore';
+import { useSound } from '@/hooks/useSound';
 import { AnswerControl } from './AnswerControl';
 import { RoundControls } from './RoundControls';
 import { TeamControl } from './TeamControl';
@@ -10,6 +11,7 @@ function handleOpenBoard() {
 export function OperatorPanel() {
   const rounds = useGameStore((state) => state.rounds);
   const currentRoundIndex = useGameStore((state) => state.currentRoundIndex);
+  const { isMuted, toggleMute } = useSound();
 
   const currentQuestion = rounds[currentRoundIndex]?.question;
 
@@ -20,12 +22,20 @@ export function OperatorPanel() {
         <h1 className="font-display text-xl text-familiada-gold text-glow-gold tracking-wide">
           WESELNA FAMILIADA — Panel Operatora
         </h1>
-        <button
-          onClick={handleOpenBoard}
-          className="operator-btn bg-familiada-gold text-familiada-bg-dark hover:bg-yellow-400 font-bold"
-        >
-          Otwórz Tablicę
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={toggleMute}
+            className="operator-btn bg-familiada-bg-dark text-familiada-text-secondary border border-familiada-border hover:border-familiada-gold hover:text-familiada-gold"
+          >
+            {isMuted ? 'Włącz dźwięk' : 'Wycisz'}
+          </button>
+          <button
+            onClick={handleOpenBoard}
+            className="operator-btn bg-familiada-gold text-familiada-bg-dark hover:bg-yellow-400 font-bold"
+          >
+            Otwórz Tablicę
+          </button>
+        </div>
       </header>
 
       {/* Main content */}
