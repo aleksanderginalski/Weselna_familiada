@@ -54,11 +54,34 @@ describe('App', () => {
     expect(screen.queryByText('ROZPOCZNIJ GRĘ')).not.toBeInTheDocument();
   });
 
-  it('should render winner screen when status is finished', () => {
+  it('should show end game choice buttons when last round finished and winner not declared', () => {
     useGameStore.getState().loadGame(MOCK_GAME_DATA);
     useGameStore.setState({
       ...useGameStore.getState(),
       status: 'finished',
+      showingWinner: false,
+      currentRound: {
+        ...useGameStore.getState().currentRound,
+        phase: 'summary',
+      },
+      teams: {
+        left: { name: 'Lewa', totalScore: 100 },
+        right: { name: 'Prawa', totalScore: 50 },
+      },
+    });
+
+    render(<App />);
+
+    expect(screen.getByText('OGŁOŚ ZWYCIĘSTWO')).toBeInTheDocument();
+    expect(screen.getByText('RUNDA FINAŁOWA')).toBeInTheDocument();
+  });
+
+  it('should render winner screen when status is finished and winner is declared', () => {
+    useGameStore.getState().loadGame(MOCK_GAME_DATA);
+    useGameStore.setState({
+      ...useGameStore.getState(),
+      status: 'finished',
+      showingWinner: true,
       teams: {
         left: { name: 'Lewa', totalScore: 100 },
         right: { name: 'Prawa', totalScore: 50 },

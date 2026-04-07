@@ -7,8 +7,11 @@ const correctSound = new Howl({ src: ['/sounds/dobra-odpowiedz-familiada.mp3'] }
 const wrongSound = new Howl({ src: ['/sounds/bledna-familiada.mp3'] });
 const nextRoundSound = new Howl({ src: ['/sounds/przed-i-po-rundzie-familiada.mp3'] });
 const introSound = new Howl({ src: ['/sounds/intro-familiada.mp3'] });
-// Placeholder — will be replaced by wygrana-familiada.mp3 in US-026
+// Placeholder — wygrana-familiada.mp3 not yet available
 const winSound = new Howl({ src: ['/sounds/przed-finalem-familiada.mp3'] });
+const finalRoundSound = new Howl({ src: ['/sounds/przed-finalem-familiada.mp3'] });
+const bellSound = new Howl({ src: ['/sounds/dzwonki-familiada.mp3'] });
+const timerEndSound = new Howl({ src: ['/sounds/czas-final-familiada.mp3'] });
 
 interface UseSoundReturn {
   playCorrect: () => void;
@@ -16,6 +19,9 @@ interface UseSoundReturn {
   playNextRound: () => void;
   playIntro: () => void;
   playWin: () => void;
+  playFinalRound: () => void;
+  playBell: () => void;
+  playTimerEnd: () => void;
   isMuted: boolean;
   toggleMute: () => void;
 }
@@ -45,5 +51,28 @@ export function useSound(): UseSoundReturn {
     if (!isMuted) winSound.play();
   }
 
-  return { playCorrect, playWrong, playNextRound, playIntro, playWin, isMuted, toggleMute };
+  function playFinalRound() {
+    if (!isMuted) finalRoundSound.play();
+  }
+
+  function playBell() {
+    if (!isMuted) bellSound.play();
+  }
+
+  function playTimerEnd() {
+    if (!isMuted) timerEndSound.play();
+  }
+
+  return {
+    playCorrect,
+    playWrong,
+    playNextRound,
+    playIntro,
+    playWin,
+    playFinalRound,
+    playBell,
+    playTimerEnd,
+    isMuted,
+    toggleMute,
+  };
 }
