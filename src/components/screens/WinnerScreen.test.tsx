@@ -57,4 +57,77 @@ describe('WinnerScreen', () => {
 
     expect(useGameStore.getState().status).toBe('lobby');
   });
+
+  it('should show calculated final score and team name when finalRound is present', () => {
+    // TC-118: score = (100 + 50) × 15 = 2250, no bonus (sum < 200)
+    setupFinishedState(100, 50);
+    useGameStore.setState({
+      ...useGameStore.getState(),
+      finalRound: {
+        questions: [],
+        playerA: [
+          { text: 'A', points: 30, isRevealed: true, pointsVisible: true, type: 'correct' },
+          { text: '', points: 0, isRevealed: false, pointsVisible: false, type: 'pending' },
+          { text: '', points: 0, isRevealed: false, pointsVisible: false, type: 'pending' },
+          { text: '', points: 0, isRevealed: false, pointsVisible: false, type: 'pending' },
+          { text: '', points: 0, isRevealed: false, pointsVisible: false, type: 'pending' },
+        ],
+        playerB: [
+          { text: 'B', points: 20, isRevealed: true, pointsVisible: true, type: 'correct' },
+          { text: '', points: 0, isRevealed: false, pointsVisible: false, type: 'pending' },
+          { text: '', points: 0, isRevealed: false, pointsVisible: false, type: 'pending' },
+          { text: '', points: 0, isRevealed: false, pointsVisible: false, type: 'pending' },
+          { text: '', points: 0, isRevealed: false, pointsVisible: false, type: 'pending' },
+        ],
+        playerAHidden: false,
+        phase: 'finished',
+        timerRunning: false,
+        timerSecondsLeft: 0,
+        playerAInitialTimer: 15,
+        playerBInitialTimer: 20,
+      },
+    });
+    render(<WinnerScreen />);
+
+    // left team wins: (100 + 30 + 20) × 15 = 2250
+    expect(screen.getByText('2250')).toBeInTheDocument();
+    expect(screen.getByText('Drużyna A')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'NOWA GRA' })).toBeInTheDocument();
+    // No "WYGRYWA" or "PKT" label in FinalWinnerScreen
+    expect(screen.queryByText('WYGRYWA')).not.toBeInTheDocument();
+  });
+
+  it('should add 25000 bonus when final sum is 200 or more', () => {
+    // TC-119: sum of answers = 200, score = (0 + 200) × 15 + 25000 = 28000
+    setupFinishedState(0, 0);
+    useGameStore.setState({
+      ...useGameStore.getState(),
+      finalRound: {
+        questions: [],
+        playerA: [
+          { text: 'A', points: 100, isRevealed: true, pointsVisible: true, type: 'correct' },
+          { text: '', points: 0, isRevealed: false, pointsVisible: false, type: 'pending' },
+          { text: '', points: 0, isRevealed: false, pointsVisible: false, type: 'pending' },
+          { text: '', points: 0, isRevealed: false, pointsVisible: false, type: 'pending' },
+          { text: '', points: 0, isRevealed: false, pointsVisible: false, type: 'pending' },
+        ],
+        playerB: [
+          { text: 'B', points: 100, isRevealed: true, pointsVisible: true, type: 'correct' },
+          { text: '', points: 0, isRevealed: false, pointsVisible: false, type: 'pending' },
+          { text: '', points: 0, isRevealed: false, pointsVisible: false, type: 'pending' },
+          { text: '', points: 0, isRevealed: false, pointsVisible: false, type: 'pending' },
+          { text: '', points: 0, isRevealed: false, pointsVisible: false, type: 'pending' },
+        ],
+        playerAHidden: false,
+        phase: 'finished',
+        timerRunning: false,
+        timerSecondsLeft: 0,
+        playerAInitialTimer: 15,
+        playerBInitialTimer: 20,
+      },
+    });
+    render(<WinnerScreen />);
+
+    expect(screen.getByText('28000')).toBeInTheDocument();
+  });
 });
