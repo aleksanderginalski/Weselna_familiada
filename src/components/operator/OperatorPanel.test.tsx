@@ -58,4 +58,20 @@ describe('OperatorPanel', () => {
 
     expect(window.open).toHaveBeenCalledWith('/?view=board', '_blank');
   });
+
+  it('should render mute button with "Wycisz" label when not muted', () => {
+    // TC-102
+    render(<OperatorPanel />);
+
+    expect(screen.getByRole('button', { name: 'Wycisz' })).toBeInTheDocument();
+  });
+
+  it('should display "Włącz dźwięk" after mute button is clicked', async () => {
+    // TC-103
+    render(<OperatorPanel />);
+
+    await userEvent.click(screen.getByRole('button', { name: 'Wycisz' }));
+
+    expect(screen.getByRole('button', { name: 'Włącz dźwięk' })).toBeInTheDocument();
+  });
 });
