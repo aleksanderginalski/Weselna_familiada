@@ -142,6 +142,19 @@ MIT License — zobacz [LICENSE](./LICENSE)
 
 ## Latest
 
+**v0.22.0** — Sound effects for game events (US-022)
+
+- `src/hooks/useSound.ts` — new hook wrapping Howler.js; Howl instances created once at module level; exposes `playCorrect`, `playWrong`, `playNextRound`, `playIntro`, `playWin`, `isMuted`, `toggleMute`; all play functions are gated by `isMuted` from Zustand store
+- `src/store/gameStore.ts` — added `isMuted: boolean` (default `false`) and `toggleMute()` action; mute state is operator-only (not broadcast to board window via BroadcastChannel)
+- `src/components/operator/AnswerControl.tsx` — `playCorrect()` on ODKRYJ click
+- `src/components/operator/TeamControl.tsx` — `playWrong()` on BŁĄD click
+- `src/components/operator/RoundControls.tsx` — `playNextRound()` on NASTĘPNA RUNDA click; suppressed on last round (WinnerScreen plays its own sound instead)
+- `src/components/screens/LobbyScreen.tsx` — `playIntro()` on ROZPOCZNIJ GRĘ click
+- `src/components/screens/WinnerScreen.tsx` — `playWin()` on mount via `useEffect`; uses `przed-finalem-familiada.mp3` as placeholder until `wygrana-familiada.mp3` is wired in US-026
+- `src/components/operator/OperatorPanel.tsx` — mute toggle button in header ("Wycisz" / "Włącz dźwięk")
+- Sound files in `public/sounds/`: `dobra-odpowiedz-familiada.mp3`, `bledna-familiada.mp3`, `przed-i-po-rundzie-familiada.mp3`, `intro-familiada.mp3`, `przed-finalem-familiada.mp3`
+- 8 tests added in `useSound.test.ts`, `gameStore.test.ts`, `OperatorPanel.test.tsx` (139 total, TC-096 through TC-103)
+
 **v0.21.0** — Winner screen and win condition detection (US-020 + US-021)
 
 - `src/components/screens/WinnerScreen.tsx` — full-screen celebration shown when `status === 'finished'`; determines winner by comparing `teams.left.totalScore` vs `teams.right.totalScore`; handles tie case with "REMIS!" display; shows winning team name and score prominently, losing team score below; "NOWA GRA" button calls `resetGame()` and returns to lobby
