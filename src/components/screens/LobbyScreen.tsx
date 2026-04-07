@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import { useGameStore } from '@/store/gameStore';
+import { useSound } from '@/hooks/useSound';
 import { GameDataFile } from '@/types/game';
 
 type GameMode = 'fixed' | 'score';
@@ -24,6 +25,7 @@ const DEFAULT_FORM: LobbyFormState = {
 export function LobbyScreen() {
   const loadGame = useGameStore((state) => state.loadGame);
   const startGame = useGameStore((state) => state.startGame);
+  const { playIntro } = useSound();
 
   const [gameData, setGameData] = useState<GameDataFile | null>(null);
   const [form, setForm] = useState<LobbyFormState>(DEFAULT_FORM);
@@ -69,6 +71,7 @@ export function LobbyScreen() {
 
     loadGame(data);
     startGame();
+    playIntro();
   }
 
   if (isLoading) {

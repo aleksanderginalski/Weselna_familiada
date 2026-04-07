@@ -1,4 +1,5 @@
 import { useGameStore } from '@/store/gameStore';
+import { useSound } from '@/hooks/useSound';
 import { TeamSide } from '@/types/game';
 
 function getOpposingTeam(side: TeamSide): TeamSide {
@@ -25,6 +26,7 @@ export function RoundControls() {
   const teams = useGameStore((state) => state.teams);
   const endRound = useGameStore((state) => state.endRound);
   const nextRound = useGameStore((state) => state.nextRound);
+  const { playNextRound } = useSound();
 
   const { phase, controllingTeam, stealFailed, roundScore } = currentRound;
 
@@ -43,6 +45,9 @@ export function RoundControls() {
 
   const canEndRound = phase !== 'summary' && winner !== null;
   const canNextRound = phase === 'summary';
+
+  // When the next round would be the last one — the game will end and WinnerScreen plays its own sound
+  const isGameEnding = currentRoundIndex + 1 >= totalRounds;
 
   return (
     <div className="bg-familiada-bg-panel border-2 border-familiada-border rounded-lg p-4 flex flex-col gap-3">
@@ -75,7 +80,7 @@ export function RoundControls() {
         )}
         {canNextRound && (
           <button
-            onClick={nextRound}
+            onClick={() => { if (!isGameEnding) playNextRound(); nextRound(); }}
             className="operator-btn bg-familiada-green text-familiada-bg-dark hover:bg-green-400 w-full"
           >
             NASTĘPNA RUNDA

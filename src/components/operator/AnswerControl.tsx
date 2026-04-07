@@ -1,10 +1,12 @@
 import { useGameStore } from '@/store/gameStore';
+import { useSound } from '@/hooks/useSound';
 
 export function AnswerControl() {
   const rounds = useGameStore((state) => state.rounds);
   const currentRoundIndex = useGameStore((state) => state.currentRoundIndex);
   const revealedAnswers = useGameStore((state) => state.currentRound.revealedAnswers);
   const revealAnswer = useGameStore((state) => state.revealAnswer);
+  const { playCorrect } = useSound();
 
   const currentRound = rounds[currentRoundIndex];
 
@@ -48,7 +50,7 @@ export function AnswerControl() {
                 </span>
               ) : (
                 <button
-                  onClick={() => revealAnswer(index)}
+                  onClick={() => { playCorrect(); revealAnswer(index); }}
                   className="operator-btn-primary text-sm px-4 py-2 w-20 shrink-0"
                 >
                   ODKRYJ

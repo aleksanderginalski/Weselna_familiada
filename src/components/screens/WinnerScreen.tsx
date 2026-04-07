@@ -1,4 +1,7 @@
+import { useEffect, useRef } from 'react';
+
 import { useGameStore } from '@/store/gameStore';
+import { useSound } from '@/hooks/useSound';
 import { TeamSide } from '@/types/game';
 
 type WinnerResult = TeamSide | 'tie';
@@ -16,6 +19,13 @@ function determineWinner(leftScore: number, rightScore: number): WinnerResult {
 export function WinnerScreen() {
   const teams = useGameStore((state) => state.teams);
   const resetGame = useGameStore((state) => state.resetGame);
+  const { playWin } = useSound();
+  // Capture playWin at mount time so the effect runs exactly once with the correct mute state
+  const playWinOnMount = useRef(playWin);
+
+  useEffect(() => {
+    playWinOnMount.current();
+  }, []);
 
   const winner = determineWinner(teams.left.totalScore, teams.right.totalScore);
 
