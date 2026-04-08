@@ -21,3 +21,20 @@ describe('Tailwind Familiada theme', () => {
     expect(colors['gold-dark']).toBeDefined();
   });
 });
+
+// TC-125
+describe('Tailwind font families (US-027)', () => {
+  const fonts = tailwindConfig.theme.extend.fontFamily;
+
+  it('should define font-display as Familiada-2 for the dot-matrix board', () => {
+    expect(fonts['display'][0]).toBe('Familiada-2');
+  });
+
+  it('should define font-heading as Familiada for headings and labels outside the board', () => {
+    expect(fonts['heading'][0]).toBe('Familiada');
+  });
+
+  it('should define font-body as Arial', () => {
+    expect(fonts['body'][0]).toBe('Arial');
+  });
+});

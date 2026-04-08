@@ -117,21 +117,21 @@ function WinnerDisplay({ winnerName, winnerScore, loserName, loserScore, large }
   return (
     <div className="text-center">
       <h1
-        className={`font-display text-familiada-text-secondary mb-4 uppercase tracking-widest ${large ? 'text-5xl' : 'text-3xl'}`}
+        className={`font-heading text-familiada-text-secondary mb-4 uppercase tracking-widest ${large ? 'text-5xl' : 'text-3xl'}`}
       >
         WYGRYWA
       </h1>
       <div className="border-4 border-familiada-gold rounded-xl px-12 py-8 box-glow-gold mb-8">
         <p
-          className={`font-display text-familiada-gold text-glow-gold ${large ? 'text-7xl' : 'text-4xl'}`}
+          className={`font-heading text-familiada-gold text-glow-gold ${large ? 'text-7xl' : 'text-4xl'}`}
         >
           {winnerName}
         </p>
-        <p className={`font-display text-white mt-3 ${large ? 'text-9xl' : 'text-6xl'}`}>
+        <p className={`font-heading text-white mt-3 ${large ? 'text-9xl' : 'text-6xl'}`}>
           {winnerScore} PKT
         </p>
       </div>
-      <p className={`text-familiada-text-secondary ${large ? 'text-3xl' : 'text-xl'}`}>
+      <p className={`font-heading text-familiada-text-secondary ${large ? 'text-3xl' : 'text-xl'}`}>
         {loserName}: {loserScore} pkt
       </p>
     </div>
@@ -153,18 +153,18 @@ function FinalWinnerScreen({ winnerName, score, onReset, showControls, large }: 
       <div className="border-4 border-familiada-gold rounded-xl px-16 py-12 box-glow-gold text-center">
         {winnerName && (
           <p
-            className={`font-display text-familiada-gold text-glow-gold mb-4 ${large ? 'text-6xl' : 'text-4xl'}`}
+            className={`font-heading text-familiada-gold text-glow-gold mb-4 ${large ? 'text-6xl' : 'text-4xl'}`}
           >
             {winnerName}
           </p>
         )}
         <p
-          className={`font-display text-familiada-gold text-glow-gold ${large ? 'text-9xl' : 'text-8xl'}`}
+          className={`font-heading text-familiada-gold text-glow-gold ${large ? 'text-9xl' : 'text-8xl'}`}
         >
           {score}
         </p>
         <p
-          className={`font-display text-familiada-text-secondary mt-2 uppercase tracking-widest ${large ? 'text-4xl' : 'text-3xl'}`}
+          className={`font-heading text-familiada-text-secondary mt-2 uppercase tracking-widest ${large ? 'text-4xl' : 'text-3xl'}`}
         >
           PKT
         </p>
@@ -189,18 +189,18 @@ function TieDisplay({ leftName, score, rightName, large }: TieDisplayProps) {
   return (
     <div className="text-center">
       <h1
-        className={`font-display text-familiada-text-secondary mb-4 uppercase tracking-widest ${large ? 'text-5xl' : 'text-3xl'}`}
+        className={`font-heading text-familiada-text-secondary mb-4 uppercase tracking-widest ${large ? 'text-5xl' : 'text-3xl'}`}
       >
         REMIS!
       </h1>
       <div className="border-4 border-familiada-gold rounded-xl px-12 py-8 box-glow-gold">
-        <p className={`font-display text-familiada-gold ${large ? 'text-4xl' : 'text-2xl'}`}>
+        <p className={`font-heading text-familiada-gold ${large ? 'text-4xl' : 'text-2xl'}`}>
           {leftName}
         </p>
-        <p className={`font-display text-familiada-gold mt-4 ${large ? 'text-4xl' : 'text-2xl'}`}>
+        <p className={`font-heading text-familiada-gold mt-4 ${large ? 'text-4xl' : 'text-2xl'}`}>
           {rightName}
         </p>
-        <p className={`font-display text-white mt-4 ${large ? 'text-8xl' : 'text-5xl'}`}>
+        <p className={`font-heading text-white mt-4 ${large ? 'text-8xl' : 'text-5xl'}`}>
           {score} PKT
         </p>
       </div>

@@ -24,7 +24,8 @@ export default {
         }
       },
       fontFamily: {
-        'display': ['Impact', 'Haettenschweiler', 'Arial Narrow Bold', 'sans-serif'],
+        'display': ['Familiada-2', 'sans-serif'],
+        'heading': ['Familiada', 'Impact', 'sans-serif'],
         'body': ['Arial', 'Helvetica', 'sans-serif'],
       },
       animation: {

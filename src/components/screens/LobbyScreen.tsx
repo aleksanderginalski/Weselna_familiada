@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 
 import { useGameStore } from '@/store/gameStore';
-import { useSound } from '@/hooks/useSound';
 import { GameDataFile } from '@/types/game';
 
 type GameMode = 'fixed' | 'score';
@@ -25,7 +24,6 @@ const DEFAULT_FORM: LobbyFormState = {
 export function LobbyScreen() {
   const loadGame = useGameStore((state) => state.loadGame);
   const startGame = useGameStore((state) => state.startGame);
-  const { playIntro } = useSound();
 
   const [gameData, setGameData] = useState<GameDataFile | null>(null);
   const [form, setForm] = useState<LobbyFormState>(DEFAULT_FORM);
@@ -71,7 +69,6 @@ export function LobbyScreen() {
 
     loadGame(data);
     startGame();
-    playIntro();
   }
 
   if (isLoading) {
@@ -93,7 +90,7 @@ export function LobbyScreen() {
   return (
     <div className="min-h-screen bg-familiada-bg-dark flex items-center justify-center p-8">
       <div className="bg-familiada-bg-panel border-2 border-familiada-border rounded-xl p-8 w-full max-w-lg">
-        <h1 className="font-display text-3xl text-familiada-gold text-center mb-8 text-glow-gold">
+        <h1 className="font-heading text-3xl text-familiada-gold text-center mb-8 text-glow-gold">
           WESELNA FAMILIADA
         </h1>
 

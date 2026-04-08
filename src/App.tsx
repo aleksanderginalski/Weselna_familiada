@@ -1,4 +1,4 @@
-import { FinalRoundBoard } from '@/components/board/FinalRoundBoard';
+import { FinalRoundGameBoard } from '@/components/board/FinalRoundGameBoard';
 import { GameBoard } from '@/components/board/GameBoard';
 import { FinalRoundOperator } from '@/components/operator/FinalRoundOperator';
 import { OperatorPanel } from '@/components/operator/OperatorPanel';
@@ -15,7 +15,7 @@ export function App() {
   const showingWinner = useGameStore((state) => state.showingWinner);
 
   if (isBoard) {
-    if (status === 'finalRound') return <FinalRoundBoard />;
+    if (status === 'finalRound') return <FinalRoundGameBoard />;
     if (showingWinner) return <WinnerScreen />;
     return <GameBoard />;
   }

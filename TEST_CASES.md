@@ -1,7 +1,7 @@
 # Weselna Familiada - Test Cases Documentation
 
-**Version:** 1.4  
-**Date:** 2026-04-05  
+**Version:** 1.5  
+**Date:** 2026-04-08  
 **Author:** QA Agent  
 **Test Framework:** Vitest
 
@@ -1603,6 +1603,167 @@ beforeEach(() => {
 1. Load game, set `status: 'finished'` with scores
 2. Render `<App />`
 3. Verify "WYGRYWA" heading and "NOWA GRA" button are in the document
+
+**Status:** ✅ Done
+
+---
+
+#### TC-096 through TC-124
+
+*Reserved for US-021 through US-026 (FinalRound, LobbyScreen, etc.)*
+
+---
+
+#### TC-125: Tailwind font families — US-027 font tokens defined correctly
+
+**Related US:** US-027
+**Type:** Config
+**Priority:** High
+**File:** `src/test/tailwindTheme.test.ts`
+
+**Test Steps:**
+1. Import `tailwind.config.js`
+2. Assert `fontFamily['display'][0] === 'Familiada-2'`
+3. Assert `fontFamily['heading'][0] === 'Familiada'`
+4. Assert `fontFamily['body'][0] === 'Arial'`
+
+**Status:** ✅ Done
+
+---
+
+#### TC-126: Project structure — US-027 font assets exist in public/fonts
+
+**Related US:** US-027
+**Type:** Project Structure
+**Priority:** High
+**File:** `src/test/projectStructure.test.ts`
+
+**Test Steps:**
+1. Check `public/fonts/Familiada-2.otf` exists
+2. Check `public/fonts/familiada.ttf` exists
+3. Check `public/fonts/familiada.woff2` exists
+
+**Status:** ✅ Done
+
+---
+
+#### TC-127: DigitDisplay — renders labels, sr-only value, clamps to 999, and gold outer border
+
+**Related US:** US-027
+**Type:** Component
+**Priority:** High
+**File:** `src/components/shared/DigitDisplay.test.tsx`
+
+**Test Steps:**
+1. Render `<DigitDisplay value={42} label="Do wygrania" sublabel="x2 mnożnik" />`
+   - Assert sr-only "42", label "Do wygrania", sublabel "x2 mnożnik" visible
+2. Render `<DigitDisplay value={1500} />`
+   - Assert sr-only shows "1500" (raw value)
+   - Assert `data-digit` attributes = `['9','9','9']` (clamped to 999)
+3. Render `<DigitDisplay value={0} />`
+   - Assert sr-only "0" is in the document
+4. Render `<DigitDisplay value={7} />`
+   - Assert `.border-familiada-gold` exists (outer border)
+   - Assert `.border-black` exists (inner border)
+   - Assert gold border's `parentElement` does NOT have class `border-familiada-gold`
+
+**Status:** ✅ Done
+
+---
+
+#### TC-128: DotMatrixBoard — no mistake characters when no team selected
+
+**Related US:** US-028
+**Type:** Component
+**Priority:** High
+**File:** `src/components/board/DotMatrixBoard.test.tsx`
+
+**Test Steps:**
+1. Load + start game, render `<DotMatrixBoard />`
+2. Assert container text does NOT contain U+2000 (En Quad)
+3. Assert container text does NOT contain U+2007 (Figure Space)
+
+**Status:** ✅ Done
+
+---
+
+#### TC-129: DotMatrixBoard — small mistake En Quad after 1 left-team mistake
+
+**Related US:** US-028
+**Type:** Component
+**Priority:** High
+**File:** `src/components/board/DotMatrixBoard.test.tsx`
+
+**Test Steps:**
+1. `selectTeam('left')`, `markMistake()`
+2. Render `<DotMatrixBoard />`
+3. Assert container text CONTAINS U+2000 (En Quad — small mistake pattern)
+4. Assert container text does NOT contain U+2007 (big mistake not shown yet)
+
+**Status:** ✅ Done
+
+---
+
+#### TC-130: DotMatrixBoard — 3 small-mistake groups after 3 mistakes (≥6 En Quads)
+
+**Related US:** US-028
+**Type:** Component
+**Priority:** High
+**File:** `src/components/board/DotMatrixBoard.test.tsx`
+
+**Test Steps:**
+1. `selectTeam('left')`, `markMistake()` ×3
+2. Render `<DotMatrixBoard />`
+3. Count occurrences of U+2000 in `container.textContent`
+4. Assert count ≥ 6 (each of 3 patterns has 2× En Quad)
+
+**Status:** ✅ Done
+
+---
+
+#### TC-131: DotMatrixBoard — big mistake Figure Space after failed steal
+
+**Related US:** US-028
+**Type:** Component
+**Priority:** High
+**File:** `src/components/board/DotMatrixBoard.test.tsx`
+
+**Test Steps:**
+1. `selectTeam('left')`, `markMistake()` ×3 (triggers steal), then `markMistake()` (steal fails)
+2. Render `<DotMatrixBoard />`
+3. Assert container text CONTAINS U+2007 (Figure Space — big mistake pattern)
+
+**Status:** ✅ Done
+
+---
+
+#### TC-132: DotMatrixBoard — small mistake chars in right cols when right team controls
+
+**Related US:** US-028
+**Type:** Component
+**Priority:** High
+**File:** `src/components/board/DotMatrixBoard.test.tsx`
+
+**Test Steps:**
+1. `selectTeam('right')`, `markMistake()`
+2. Render `<DotMatrixBoard />`
+3. Assert container text CONTAINS U+2000 (En Quad in right-side mistake cols)
+
+**Status:** ✅ Done
+
+---
+
+#### TC-133: DotMatrixBoard — EM Space (U+2003) present in small mistake pattern
+
+**Related US:** US-028
+**Type:** Component
+**Priority:** Medium
+**File:** `src/components/board/DotMatrixBoard.test.tsx`
+
+**Test Steps:**
+1. `selectTeam('left')`, `markMistake()`
+2. Render `<DotMatrixBoard />`
+3. Assert container text CONTAINS U+2003 (EM Space — center cell of pattern)
 
 **Status:** ✅ Done
 

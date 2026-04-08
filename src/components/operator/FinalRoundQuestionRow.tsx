@@ -10,6 +10,8 @@ interface Props {
   correctAnswers: FinalRoundAnswerData[];
   playerAAnswer: FinalRoundAnswer;
   playerBAnswer: FinalRoundAnswer;
+  /** Player A's answer for this question — used to block player B from picking the same answer */
+  playerAAnswerForQuestion?: FinalRoundAnswer;
   phase: FinalRoundPhase;
 }
 
@@ -19,9 +21,11 @@ interface AnswerSlotProps {
   answer: FinalRoundAnswer;
   correctAnswers: FinalRoundAnswerData[];
   isActive: boolean;
+  /** Text of the answer already chosen by the other player — blocked for player B */
+  blockedAnswerText?: string;
 }
 
-function AnswerSlot({ player, questionIndex, answer, correctAnswers, isActive }: AnswerSlotProps) {
+function AnswerSlot({ player, questionIndex, answer, correctAnswers, isActive, blockedAnswerText }: AnswerSlotProps) {
   const revealFinalAnswer = useGameStore((state) => state.revealFinalAnswer);
   const showFinalAnswerPoints = useGameStore((state) => state.showFinalAnswerPoints);
   const { playBell, playCorrect, playWrong } = useSound();
@@ -99,22 +103,29 @@ function AnswerSlot({ player, questionIndex, answer, correctAnswers, isActive }:
   return (
     <div className="flex flex-col gap-2">
       <div className="flex flex-wrap gap-1">
-        {correctAnswers.map((ca) => (
-          <button
-            key={ca.text}
-            onClick={() => {
-              setSelectedCorrect(ca);
-              setWrongText('');
-            }}
-            className={`text-xs px-2 py-1 rounded border ${
-              selectedCorrect?.text === ca.text
-                ? 'bg-green-700 border-green-500 text-white'
-                : 'border-gray-600 text-gray-300 hover:bg-gray-700'
-            }`}
-          >
-            {ca.text} ({ca.points})
-          </button>
-        ))}
+        {correctAnswers.map((ca) => {
+          const isBlocked = blockedAnswerText === ca.text;
+          return (
+            <button
+              key={ca.text}
+              disabled={isBlocked}
+              onClick={() => {
+                setSelectedCorrect(ca);
+                setWrongText('');
+              }}
+              title={isBlocked ? 'Odpowiedź gracza A' : undefined}
+              className={`text-xs px-2 py-1 rounded border ${
+                isBlocked
+                  ? 'border-gray-700 text-gray-600 line-through cursor-not-allowed'
+                  : selectedCorrect?.text === ca.text
+                    ? 'bg-green-700 border-green-500 text-white'
+                    : 'border-gray-600 text-gray-300 hover:bg-gray-700'
+              }`}
+            >
+              {ca.text} ({ca.points})
+            </button>
+          );
+        })}
       </div>
 
       <div className="flex gap-2">
@@ -146,10 +157,15 @@ export function FinalRoundQuestionRow({
   correctAnswers,
   playerAAnswer,
   playerBAnswer,
+  playerAAnswerForQuestion,
   phase,
 }: Props) {
   const isRevealingA = phase === 'revealingA';
   const isRevealingB = phase === 'revealingB';
+
+  // Block player B from picking the same correct answer that player A already chose
+  const blockedForB =
+    playerAAnswerForQuestion?.type === 'correct' ? playerAAnswerForQuestion.text : undefined;
 
   return (
     <div className="border border-gray-700 rounded-lg p-3 space-y-2">
@@ -177,6 +193,7 @@ export function FinalRoundQuestionRow({
             answer={playerBAnswer}
             correctAnswers={correctAnswers}
             isActive={isRevealingB}
+            blockedAnswerText={blockedForB}
           />
         </div>
       </div>

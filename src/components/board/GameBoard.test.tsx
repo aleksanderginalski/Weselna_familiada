@@ -37,11 +37,11 @@ describe('GameBoard', () => {
     // RoundScore
     expect(screen.getByText('Do wygrania')).toBeInTheDocument();
 
-    // AnswerBoard — answer rows
-    expect(screen.getByText('1')).toBeInTheDocument();
-    expect(screen.getByText('2')).toBeInTheDocument();
+    // DotMatrixBoard — answer numbers rendered as data-digit (CSS ::before), not DOM text
+    const digitCells = document.querySelectorAll('[data-digit]');
+    expect(digitCells.length).toBeGreaterThan(0);
 
-    // AnswerSum
+    // AnswerSum — sr-only label from DotMatrixBoard
     expect(screen.getByText('Suma:')).toBeInTheDocument();
   });
 

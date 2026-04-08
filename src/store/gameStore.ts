@@ -75,6 +75,7 @@ interface StoreActions {
   revealFinalAnswer: (questionIndex: number, player: 'A' | 'B', answer: FinalRoundAnswer) => void;
   showFinalAnswerPoints: (questionIndex: number, player: 'A' | 'B') => void;
   hidePlayerAAnswers: () => void;
+  showPlayerAAnswers: () => void;
   finishFinalRound: () => void;
 }
 
@@ -270,9 +271,16 @@ export const useGameStore = create<GameState & StoreActions & SoundPreferences>(
   advanceToRevealPhase: () =>
     set((state) => {
       if (!state.finalRound) return {};
-      const nextPhase = state.finalRound.phase === 'answeringA' ? 'revealingA' : 'revealingB';
+      const isRevealingB = state.finalRound.phase === 'answeringB';
+      const nextPhase = isRevealingB ? 'revealingB' : 'revealingA';
       return {
-        finalRound: { ...state.finalRound, phase: nextPhase, timerRunning: false },
+        finalRound: {
+          ...state.finalRound,
+          phase: nextPhase,
+          timerRunning: false,
+          // Reveal player A's answers when moving to revealingB phase
+          playerAHidden: isRevealingB ? false : state.finalRound.playerAHidden,
+        },
       };
     }),
 
@@ -306,6 +314,12 @@ export const useGameStore = create<GameState & StoreActions & SoundPreferences>(
           timerSecondsLeft: state.finalRound.playerBInitialTimer,
         },
       };
+    }),
+
+  showPlayerAAnswers: () =>
+    set((state) => {
+      if (!state.finalRound) return {};
+      return { finalRound: { ...state.finalRound, playerAHidden: false } };
     }),
 
   finishFinalRound: () =>
