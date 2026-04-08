@@ -142,6 +142,25 @@ MIT License — zobacz [LICENSE](./LICENSE)
 
 ## Latest
 
+**v0.28.0** — Dot-matrix X mistake indicators on board (US-027 + US-028)
+
+- `public/fonts/Familiada-2.otf` — new custom dot-matrix font (em-square 640×896, 5:7 ratio) served as static file
+- `public/fonts/familiada.ttf`, `public/fonts/familiada.woff2` — Familiada heading font served as static files
+- `src/index.css` — two `@font-face` declarations: `Familiada-2` (opentype) and `Familiada` (woff2 + truetype)
+- `tailwind.config.js` — added `font-display` (Familiada-2), `font-heading` (Familiada), `font-body` (Arial) tokens
+- `src/components/board/DotMatrixBoard.tsx` — complete rewrite: 10×30 LED grid, cell aspect-ratio 5:7 matching Familiada-2 em-square; `FONT_SIZE = 'calc(700cqi / 179)'` sizes glyphs via container query; hidden answers use U+2026 (Horizontal Ellipsis) as dot-matrix circles; mistake X marks rendered inline (cols 1–3 for left team, cols 28–30 for right team)
+- `src/components/board/DotMatrixBoard.tsx` (US-028) — `buildGrid()` extended with `controllingTeam`, `mistakes`, `stealFailed`; small mistake pattern (7 Unicode chars, 3×3 block) repeated up to 3 times; big mistake pattern (9 Unicode chars, failed steal) rendered on steal team's side; `MistakeIndicator` removed from `GameBoard`
+- `src/components/shared/DigitDisplay.tsx` — new shared component: 3-digit LED display with gold outer border → black inner border; `font-heading` labels; `labelColor` prop; value clamped to 999
+- `src/components/board/FinalRoundDotMatrix.tsx` — new component: same 10×30 grid layout for final round projector view; player A answers right-aligned (cols 1–11), player B answers left-aligned (cols 19–28); skipped/wrong shown simultaneously
+- `src/components/board/FinalRoundGameBoard.tsx` — new component: final round board with `DigitDisplay` for current sum, timer remaining, and points to 200
+- `src/components/board/RoundScore.tsx` — uses `DigitDisplay` for "Do wygrania" display
+- `src/components/board/GameBoard.tsx` — `MistakeIndicator` removed from both sides
+- `src/store/gameStore.ts` — added `showPlayerAAnswers` action; `advanceToRevealPhase` auto-clears `playerAHidden` when entering `revealingB` phase
+- `src/components/screens/LobbyScreen.tsx` — `playIntro()` removed (moved to OperatorPanel "Otwórz Tablicę" button)
+- `src/components/operator/OperatorPanel.tsx` — `playIntro()` plays when board window is opened
+- Font updated on: `TeamScore`, `WinnerScreen`, `LobbyScreen`, `OperatorPanel` (headings → `font-heading`)
+- 9 tests added: TC-125 through TC-133 (177 total); `GameBoard.test.tsx` updated for CSS-only `data-digit` rendering
+
 **v0.26.0** — Final round mode (US-026)
 
 - `public/pytania-final.json` — new file with 5 final round questions (each with up to 5 weighted answers)

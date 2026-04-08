@@ -39,12 +39,17 @@ The design should feel like a Polish TV show from the 90s/2000s meets wedding ce
 
 ## 3. Typography
 
-| Role | Font | Weight | Size |
-|------|------|--------|------|
-| Logo/Title | Inter / System | Bold | 48px |
-| Answer Text | Inter / System | Semibold | 36px |
-| Score Numbers | Inter / System | Bold | 72px |
-| UI Labels | Inter / System | Medium | 16px |
+| Role | Font | Tailwind Token | Notes |
+|------|------|----------------|-------|
+| Dot-matrix board cells | Familiada-2 | `font-display` | Custom OTF, em-square 640×896 (5:7), glyphs fill cell exactly |
+| Headings, team names, labels | Familiada | `font-heading` | TTF/WOFF2, retro TV style |
+| UI text (operator panel) | Arial | `font-body` | Fallback: Helvetica, sans-serif |
+
+### Board cell sizing (US-027)
+- Cell aspect-ratio: 5:7 — matches Familiada-2 em-square (640×896)
+- Grid: 30 cols × 10 rows; gap = 1 px unit
+- Font size: `calc(700cqi / 179)` — 700 units tall / 179 horizontal units total
+- `line-height: 1` — eliminates extra whitespace above/below glyphs
 
 ---
 

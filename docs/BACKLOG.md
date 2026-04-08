@@ -2,7 +2,7 @@
 
 **Project:** Weselna Familiada  
 **Version:** 2.0  
-**Last Updated:** 2026-04-05 (US-008 Done)  
+**Last Updated:** 2026-04-08 (US-027, US-028 Done)  
 **Product Owner:** Aleksander Ginalski  
 **Repository:** https://github.com/AleksanderGinalworking/Weselna_familiada
 
@@ -817,6 +817,82 @@ EPIC-003: Weselna Familiada M3 - Final Round (Optional)
 - [ ] **TASK-025.1:** Add shake/pulse animation to MistakeIndicator - 15min
 - [ ] **TASK-025.2:** Write animation tests (/qa) - 10min
 - [ ] **TASK-025.3:** Manual verification: animation works - 5min
+
+---
+
+### US-027: Apply custom Familiada font to game board
+
+**As a** wedding guest  
+**I want to** see the board rendered in the authentic Familiada dot-matrix font  
+**So that** the display looks like the original TV show
+
+**Status:** ✅ COMPLETED  
+**Story Points:** 3  
+**Priority:** P2
+
+**Acceptance Criteria:**
+
+- [x] `Familiada-2.otf` (dot-matrix board glyphs) served from `public/fonts/`
+- [x] `Familiada` (headings, labels) served from `public/fonts/` (woff2 + ttf)
+- [x] `font-display` Tailwind token → Familiada-2 (board cells only)
+- [x] `font-heading` Tailwind token → Familiada (operator panel, scores, winner screen)
+- [x] `font-body` Tailwind token → Arial (UI text)
+- [x] `DotMatrixBoard` uses 10×30 LED grid; cell aspect-ratio 5:7 matching Familiada-2 em-square (640×896)
+- [x] Container query (`cqi`) sizes font so glyphs fill each cell exactly; `line-height: 1`
+- [x] Hidden answers render U+2026 (Horizontal Ellipsis) as dot-matrix circles from Familiada-2
+- [x] `DigitDisplay` styled with gold outer border → black inner border, `font-heading` labels
+- [x] `FinalRoundDotMatrix` uses same 10×30 grid for projector view during final round
+
+**Notes:**
+- Familiada-2 em-square: 640×896 (5:7 ratio) — cell must use `aspect-ratio: 5/7`
+- Grid math: 30 cols × 5 + 29 gaps × 1 = 179 units → `FONT_SIZE = 'calc(700cqi / 179)'`
+- Intro sound (`playIntro`) moved from LobbyScreen "Nowa Gra" to OperatorPanel "Otwórz Tablicę"
+
+**Tasks:**
+
+- [x] **TASK-027.1:** Add font files to `public/fonts/`
+- [x] **TASK-027.2:** Declare `@font-face` in `src/index.css`
+- [x] **TASK-027.3:** Add `font-display`, `font-heading`, `font-body` tokens to `tailwind.config.js`
+- [x] **TASK-027.4:** Rewrite `DotMatrixBoard` with cqi sizing, 5:7 cells, Horizontal Ellipsis dots
+- [x] **TASK-027.5:** Create `DigitDisplay` shared component with gold/black double border
+- [x] **TASK-027.6:** Create `FinalRoundDotMatrix` and `FinalRoundGameBoard` for final round projector view
+- [x] **TASK-027.7:** Update `TeamScore`, `LobbyScreen`, `OperatorPanel`, `WinnerScreen` to use `font-heading`
+- [x] **TASK-027.8:** Write 3 tests (TC-125 through TC-127)
+- [x] **TASK-027.9:** Manual verification: board renders correctly with font
+
+---
+
+### US-028: Show mistake X marks on dot-matrix board
+
+**As a** wedding guest  
+**I want to** see mistake X marks rendered directly on the dot-matrix board  
+**So that** the board looks like the original TV show without a separate indicator widget
+
+**Status:** ✅ COMPLETED  
+**Story Points:** 2  
+**Priority:** P2
+
+**Acceptance Criteria:**
+
+- [x] Small mistake X (3×3 Unicode spacing characters) shown in cols 1–3 (left team) or cols 28–30 (right team)
+- [x] Up to 3 small mistakes displayed at rows 2–4, 5–7, 8–10 respectively
+- [x] Big mistake X (failed steal, 5-row Unicode pattern) shown on the steal team's side
+- [x] No separate `MistakeIndicator` component in `GameBoard`
+- [x] X glyphs use Unicode spacing characters (U+2000–U+200A) rendered via Familiada-2 font
+
+**Notes:**
+- Small mistake pattern: 7 cells forming an X in a 3×3 block; anchored at rows 1, 4, 7 (0-indexed)
+- Big mistake pattern: 9 cells spanning rows 3–7 (0-indexed), 3 columns wide
+- Left team anchor col: 0; right team anchor col: 27 (0-indexed)
+- `buildGrid()` extended with `controllingTeam`, `mistakes`, `stealFailed` params
+
+**Tasks:**
+
+- [x] **TASK-028.1:** Define `SMALL_MISTAKE_PATTERN` and `BIG_MISTAKE_PATTERN` constants
+- [x] **TASK-028.2:** Extend `buildGrid()` to render mistakes onto the grid
+- [x] **TASK-028.3:** Remove `MistakeIndicator` from `GameBoard`
+- [x] **TASK-028.4:** Write 6 tests (TC-128 through TC-133)
+- [x] **TASK-028.5:** Manual verification: X marks render correctly for both teams
 
 ---
 

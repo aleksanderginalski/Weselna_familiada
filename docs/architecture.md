@@ -141,17 +141,25 @@ interface RoundState {
 src/
 ├── components/
 │   ├── board/           # Game board (projector view)
+│   │   ├── DotMatrixBoard.tsx      # 10×30 LED grid; font-display (Familiada-2); inline mistake X marks
+│   │   ├── FinalRoundDotMatrix.tsx # Same grid for final round projector view
+│   │   ├── FinalRoundGameBoard.tsx # Final round board with DigitDisplay widgets
 │   │   ├── AnswerRow.tsx
 │   │   ├── AnswerBoard.tsx
 │   │   ├── TeamScore.tsx
 │   │   ├── RoundScore.tsx
-│   │   ├── MistakeIndicator.tsx
+│   │   ├── MistakeIndicator.tsx    # Kept for operator panel; removed from GameBoard (US-028)
 │   │   └── GameBoard.tsx
 │   ├── operator/        # Operator panel (laptop view)
 │   │   ├── AnswerControl.tsx
 │   │   ├── TeamPanel.tsx
 │   │   ├── RoundControls.tsx
+│   │   ├── FinalRoundOperator.tsx
+│   │   ├── FinalRoundTimerPanel.tsx
+│   │   ├── FinalRoundQuestionRow.tsx
 │   │   └── OperatorPanel.tsx
+│   ├── shared/          # Reusable components
+│   │   └── DigitDisplay.tsx        # 3-digit LED display; gold/black double border; font-heading labels
 │   └── screens/
 │       ├── LobbyScreen.tsx
 │       ├── GameScreen.tsx
