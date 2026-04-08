@@ -31,7 +31,8 @@ EPIC-001: Weselna Familiada M1 - Core Game Mechanics
 
 EPIC-002: Weselna Familiada M2 - Polish & Sound
 ├── FEATURE-007: Sound Effects
-└── FEATURE-008: Animations
+├── FEATURE-008: Animations
+└── FEATURE-010: Visual Authenticity
 
 EPIC-003: Weselna Familiada M3 - Final Round (Optional)
 └── FEATURE-009: Quick Round Mode
@@ -803,20 +804,75 @@ EPIC-003: Weselna Familiada M3 - Final Round (Optional)
 **I want to** see X marks appear with impact  
 **So that** mistakes feel dramatic
 
-**Status:** 📋 Planned  
+**Status:** ❌ Cancelled — superseded by US-028 (Authentic X Indicator)  
 **Story Points:** 1  
 **Priority:** P3
 
+---
+
+## 🔧 FEATURE-010: Visual Authenticity
+
+**Priority:** P2 (Medium)  
+**Sprint:** Sprint 5  
+**Total Points:** 5  
+**Status:** 📋 Planned
+
+### US-027: Apply custom Familiada font to game board
+
+**As a** wedding guest  
+**I want to** see the authentic Familiada typeface on the game board  
+**So that** the game looks and feels like the real TV show
+
+**Status:** 📋 Planned  
+**Story Points:** 2  
+**Priority:** P2
+
 **Acceptance Criteria:**
 
-- [ ] X appears with shake or pulse animation
-- [ ] Animation draws attention to the mistake
+- [ ] `familiada.ttf` loaded via `@font-face` in `src/index.css`
+- [ ] `font-display` family in `tailwind.config.js` updated to use `Familiada` with Impact as fallback
+- [ ] Custom font applied on game board: answer text, scores, team names, question title
+- [ ] Operator panel typography unchanged
+- [ ] No layout regressions at 1920×1080
 
 **Tasks:**
 
-- [ ] **TASK-025.1:** Add shake/pulse animation to MistakeIndicator - 15min
-- [ ] **TASK-025.2:** Write animation tests (/qa) - 10min
-- [ ] **TASK-025.3:** Manual verification: animation works - 5min
+- [ ] **TASK-027.1:** Register `@font-face` for `familiada.ttf` in `src/index.css` - 10min
+- [ ] **TASK-027.2:** Update `font-display` in `tailwind.config.js` to `['Familiada', 'Impact', ...]` - 5min
+- [ ] **TASK-027.3:** Verify font renders on all board elements (answers, scores, team names, question) - 15min
+- [ ] **TASK-027.4:** Manual verification: board looks authentic at 1920×1080 - 10min
+
+---
+
+### US-028: Authentic dot-matrix X indicator
+
+**As a** wedding guest  
+**I want to** see X error marks styled as yellow dot-matrix LEDs  
+**So that** the mistake indicators match the authentic Familiada TV show look
+
+**Status:** 📋 Planned  
+**Story Points:** 3  
+**Priority:** P2
+
+**Acceptance Criteria:**
+
+- [ ] X indicators use yellow color (`#fbbf24`) instead of red
+- [ ] X shape rendered as dot-matrix LED pattern via CSS (`radial-gradient` grid)
+- [ ] Small X slots (3 per controlling team side) display dot-matrix style
+- [ ] Large X slot (steal indicator) displays same dot-matrix style, scaled up
+- [ ] Empty slots show dark/invisible dots (no bright color)
+- [ ] Active slots show yellow dot-matrix X
+- [ ] No change to X indicator logic or state — visual only
+- [ ] Only game board affected; operator panel unchanged
+
+**Tasks:**
+
+- [ ] **TASK-028.1:** Design dot-matrix CSS pattern for X (radial-gradient grid) - 30min
+- [ ] **TASK-028.2:** Update `MistakeIndicator.tsx` — replace CSS classes with dot-matrix implementation - 30min
+- [ ] **TASK-028.3:** Update `.mistake-x` styles in `src/index.css` - 15min
+- [ ] **TASK-028.4:** Update color tokens if needed (yellow X vs red X) - 10min
+- [ ] **TASK-028.5:** Write component tests (/qa) - 20min
+- [ ] **TASK-028.6:** Manual verification: X indicators match reference images - 10min
 
 ---
 

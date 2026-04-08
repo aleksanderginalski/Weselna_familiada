@@ -41,10 +41,14 @@ The design should feel like a Polish TV show from the 90s/2000s meets wedding ce
 
 | Role | Font | Weight | Size |
 |------|------|--------|------|
-| Logo/Title | Inter / System | Bold | 48px |
-| Answer Text | Inter / System | Semibold | 36px |
-| Score Numbers | Inter / System | Bold | 72px |
-| UI Labels | Inter / System | Medium | 16px |
+| Logo/Title | **Familiada** (Impact fallback) | Regular | 48px |
+| Answer Text | **Familiada** (Impact fallback) | Regular | 36px |
+| Score Numbers | **Familiada** (Impact fallback) | Regular | 72px |
+| UI Labels | Arial / System | Medium | 16px |
+
+**Font file:** `src/assets/fonts/familiada.ttf` — loaded via `@font-face` in `src/index.css`  
+**Scope:** Game board only. Operator panel uses system fonts.  
+**Fallback stack:** `['Familiada', 'Impact', 'Arial Narrow Bold', 'sans-serif']`
 
 ---
 
@@ -66,6 +70,26 @@ The design should feel like a Polish TV show from the 90s/2000s meets wedding ce
 text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
 box-shadow: 0 0 20px rgba(251, 191, 36, 0.3);
 ```
+
+---
+
+## 6. X Error Indicators (Mistake / Steal)
+
+**Reference:** original Familiada LED board — see `/Duży błąd.JPG` and `/Mały Błąd.JPG`
+
+| Property | Value |
+|----------|-------|
+| Color | Yellow (`#fbbf24`) — same as gold accent |
+| Style | Dot-matrix LED pattern via CSS `radial-gradient` grid |
+| Background | Dark (`#0a1628`) with visible dot grid |
+| Active state | Yellow dots |
+| Inactive/empty state | Dark/invisible dots (no bright color) |
+
+**Types:**
+- **Small X** — 3 stacked slots on the controlling team's side (one per mistake)
+- **Large X** — 1 tall slot on the opposing side (steal indicator), height = 3 small slots combined
+
+**Scope:** Game board only. Operator panel keeps current styling.
 
 ---
 
