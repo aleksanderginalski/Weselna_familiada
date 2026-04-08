@@ -67,6 +67,7 @@ export function FinalRoundOperator() {
                 type: 'pending',
               }
             }
+            playerAAnswerForQuestion={playerA[i]}
             phase={phase}
           />
         ))}

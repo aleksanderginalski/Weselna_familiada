@@ -1,3 +1,20 @@
+@font-face {
+  font-family: 'Familiada-2';
+  src: url('/fonts/Familiada-2.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Familiada';
+  src: url('/fonts/familiada.woff2') format('woff2'),
+       url('/fonts/familiada.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -82,6 +99,32 @@
     @apply border-2 border-familiada-border;
     @apply hover:border-familiada-gold;
   }
+}
+
+/* Container for the dot-matrix board — enables container query units (cqb/cqi) */
+.dot-matrix-container {
+  container-type: size;
+  width: 100%;
+  height: 100%;
+}
+
+/* Digit cell: value shown via CSS pseudo-element so DOM text stays empty.
+   Prevents RTL getByText('0') from matching display cells instead of score labels. */
+.digit-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.digit-cell::before {
+  content: attr(data-digit);
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  line-height: 1;
+  display: block;
+  width: 100%;
+  text-align: center;
 }
 
 @layer utilities {

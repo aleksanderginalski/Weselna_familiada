@@ -4,14 +4,15 @@ import { AnswerControl } from './AnswerControl';
 import { RoundControls } from './RoundControls';
 import { TeamControl } from './TeamControl';
 
-function handleOpenBoard() {
-  window.open('/?view=board', '_blank');
-}
-
 export function OperatorPanel() {
   const rounds = useGameStore((state) => state.rounds);
   const currentRoundIndex = useGameStore((state) => state.currentRoundIndex);
-  const { isMuted, toggleMute } = useSound();
+  const { isMuted, toggleMute, playIntro } = useSound();
+
+  function handleOpenBoard() {
+    window.open('/?view=board', '_blank');
+    playIntro();
+  }
 
   const currentQuestion = rounds[currentRoundIndex]?.question;
 
@@ -19,7 +20,7 @@ export function OperatorPanel() {
     <div className="min-h-screen bg-familiada-bg-dark flex flex-col">
       {/* Header */}
       <header className="flex items-center justify-between px-6 py-3 bg-familiada-bg-panel border-b-2 border-familiada-border">
-        <h1 className="font-display text-xl text-familiada-gold text-glow-gold tracking-wide">
+        <h1 className="font-heading text-xl text-familiada-gold text-glow-gold tracking-wide">
           WESELNA FAMILIADA — Panel Operatora
         </h1>
         <div className="flex gap-2">
