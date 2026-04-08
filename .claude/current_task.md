@@ -1,50 +1,82 @@
-# Current Task — US-017
+# Current Task — US-027
 
 ## Context
-Create the Round Controls component for the Operator Panel. The operator needs to see the current round number, total rounds, multiplier, and a button to end the round and advance to the next one. The store already has `endRound(winner)` and `nextRound()` actions. The winning team is determined from `currentRound.controllingTeam` (or the opposing team when steal succeeded).
+
+Apply the custom `familiada.ttf` font to the game board so it looks like the real TV show.
+The font file already exists at `src/assets/fonts/familiada.ttf` (untracked).
+The `font-display` Tailwind utility class is already used on all board elements
+(`AnswerRow`, `TeamScore`, `RoundScore`, `AnswerSum`, `FinalRoundBoard`),
+so registering the font and updating the Tailwind config is all that's needed.
+Operator panel typography must remain unchanged.
 
 ## Read
-- `src/store/gameStore.ts` — `endRound`, `nextRound`, `currentRoundIndex`, `config.multipliers`, `config.numberOfRounds`, `currentRound` (phase, controllingTeam, stealFailed, roundScore), `teams`
-- `src/types/game.ts` — `TeamSide`, `RoundState`, `GameConfig`
-- `docs/wireframes.md` — S-003 Operator Panel (round info bar + ZAKOŃCZ RUNDĘ button)
-- `src/components/operator/TeamControl.tsx` — pattern for operator components
-- `src/index.css` — existing component classes (`operator-btn`, etc.)
-- `tailwind.config.js` — available custom colors
-- `src/App.tsx` — where to integrate the new component
+
+- `src/index.css` — add `@font-face` declaration here
+- `tailwind.config.js` — update `font-display` family to prepend `Familiada`
+- `src/components/board/AnswerRow.tsx` — uses `font-display`, verify no override needed
+- `src/components/board/TeamScore.tsx` — uses `font-display`, verify no override needed
+- `src/components/board/RoundScore.tsx` — uses `font-display`, verify no override needed
+- `src/components/board/AnswerSum.tsx` — uses `font-display`, verify no override needed
+- `src/components/board/FinalRoundBoard.tsx` — uses `font-display`, verify no override needed
 
 ## Tasks
 
-1. Create `src/components/operator/RoundControls.tsx` — single component that:
-   - Reads from store: `currentRoundIndex`, `config` (multipliers, numberOfRounds), `currentRound` (phase, controllingTeam, stealFailed, roundScore), `teams`
-   - Displays: "Runda X z Y" and "Mnożnik: xN"
-   - Computes the winner:
-     - In normal flow: `controllingTeam`
-     - When steal failed: `controllingTeam` (original guessing team keeps points)
-     - When steal succeeded: the opposing team (not `controllingTeam`)
-   - Renders a "ZAKOŃCZ RUNDĘ" button that calls `endRound(winner)` — visible only when `phase !== 'summary'` and `controllingTeam !== null`
-   - Renders a "NASTĘPNA RUNDA" button that calls `nextRound()` — visible only when `phase === 'summary'`
-   - When `phase === 'summary'`, show how many points were awarded: "Drużyna X otrzymuje Y pkt"
-   - Both buttons disabled when conditions not met (use `disabled` attribute + grayed styling)
+### 1. Register `@font-face` in `src/index.css`
 
-2. Integrate `RoundControls` into `src/App.tsx` — add it below `TeamControl` in the operator panel section.
+Add before `@tailwind base;` (or inside `@layer base`):
+
+```css
+@font-face {
+  font-family: 'Familiada';
+  src: url('/fonts/familiada.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+```
+
+### 2. Copy font to `public/fonts/`
+
+The font must be served as a static asset. Copy `src/assets/fonts/familiada.ttf`
+to `public/fonts/familiada.ttf` so it is accessible at `/fonts/familiada.ttf`.
+
+> Note: Vite does not serve files from `src/assets/` at a public URL by default —
+> only files in `public/` are served as-is. So the font must live in `public/fonts/`.
+
+### 3. Update `font-display` in `tailwind.config.js`
+
+Change the `display` font family from:
+
+```js
+'display': ['Impact', 'Haettenschweiler', 'Arial Narrow Bold', 'sans-serif'],
+```
+
+to:
+
+```js
+'display': ['Familiada', 'Impact', 'Haettenschweiler', 'Arial Narrow Bold', 'sans-serif'],
+```
+
+### 4. Verify board components use `font-display`
+
+Read each board component listed above and confirm they use `font-display` (or `font-body`
+for operator-only elements). No code changes expected — this is a read-and-confirm step.
 
 ## Constraints
+
 - No `any` types
-- Max file length: 300 lines, max function length: 50 lines
-- Max component props: 7
-- Functional components only
 - Do not create tests — that is `/qa` scope
-- Use `operator-btn` class from `src/index.css` for buttons
-- All store reads via selectors in `RoundControls` (no prop drilling from App)
+- Operator panel components must NOT use `font-display` on any new elements
+- Font file goes in `public/fonts/` (not `src/assets/fonts/`) so Vite serves it correctly
+- No layout changes — font swap only
 
 ## After implementation
+
 - Run linter: `npm run lint`
 - Run tests: `npm test`
 - Manual verification steps (in Polish):
-  1. Uruchom `npm run dev` i otwórz Panel Operatora
-  2. Sprawdź czy widać "Runda 1 z X" i "Mnożnik: x1" (bez załadowanej gry: wyświetl sensowny stan domyślny)
-  3. Załaduj grę (`pytania.json`), wybierz drużynę — sprawdź czy przycisk "ZAKOŃCZ RUNDĘ" się pojawia
-  4. Kliknij "ZAKOŃCZ RUNDĘ" — sprawdź czy punkty trafiają do właściwej drużyny i pojawia się komunikat "Drużyna X otrzymuje Y pkt"
-  5. Sprawdź czy po "ZAKOŃCZ RUNDĘ" pojawia się przycisk "NASTĘPNA RUNDA"
-  6. Kliknij "NASTĘPNA RUNDA" — sprawdź czy numer rundy wzrasta, mnożnik zmienia się zgodnie z konfiguracją
-  7. Przetestuj fazy steal: gdy drużyna B przejmuje i odpowiada poprawnie (stealFailed = false) — punkty powinny trafić do drużyny B; gdy się myli (stealFailed = true) — punkty do drużyny A
+  1. Uruchom `npm run dev`, otwórz tablicę (`?view=board`) — sprawdź czy tekst odpowiedzi wyświetla się krojem Familiada (nie Impact)
+  2. Sprawdź wyniki drużyn, punkty rundy i sumę odpowiedzi — wszystkie powinny używać Familiada
+  3. Otwórz Panel Operatora (bez `?view=board`) — sprawdź czy typografia NIE zmieniła się (nadal Arial/Impact)
+  4. Sprawdź konsolę przeglądarki — brak błędów 404 dla pliku czcionki
+  5. Sprawdź w DevTools > Network że `familiada.ttf` ładuje się poprawnie (status 200)

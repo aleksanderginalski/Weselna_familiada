@@ -1,4 +1,5 @@
 import { useGameStore } from '@/store/gameStore';
+import { DigitDisplay } from '@/components/shared/DigitDisplay';
 
 export function RoundScore() {
   const currentRoundIndex = useGameStore((state) => state.currentRoundIndex);
@@ -9,16 +10,11 @@ export function RoundScore() {
   const pointsToWin = roundScore * multiplier;
 
   return (
-    <div className="flex flex-col items-center gap-1 bg-familiada-bg-panel border border-familiada-border rounded-lg px-8 py-3">
-      <span className="font-body text-sm text-familiada-text-secondary uppercase tracking-widest">
-        Do wygrania
-      </span>
-      <span className="font-display text-6xl text-familiada-gold">
-        {pointsToWin}
-      </span>
-      <span className="font-body text-xs text-familiada-text-secondary">
-        x{multiplier} mnożnik
-      </span>
-    </div>
+    <DigitDisplay
+      value={pointsToWin}
+      label="Do wygrania"
+      sublabel={`x${multiplier} mnożnik`}
+      digitFontSize="4rem"
+    />
   );
 }

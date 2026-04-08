@@ -39,16 +39,17 @@ The design should feel like a Polish TV show from the 90s/2000s meets wedding ce
 
 ## 3. Typography
 
-| Role | Font | Weight | Size |
-|------|------|--------|------|
-| Logo/Title | **Familiada** (Impact fallback) | Regular | 48px |
-| Answer Text | **Familiada** (Impact fallback) | Regular | 36px |
-| Score Numbers | **Familiada** (Impact fallback) | Regular | 72px |
-| UI Labels | Arial / System | Medium | 16px |
+| Role | Font | Tailwind Token | Notes |
+|------|------|----------------|-------|
+| Dot-matrix board cells | Familiada-2 | `font-display` | Custom OTF, em-square 640×896 (5:7), glyphs fill cell exactly |
+| Headings, team names, labels | Familiada | `font-heading` | TTF/WOFF2, retro TV style |
+| UI text (operator panel) | Arial | `font-body` | Fallback: Helvetica, sans-serif |
 
-**Font file:** `src/assets/fonts/familiada.ttf` — loaded via `@font-face` in `src/index.css`  
-**Scope:** Game board only. Operator panel uses system fonts.  
-**Fallback stack:** `['Familiada', 'Impact', 'Arial Narrow Bold', 'sans-serif']`
+### Board cell sizing (US-027)
+- Cell aspect-ratio: 5:7 — matches Familiada-2 em-square (640×896)
+- Grid: 30 cols × 10 rows; gap = 1 px unit
+- Font size: `calc(700cqi / 179)` — 700 units tall / 179 horizontal units total
+- `line-height: 1` — eliminates extra whitespace above/below glyphs
 
 ---
 

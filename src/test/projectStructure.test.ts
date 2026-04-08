@@ -31,6 +31,10 @@ describe('Project Structure', () => {
     'tsconfig.json',
     'vite.config.ts',
     'index.html',
+    // TC-126: US-027 font assets must be served as static files
+    'public/fonts/Familiada-2.otf',
+    'public/fonts/familiada.ttf',
+    'public/fonts/familiada.woff2',
   ];
 
   it.each(requiredFiles)('should have required file: %s', (file) => {
