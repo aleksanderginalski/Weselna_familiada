@@ -2,7 +2,7 @@
 
 **Project:** Weselna Familiada  
 **Version:** 2.0  
-**Last Updated:** 2026-04-08 (US-027, US-028 Done)  
+**Last Updated:** 2026-04-09 (US-029–034 Planned — Question Management & Electron)  
 **Product Owner:** Aleksander Ginalski  
 **Repository:** https://github.com/AleksanderGinalworking/Weselna_familiada
 
@@ -15,6 +15,8 @@
 | M1        | Core Game Mechanics    | 📋 Planned |
 | M2        | Polish & Sound         | 📋 Planned |
 | M3        | Final Round (Optional) | 📋 Planned |
+| M4        | Question Management    | 📋 Planned |
+| M5        | Desktop Distribution   | 📋 Planned |
 
 ---
 
@@ -36,6 +38,12 @@ EPIC-002: Weselna Familiada M2 - Polish & Sound
 
 EPIC-003: Weselna Familiada M3 - Final Round (Optional)
 └── FEATURE-009: Quick Round Mode
+
+EPIC-004: Weselna Familiada M4 - Question Management
+└── FEATURE-011: Question Bank & Selection
+
+EPIC-005: Weselna Familiada M5 - Desktop Distribution
+└── FEATURE-012: Electron App
 ```
 
 ---
@@ -850,29 +858,29 @@ EPIC-003: Weselna Familiada M3 - Final Round (Optional)
 **I want to** see X error marks styled as yellow dot-matrix LEDs  
 **So that** the mistake indicators match the authentic Familiada TV show look
 
-**Status:** 📋 Planned  
+**Status:** ✅ COMPLETED  
 **Story Points:** 3  
 **Priority:** P2
 
 **Acceptance Criteria:**
 
-- [ ] X indicators use yellow color (`#fbbf24`) instead of red
-- [ ] X shape rendered as dot-matrix LED pattern via CSS (`radial-gradient` grid)
-- [ ] Small X slots (3 per controlling team side) display dot-matrix style
-- [ ] Large X slot (steal indicator) displays same dot-matrix style, scaled up
-- [ ] Empty slots show dark/invisible dots (no bright color)
-- [ ] Active slots show yellow dot-matrix X
-- [ ] No change to X indicator logic or state — visual only
-- [ ] Only game board affected; operator panel unchanged
+- [x] X indicators use yellow color (`#fbbf24`) instead of red
+- [x] X shape rendered as dot-matrix LED pattern via CSS (`radial-gradient` grid)
+- [x] Small X slots (3 per controlling team side) display dot-matrix style
+- [x] Large X slot (steal indicator) displays same dot-matrix style, scaled up
+- [x] Empty slots show dark/invisible dots (no bright color)
+- [x] Active slots show yellow dot-matrix X
+- [x] No change to X indicator logic or state — visual only
+- [x] Only game board affected; operator panel unchanged
 
 **Tasks:**
 
-- [ ] **TASK-028.1:** Design dot-matrix CSS pattern for X (radial-gradient grid) - 30min
-- [ ] **TASK-028.2:** Update `MistakeIndicator.tsx` — replace CSS classes with dot-matrix implementation - 30min
-- [ ] **TASK-028.3:** Update `.mistake-x` styles in `src/index.css` - 15min
-- [ ] **TASK-028.4:** Update color tokens if needed (yellow X vs red X) - 10min
-- [ ] **TASK-028.5:** Write component tests (/qa) - 20min
-- [ ] **TASK-028.6:** Manual verification: X indicators match reference images - 10min
+- [x] **TASK-028.1:** Design dot-matrix CSS pattern for X (radial-gradient grid) - 30min
+- [x] **TASK-028.2:** Update `MistakeIndicator.tsx` — replace CSS classes with dot-matrix implementation - 30min
+- [x] **TASK-028.3:** Update `.mistake-x` styles in `src/index.css` - 15min
+- [x] **TASK-028.4:** Update color tokens if needed (yellow X vs red X) - 10min
+- [x] **TASK-028.5:** Write component tests (/qa) - 20min
+- [x] **TASK-028.6:** Manual verification: X indicators match reference images - 10min
 
 ---
 
@@ -1002,6 +1010,169 @@ EPIC-003: Weselna Familiada M3 - Final Round (Optional)
 - [x] **TASK-026.5:** Wire `playFinalRound`, `playBell`, `playTimerEnd` in `useSound.ts`
 - [x] **TASK-026.6:** Write 21 tests (TC-104 through TC-124)
 - [x] **TASK-026.7:** Manual verification: final round works end-to-end
+
+---
+
+# 📦 EPIC-004: Question Management
+
+**Goal:** Enable operators to manage a large question bank and select questions before each game
+
+**Business Value:** Allow non-technical users to add/edit questions and operators to curate which questions are played at the wedding
+
+**Status:** 📋 Planned
+
+---
+
+## 🔧 FEATURE-011: Question Bank & Selection
+
+**Priority:** P1 (High)
+**Total Points:** 18
+**Status:** 📋 Planned
+
+### US-029: Question bank data model
+
+**As a** developer
+**I want to** redesign the question data format to support a large question bank with categories
+**So that** the app can manage 100+ questions and select subsets for each game
+
+**Status:** 📋 Planned
+**Story Points:** 3
+**Priority:** P0
+
+**Acceptance Criteria:**
+
+- [ ] New `pytania-bank.json` format supports 100+ questions with optional `category` field
+- [ ] Existing `pytania.json` questions migrated to new bank format
+- [ ] `GameConfig` updated — questions no longer embedded in config, loaded from bank
+- [ ] `gameStore.ts` loads questions from bank at startup
+- [ ] Backward compatibility: existing game flow unaffected
+
+---
+
+### US-030: Question selection screen
+
+**As an** operator
+**I want to** select which questions are played before the game starts
+**So that** I can curate the game or let the app draw randomly based on game mode
+
+**Status:** 📋 Planned
+**Story Points:** 8
+**Priority:** P0
+
+**Acceptance Criteria:**
+
+- [ ] New screen shown between Lobby and first round (pre-game setup step)
+- [ ] Operator can manually check/uncheck questions from the full bank
+- [ ] "Draw randomly" button selects N questions based on game mode:
+  - Fixed rounds mode: draws exactly `numberOfRounds` questions
+  - Score cap mode: draws a reasonable pool (e.g. 10) to cover the session
+- [ ] Selected questions are reorderable (drag & drop or up/down arrows)
+- [ ] Confirmation button locks selection and starts the game
+- [ ] Screen accessible on operator window only (not board)
+
+---
+
+### US-031: In-app question editor
+
+**As an** operator (non-technical user)
+**I want to** add, edit and delete questions directly in the app
+**So that** I can manage the question bank without editing JSON files
+
+**Status:** 📋 Planned
+**Story Points:** 8
+**Priority:** P1
+
+**Acceptance Criteria:**
+
+- [ ] Accessible from Lobby screen via "Manage Questions" button
+- [ ] Lists all questions in the bank with edit/delete actions
+- [ ] "Add question" form: question text + up to 8 answers with points each
+- [ ] Edits saved to `localStorage` (persists between sessions, independent of app updates)
+- [ ] Changes reflected immediately in question selection screen
+- [ ] Validation: question text required, at least 2 answers, points must be positive integers
+- [ ] Non-technical UX: clear labels, no JSON visible
+
+---
+
+# 📦 EPIC-005: Desktop Distribution
+
+**Goal:** Package the app as a standalone desktop application installable on Windows without any developer tools
+
+**Business Value:** Allow the wedding game to be run by anyone on any Windows laptop without installing Node.js, VSCode, or any developer tooling
+
+**Status:** 📋 Planned
+
+---
+
+## 🔧 FEATURE-012: Electron App
+
+**Priority:** P1 (High)
+**Total Points:** 13
+**Status:** 📋 Planned
+
+### US-032: Electron setup and two-window management
+
+**As a** developer
+**I want to** set up Electron with proper two-window management
+**So that** the operator panel and game board run as native desktop windows
+
+**Status:** 📋 Planned
+**Story Points:** 5
+**Priority:** P0
+
+**Acceptance Criteria:**
+
+- [ ] Electron added as dependency with minimal main process (`electron/main.ts`)
+- [ ] App opens Operator window on launch
+- [ ] BroadcastChannel verified to work between two Electron BrowserWindows (same session)
+- [ ] If BroadcastChannel fails between windows: fallback implemented via Electron IPC
+- [ ] `npm run electron:dev` starts Electron in dev mode (Vite + Electron together)
+- [ ] Existing functionality (game flow, sound, final round) works without regression
+
+**Technical Notes:**
+- Risk: BroadcastChannel may not propagate between separate BrowserWindow processes — must verify in Electron's Chromium
+- Fallback: Electron IPC (`ipcMain` / `ipcRenderer`) as message relay if needed
+
+---
+
+### US-033: Production build and Windows installer
+
+**As an** operator
+**I want to** install the app on a Windows laptop with a single installer
+**So that** I can run the wedding game without any developer tools
+
+**Status:** 📋 Planned
+**Story Points:** 5
+**Priority:** P0
+
+**Acceptance Criteria:**
+
+- [ ] `electron-builder` configured to produce `.exe` NSIS installer for Windows
+- [ ] `npm run electron:build` produces distributable in `dist-electron/`
+- [ ] Installer works on a clean Windows machine (no Node.js, no VSCode)
+- [ ] App icon set (`.ico` format)
+- [ ] App name shown as "Weselna Familiada" in Windows start menu and taskbar
+- [ ] Offline — no internet required at runtime
+
+---
+
+### US-034: Auto-open board window from operator panel
+
+**As an** operator
+**I want to** open the game board window with a single button click
+**So that** I don't need to manually open a second window or URL
+
+**Status:** 📋 Planned
+**Story Points:** 3
+**Priority:** P1
+
+**Acceptance Criteria:**
+
+- [ ] "Open Board Window" button in Lobby screen (operator panel)
+- [ ] Clicking it opens the Board window via Electron IPC → `ipcMain` creates a new `BrowserWindow`
+- [ ] Board window opens maximized (ready for projector)
+- [ ] If board window is already open: focuses it instead of opening a duplicate
+- [ ] Works in both dev and production builds
 
 ---
 

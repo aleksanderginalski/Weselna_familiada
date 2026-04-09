@@ -248,4 +248,41 @@ Operator Panel                    Game Board
 
 ---
 
+### ADR-004: Question Bank + localStorage for User Edits (US-029–031)
+
+**Decision:** Separate question bank (`pytania-bank.json`) from game config; user edits stored in `localStorage`
+
+**Rationale:**
+- `pytania-bank.json` ships with the app as the default bank (100+ questions, optional `category` field)
+- Operator edits (add/edit/delete) stored in `localStorage` — persists between sessions, survives app updates
+- At runtime: merge base bank with localStorage overrides
+- No backend or file-system writes needed; works in both browser and Electron renderer
+
+**Impact:**
+- `gameStore.ts` loads question bank on init (base JSON + localStorage merge)
+- New pre-game screen: `QuestionSelectionScreen` (operator only)
+- New admin screen: `QuestionEditorScreen` (operator only, accessible from Lobby)
+
+---
+
+### ADR-005: Electron for Desktop Distribution (US-032–034)
+
+**Decision:** Package as Electron app; produce Windows `.exe` installer via `electron-builder`
+
+**Rationale:**
+- Target users have no Node.js or developer tools installed
+- App must work fully offline (no internet at wedding venue)
+- Electron wraps the existing Vite/React app with minimal changes
+
+**Risk & Mitigation:**
+- **Risk:** BroadcastChannel may not propagate between separate Electron `BrowserWindow` processes
+- **Mitigation:** Verify in US-032; if broken, implement Electron IPC relay (`ipcMain` as message bus between renderer windows)
+
+**Impact:**
+- New `electron/main.ts` — main process, manages two `BrowserWindow` instances
+- Board window opened via IPC from operator panel (US-034) instead of `window.open()`
+- `npm run electron:dev` and `npm run electron:build` scripts added
+
+---
+
 *This document is updated during /discover sessions when architectural changes are made.*
