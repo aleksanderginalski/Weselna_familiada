@@ -755,22 +755,22 @@ EPIC-005: Weselna Familiada M5 - Desktop Distribution
 **I want to** control sound volume  
 **So that** I can adjust for the venue acoustics
 
-**Status:** 📋 Planned  
+**Status:** ✅ COMPLETED  
 **Story Points:** 2  
 **Priority:** P3
 
 **Acceptance Criteria:**
 
-- [ ] Volume slider in operator panel
-- [ ] Volume persists during session
+- [x] Volume slider in operator panel
+- [x] Volume persists during session
 
 **Tasks:**
 
-- [ ] **TASK-023.1:** Add volume state to store - 10min
-- [ ] **TASK-023.2:** Create volume slider component - 15min
-- [ ] **TASK-023.3:** Connect volume to Howler.js - 10min
-- [ ] **TASK-023.4:** Write component tests (/qa) - 15min
-- [ ] **TASK-023.5:** Manual verification: volume control works - 5min
+- [x] **TASK-023.1:** Add volume state to store - 10min
+- [x] **TASK-023.2:** Create volume slider component - 15min
+- [x] **TASK-023.3:** Connect volume to Howler.js - 10min
+- [x] **TASK-023.4:** Write component tests (/qa) - 15min
+- [x] **TASK-023.5:** Manual verification: volume control works - 5min
 
 ---
 
