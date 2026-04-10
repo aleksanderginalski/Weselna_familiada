@@ -86,6 +86,24 @@ describe('LobbyScreen', () => {
     expect(state.teams.right.name).toBe('Drużyna B');
   });
 
+  it('should populate questionBank in store after fetching pytania-bank.json', async () => {
+    const bankQuestion = { question: 'Bank Q?', answers: [{ text: 'Bank A', points: 15 }] };
+    global.fetch = vi.fn().mockImplementation((url: string) => {
+      if (url === '/pytania-bank.json') {
+        return Promise.resolve({ json: () => Promise.resolve({ questions: [bankQuestion] }) } as Response);
+      }
+      return Promise.resolve({ json: () => Promise.resolve(MOCK_GAME_DATA) } as Response);
+    });
+
+    render(<LobbyScreen />);
+    await waitFor(() => screen.getByRole('heading', { name: 'WESELNA FAMILIADA' }));
+
+    const state = useGameStore.getState();
+    expect(state.questionBank).toHaveLength(1);
+    expect(state.questionBank[0].question).toBe('Bank Q?');
+    expect(state.rounds).toHaveLength(1);
+  });
+
   it('should pass winningScore config when score mode selected before starting', async () => {
     render(<LobbyScreen />);
     await waitFor(() => screen.getByRole('heading', { name: 'WESELNA FAMILIADA' }));

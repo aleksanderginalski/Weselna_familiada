@@ -90,6 +90,30 @@ describe('gameStore', () => {
       expect(state.questionBank).toEqual([]);
       expect(state.rounds).toEqual([]);
     });
+
+    it('should replace questionBank and rounds when called a second time', () => {
+      const secondBank: QuestionBankFile = {
+        questions: [{ question: 'New Q?', answers: [{ text: 'New A', points: 99 }] }],
+      };
+      useGameStore.getState().loadBank(mockBankData);
+      useGameStore.getState().loadBank(secondBank);
+      const state = useGameStore.getState();
+
+      expect(state.questionBank).toEqual(secondBank.questions);
+      expect(state.rounds).toEqual(secondBank.questions);
+      expect(state.questionBank).toHaveLength(1);
+    });
+
+    it('should not affect config, status, or team scores', () => {
+      useGameStore.getState().loadGame(mockGameData);
+      useGameStore.getState().loadBank(mockBankData);
+      const state = useGameStore.getState();
+
+      expect(state.config).toEqual(mockGameData.config);
+      expect(state.status).toBe('lobby');
+      expect(state.teams.left.totalScore).toBe(0);
+      expect(state.teams.right.totalScore).toBe(0);
+    });
   });
 
   describe('startGame', () => {

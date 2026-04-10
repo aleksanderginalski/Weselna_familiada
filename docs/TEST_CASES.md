@@ -4,8 +4,8 @@
 
 | File | Tests | Status |
 |------|-------|--------|
-| src/types/game.test.ts | 14 | ✅ |
-| src/store/gameStore.test.ts | 36 | ✅ |
+| src/types/game.test.ts | 17 | ✅ |
+| src/store/gameStore.test.ts | 40 | ✅ |
 | src/hooks/useBroadcast.test.ts | 4 | ✅ |
 | src/hooks/useSound.test.ts | 6 | ✅ |
 | src/utils/broadcast.test.ts | 4 | ✅ |
@@ -24,13 +24,13 @@
 | src/components/operator/OperatorPanel.test.tsx | 6 | ✅ |
 | src/components/operator/VolumeSlider.test.tsx | 2 | ✅ |
 | src/components/operator/FinalRoundOperator.test.tsx | 1 | ✅ |
-| src/components/screens/LobbyScreen.test.tsx | 6 | ✅ |
+| src/components/screens/LobbyScreen.test.tsx | 7 | ✅ |
 | src/components/screens/WinnerScreen.test.tsx | 6 | ✅ |
 | src/App.test.tsx | 5 | ✅ |
 | src/test/lintingConfig.test.ts | 11 | ✅ |
-| src/test/tailwindTheme.test.ts | 2 | ✅ |
-| src/test/projectStructure.test.ts | 18 | ✅ |
-| **TOTAL** | **185** | ✅ |
+| src/test/tailwindTheme.test.ts | 5 | ✅ |
+| src/test/projectStructure.test.ts | 21 | ✅ |
+| **TOTAL** | **193** | ✅ |
 
 ---
 
@@ -194,3 +194,33 @@
 | # | Test | Type |
 |---|------|------|
 | TC-132 | should render mute button and volume slider in header | happy path |
+
+---
+
+## src/store/gameStore.test.ts — loadBank (US-029)
+
+| # | Test | Type |
+|---|------|------|
+| TC-133 | should store questions in questionBank and auto-select all as rounds | happy path |
+| TC-134 | should default to empty arrays when questions is undefined | boundary |
+| TC-135 | should replace questionBank and rounds when called a second time | boundary |
+| TC-136 | should not affect config, status, or team scores | isolation |
+
+---
+
+## src/types/game.test.ts — question bank types (US-029)
+
+| # | Test | Type |
+|---|------|------|
+| TC-137 | GameDataFile — should contain config only (questions loaded separately from bank) | happy path |
+| TC-138 | QuestionBankFile — should contain a questions array | happy path |
+| TC-139 | QuestionBankEntry — should extend RoundData with an optional category | happy path |
+| TC-140 | QuestionBankEntry — should allow category to be omitted | boundary |
+
+---
+
+## src/components/screens/LobbyScreen.test.tsx — loadBank integration (US-029)
+
+| # | Test | Type |
+|---|------|------|
+| TC-141 | should populate questionBank in store after fetching pytania-bank.json | integration |
