@@ -2,7 +2,7 @@
 
 **Project:** Weselna Familiada  
 **Version:** 2.0  
-**Last Updated:** 2026-04-09 (US-029–034 Planned — Question Management & Electron)  
+**Last Updated:** 2026-04-10 (US-029 Completed — Question Bank Data Model)  
 **Product Owner:** Aleksander Ginalski  
 **Repository:** https://github.com/AleksanderGinalworking/Weselna_familiada
 
@@ -1027,7 +1027,7 @@ EPIC-005: Weselna Familiada M5 - Desktop Distribution
 
 **Priority:** P1 (High)
 **Total Points:** 18
-**Status:** 📋 Planned
+**Status:** 🔄 In Progress
 
 ### US-029: Question bank data model
 
@@ -1035,17 +1035,17 @@ EPIC-005: Weselna Familiada M5 - Desktop Distribution
 **I want to** redesign the question data format to support a large question bank with categories
 **So that** the app can manage 100+ questions and select subsets for each game
 
-**Status:** 📋 Planned
+**Status:** ✅ Completed
 **Story Points:** 3
 **Priority:** P0
 
 **Acceptance Criteria:**
 
-- [ ] New `pytania-bank.json` format supports 100+ questions with optional `category` field
-- [ ] Existing `pytania.json` questions migrated to new bank format
-- [ ] `GameConfig` updated — questions no longer embedded in config, loaded from bank
-- [ ] `gameStore.ts` loads questions from bank at startup
-- [ ] Backward compatibility: existing game flow unaffected
+- [x] New `pytania-bank.json` format supports 100+ questions with optional `category` field
+- [x] Existing `pytania.json` questions migrated to new bank format
+- [x] `GameConfig` updated — questions no longer embedded in config, loaded from bank
+- [x] `gameStore.ts` loads questions from bank at startup
+- [x] Backward compatibility: existing game flow unaffected
 
 ---
 
