@@ -8,6 +8,7 @@ import { createGameChannel, requestStateSync, sendSyncState } from '@/utils/broa
 function extractGameState(store: ReturnType<typeof useGameStore.getState>): GameState {
   return {
     config: store.config,
+    questionBank: store.questionBank,
     rounds: store.rounds,
     status: store.status,
     currentRoundIndex: store.currentRoundIndex,
