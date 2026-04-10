@@ -64,7 +64,8 @@ Weselna_familiada/
 ├── .claude/agents/       # Agenci Claude Code
 ├── .vscode/              # Konfiguracja VS Code
 ├── public/
-│   └── pytania.json      # Pytania i odpowiedzi (edytuj tutaj!)
+│   ├── pytania.json          # Konfiguracja gry (tryb, mnożniki, nazwy drużyn)
+│   └── pytania-bank.json     # Bank pytań (edytuj tutaj!)
 ├── src/
 │   ├── components/       # Komponenty React
 │   ├── hooks/            # Custom hooks
@@ -79,7 +80,9 @@ Weselna_familiada/
 
 ## 📝 Edycja pytań
 
-Edytuj plik `public/pytania.json` w VS Code:
+Pytania i konfiguracja są teraz w **dwóch osobnych plikach**:
+
+### `public/pytania.json` — konfiguracja gry
 
 ```json
 {
@@ -91,10 +94,18 @@ Edytuj plik `public/pytania.json` w VS Code:
       "left": { "name": "Drużyna Pana Młodego" },
       "right": { "name": "Drużyna Panny Młodej" }
     }
-  },
-  "rounds": [
+  }
+}
+```
+
+### `public/pytania-bank.json` — bank pytań
+
+```json
+{
+  "questions": [
     {
       "question": "Twoje pytanie?",
+      "category": "general",
       "answers": [
         { "text": "Odpowiedź 1", "points": 30 },
         { "text": "Odpowiedź 2", "points": 25 }
@@ -103,6 +114,8 @@ Edytuj plik `public/pytania.json` w VS Code:
   ]
 }
 ```
+
+Pole `category` jest opcjonalne — możesz je pominąć. Bank może zawierać dowolną liczbę pytań.
 
 ## 🚀 Build produkcyjny
 
@@ -141,6 +154,15 @@ MIT License — zobacz [LICENSE](./LICENSE)
 ---
 
 ## Latest
+
+**v0.30.0** — Question bank data model (US-029)
+
+- `public/pytania-bank.json` — new file: question bank with 8 migrated questions; each entry has `question`, `answers`, and optional `category` field
+- `public/pytania.json` — `rounds` array removed; file now contains `config` only
+- `src/types/game.ts` — new `QuestionBankEntry` interface (extends `RoundData` with `category?: string`); new `QuestionBankFile` interface (`{ questions: QuestionBankEntry[] }`); `GameDataFile` no longer includes `rounds`; `GameState` gains `questionBank: QuestionBankEntry[]` field
+- `src/store/gameStore.ts` — new `loadBank(data: QuestionBankFile)` action: stores full bank in `questionBank`, auto-selects all questions as `rounds` (until US-030 adds selection screen); `loadGame` no longer sets rounds; `resetGame` preserves `questionBank` and `rounds`
+- `src/components/screens/LobbyScreen.tsx` — fetches both `/pytania.json` and `/pytania-bank.json` in parallel on mount via `Promise.all`; calls `loadBank` after loading
+- 8 tests added: TC-133 through TC-141 (193 total)
 
 **v0.29.0** — Volume control in operator panels (US-023)
 

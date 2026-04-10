@@ -2,14 +2,17 @@ import { render, screen } from '@testing-library/react';
 import { useGameStore } from '@/store/gameStore';
 import { AnswerSum } from './AnswerSum';
 
-const MOCK_DATA = {
+const MOCK_CONFIG = {
   config: {
     mode: 'fixed' as const,
     numberOfRounds: 1,
     multipliers: [1],
     teams: { left: { name: 'A' }, right: { name: 'B' } },
   },
-  rounds: [
+};
+
+const MOCK_BANK = {
+  questions: [
     {
       question: 'Test?',
       answers: [
@@ -22,11 +25,13 @@ const MOCK_DATA = {
 
 beforeEach(() => {
   useGameStore.getState().resetGame();
+  useGameStore.setState({ rounds: [], questionBank: [] });
 });
 
 describe('AnswerSum', () => {
   it('should display Suma label and 0 on game start', () => {
-    useGameStore.getState().loadGame(MOCK_DATA);
+    useGameStore.getState().loadGame(MOCK_CONFIG);
+    useGameStore.getState().loadBank(MOCK_BANK);
     useGameStore.getState().startGame();
     render(<AnswerSum />);
 
@@ -35,7 +40,8 @@ describe('AnswerSum', () => {
   });
 
   it('should update sum when answers are revealed', () => {
-    useGameStore.getState().loadGame(MOCK_DATA);
+    useGameStore.getState().loadGame(MOCK_CONFIG);
+    useGameStore.getState().loadBank(MOCK_BANK);
     useGameStore.getState().startGame();
     useGameStore.getState().revealAnswer(0);
     useGameStore.getState().revealAnswer(1);

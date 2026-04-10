@@ -2,23 +2,28 @@ import { render, screen } from '@testing-library/react';
 import { useGameStore } from '@/store/gameStore';
 import { TeamScore } from './TeamScore';
 
-const MOCK_DATA = {
+const MOCK_CONFIG = {
   config: {
     mode: 'fixed' as const,
     numberOfRounds: 1,
     multipliers: [2],
     teams: { left: { name: 'Drużyna Pana Młodego' }, right: { name: 'Drużyna Panny Młodej' } },
   },
-  rounds: [{ question: 'Test?', answers: [{ text: 'Odpowiedź', points: 30 }] }],
+};
+
+const MOCK_BANK = {
+  questions: [{ question: 'Test?', answers: [{ text: 'Odpowiedź', points: 30 }] }],
 };
 
 beforeEach(() => {
   useGameStore.getState().resetGame();
+  useGameStore.setState({ rounds: [], questionBank: [] });
 });
 
 describe('TeamScore', () => {
   it('should display team name and zero score on game start', () => {
-    useGameStore.getState().loadGame(MOCK_DATA);
+    useGameStore.getState().loadGame(MOCK_CONFIG);
+    useGameStore.getState().loadBank(MOCK_BANK);
     useGameStore.getState().startGame();
     render(<TeamScore side="left" />);
 
@@ -27,7 +32,8 @@ describe('TeamScore', () => {
   });
 
   it('should display right team name and score', () => {
-    useGameStore.getState().loadGame(MOCK_DATA);
+    useGameStore.getState().loadGame(MOCK_CONFIG);
+    useGameStore.getState().loadBank(MOCK_BANK);
     useGameStore.getState().startGame();
     render(<TeamScore side="right" />);
 
@@ -35,7 +41,8 @@ describe('TeamScore', () => {
   });
 
   it('should update score after endRound', () => {
-    useGameStore.getState().loadGame(MOCK_DATA);
+    useGameStore.getState().loadGame(MOCK_CONFIG);
+    useGameStore.getState().loadBank(MOCK_BANK);
     useGameStore.getState().startGame();
     useGameStore.getState().revealAnswer(0);
     useGameStore.getState().endRound('left');

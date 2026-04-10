@@ -47,9 +47,13 @@
 
 ## 2. Data Model
 
-### Game Configuration (from JSON)
+### Game Configuration (`pytania.json`)
 
 ```typescript
+interface GameDataFile {
+  config: GameConfig;  // no questions — loaded separately from pytania-bank.json
+}
+
 interface GameConfig {
   mode: 'fixed' | 'score';
   numberOfRounds?: number;
@@ -60,10 +64,20 @@ interface GameConfig {
     right: { name: string };
   };
 }
+```
 
-interface RoundData {
+### Question Bank (`pytania-bank.json`)
+
+```typescript
+interface QuestionBankFile {
+  questions: QuestionBankEntry[];
+}
+
+// Extends RoundData with optional category tag
+interface QuestionBankEntry {
   question: string;
   answers: AnswerData[];
+  category?: string;   // e.g. "general", "wedding", "movies"
 }
 
 interface AnswerData {
@@ -72,11 +86,23 @@ interface AnswerData {
 }
 ```
 
+### Startup Loading Flow
+
+```
+LobbyScreen mount
+  → Promise.all([fetch('/pytania.json'), fetch('/pytania-bank.json')])
+  → loadGame(configData)   — sets config, teams
+  → loadBank(bankData)     — sets questionBank[], rounds[] (all questions auto-selected)
+```
+
 ### Runtime State
 
 ```typescript
 interface GameState {
   config: GameConfig;
+  /** Full question bank loaded from pytania-bank.json */
+  questionBank: QuestionBankEntry[];
+  /** Selected subset for this game session (US-030 will allow manual selection) */
   rounds: RoundData[];
   status: 'lobby' | 'playing' | 'finished' | 'finalRound';
   currentRoundIndex: number;

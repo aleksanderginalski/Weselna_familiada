@@ -8,6 +8,8 @@ import type {
   GameState,
   GameStatus,
   MistakeIndicatorProps,
+  QuestionBankEntry,
+  QuestionBankFile,
   RoundData,
   RoundPhase,
   RoundState,
@@ -48,9 +50,18 @@ const mockRound: RoundData = {
   ],
 };
 
+const mockBankData: QuestionBankFile = {
+  questions: [mockRound],
+};
+
+const mockBankEntry: QuestionBankEntry = {
+  question: 'What do you find in a kitchen?',
+  answers: [{ text: 'Stove', points: 40 }],
+  category: 'general',
+};
+
 const mockGameData: GameDataFile = {
   config: fixedConfig,
-  rounds: [mockRound],
 };
 
 const initialRoundState: RoundState = {
@@ -67,6 +78,7 @@ const mockTeamState: TeamState = { name: 'Team A', totalScore: 0 };
 
 const mockGameState: GameState = {
   config: fixedConfig,
+  questionBank: [mockRound],
   rounds: [mockRound],
   status: 'lobby',
   currentRoundIndex: 0,
@@ -75,6 +87,7 @@ const mockGameState: GameState = {
     right: { name: 'Team B', totalScore: 0 },
   },
   currentRound: initialRoundState,
+  showingWinner: false,
 };
 
 // ---------------------------------------------------------------------------
@@ -117,9 +130,28 @@ describe('RoundData', () => {
 });
 
 describe('GameDataFile', () => {
-  it('should combine config and rounds', () => {
+  it('should contain config only (questions are loaded separately from the bank)', () => {
     expect(mockGameData.config).toBe(fixedConfig);
-    expect(mockGameData.rounds).toHaveLength(1);
+  });
+});
+
+describe('QuestionBankFile', () => {
+  it('should contain a questions array', () => {
+    expect(mockBankData.questions).toHaveLength(1);
+    expect(mockBankData.questions[0]).toBe(mockRound);
+  });
+});
+
+describe('QuestionBankEntry', () => {
+  it('should extend RoundData with an optional category', () => {
+    expect(mockBankEntry.question).toBe('What do you find in a kitchen?');
+    expect(mockBankEntry.answers).toHaveLength(1);
+    expect(mockBankEntry.category).toBe('general');
+  });
+
+  it('should allow category to be omitted', () => {
+    const entry: QuestionBankEntry = { question: 'Q?', answers: [] };
+    expect(entry.category).toBeUndefined();
   });
 });
 

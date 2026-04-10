@@ -2,14 +2,17 @@ import { render, screen } from '@testing-library/react';
 import { useGameStore } from '@/store/gameStore';
 import { AnswerBoard } from './AnswerBoard';
 
-const MOCK_DATA = {
+const MOCK_CONFIG = {
   config: {
     mode: 'fixed' as const,
     numberOfRounds: 1,
     multipliers: [1],
     teams: { left: { name: 'A' }, right: { name: 'B' } },
   },
-  rounds: [
+};
+
+const MOCK_BANK = {
+  questions: [
     {
       question: 'Test?',
       answers: [
@@ -23,6 +26,7 @@ const MOCK_DATA = {
 
 beforeEach(() => {
   useGameStore.getState().resetGame();
+  useGameStore.setState({ rounds: [], questionBank: [] });
 });
 
 describe('AnswerBoard', () => {
@@ -32,7 +36,8 @@ describe('AnswerBoard', () => {
   });
 
   it('should render all answer rows after game starts', () => {
-    useGameStore.getState().loadGame(MOCK_DATA);
+    useGameStore.getState().loadGame(MOCK_CONFIG);
+    useGameStore.getState().loadBank(MOCK_BANK);
     useGameStore.getState().startGame();
     render(<AnswerBoard />);
 
@@ -43,7 +48,8 @@ describe('AnswerBoard', () => {
   });
 
   it('should show revealed answer text and hide mask after revealAnswer', () => {
-    useGameStore.getState().loadGame(MOCK_DATA);
+    useGameStore.getState().loadGame(MOCK_CONFIG);
+    useGameStore.getState().loadBank(MOCK_BANK);
     useGameStore.getState().startGame();
     useGameStore.getState().revealAnswer(1);
     render(<AnswerBoard />);
