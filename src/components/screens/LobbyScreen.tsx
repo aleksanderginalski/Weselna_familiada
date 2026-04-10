@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import { useGameStore } from '@/store/gameStore';
-import { GameDataFile } from '@/types/game';
+import { GameDataFile, QuestionBankFile } from '@/types/game';
 
 type GameMode = 'fixed' | 'score';
 
@@ -23,6 +23,7 @@ const DEFAULT_FORM: LobbyFormState = {
 
 export function LobbyScreen() {
   const loadGame = useGameStore((state) => state.loadGame);
+  const loadBank = useGameStore((state) => state.loadBank);
   const startGame = useGameStore((state) => state.startGame);
 
   const [gameData, setGameData] = useState<GameDataFile | null>(null);
@@ -31,16 +32,19 @@ export function LobbyScreen() {
   const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
-    fetch('/pytania.json')
-      .then((res) => res.json())
-      .then((data: GameDataFile) => {
-        setGameData(data);
+    Promise.all([
+      fetch('/pytania.json').then((res) => res.json() as Promise<GameDataFile>),
+      fetch('/pytania-bank.json').then((res) => res.json() as Promise<QuestionBankFile>),
+    ])
+      .then(([configData, bankData]) => {
+        setGameData(configData);
+        loadBank(bankData);
         setForm({
-          leftName: data.config.teams.left.name,
-          rightName: data.config.teams.right.name,
-          mode: data.config.mode,
-          numberOfRounds: data.config.numberOfRounds ?? DEFAULT_FORM.numberOfRounds,
-          winningScore: data.config.winningScore ?? DEFAULT_FORM.winningScore,
+          leftName: configData.config.teams.left.name,
+          rightName: configData.config.teams.right.name,
+          mode: configData.config.mode,
+          numberOfRounds: configData.config.numberOfRounds ?? DEFAULT_FORM.numberOfRounds,
+          winningScore: configData.config.winningScore ?? DEFAULT_FORM.winningScore,
         });
         setIsLoading(false);
       })
@@ -48,13 +52,12 @@ export function LobbyScreen() {
         setHasError(true);
         setIsLoading(false);
       });
-  }, []);
+  }, [loadBank]);
 
   function handleStartGame() {
     if (!gameData) return;
 
     const data: GameDataFile = {
-      rounds: gameData.rounds,
       config: {
         ...gameData.config,
         mode: form.mode,

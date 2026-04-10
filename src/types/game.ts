@@ -32,9 +32,19 @@ export interface AnswerData {
   points: number;
 }
 
+/** A question entry in the bank — same as RoundData with an optional category tag */
+export interface QuestionBankEntry extends RoundData {
+  category?: string;
+}
+
+/** The pytania-bank.json file format */
+export interface QuestionBankFile {
+  questions: QuestionBankEntry[];
+}
+
+/** The pytania.json file format — game configuration only, no questions */
 export interface GameDataFile {
   config: GameConfig;
-  rounds: RoundData[];
 }
 
 // ============================================
@@ -70,6 +80,8 @@ export interface RoundState {
 export interface GameState {
   // Configuration (loaded from JSON, immutable during game)
   config: GameConfig;
+  /** Full question bank loaded from pytania-bank.json */
+  questionBank: QuestionBankEntry[];
   rounds: RoundData[];
 
   // Game progress

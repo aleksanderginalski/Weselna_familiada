@@ -3,14 +3,17 @@ import userEvent from '@testing-library/user-event';
 import { useGameStore } from '@/store/gameStore';
 import { AnswerControl } from './AnswerControl';
 
-const MOCK_DATA = {
+const MOCK_CONFIG = {
   config: {
     mode: 'fixed' as const,
     numberOfRounds: 1,
     multipliers: [1],
     teams: { left: { name: 'A' }, right: { name: 'B' } },
   },
-  rounds: [
+};
+
+const MOCK_BANK = {
+  questions: [
     {
       question: 'Test?',
       answers: [
@@ -24,6 +27,7 @@ const MOCK_DATA = {
 
 beforeEach(() => {
   useGameStore.getState().resetGame();
+  useGameStore.setState({ rounds: [], questionBank: [] });
 });
 
 describe('AnswerControl', () => {
@@ -33,7 +37,8 @@ describe('AnswerControl', () => {
   });
 
   it('should display all answers with number, text, points and ODKRYJ buttons', () => {
-    useGameStore.getState().loadGame(MOCK_DATA);
+    useGameStore.getState().loadGame(MOCK_CONFIG);
+    useGameStore.getState().loadBank(MOCK_BANK);
     useGameStore.getState().startGame();
     render(<AnswerControl />);
 
@@ -49,7 +54,8 @@ describe('AnswerControl', () => {
   });
 
   it('should replace ODKRYJ button with revealed indicator after clicking', async () => {
-    useGameStore.getState().loadGame(MOCK_DATA);
+    useGameStore.getState().loadGame(MOCK_CONFIG);
+    useGameStore.getState().loadBank(MOCK_BANK);
     useGameStore.getState().startGame();
     render(<AnswerControl />);
 
@@ -61,7 +67,8 @@ describe('AnswerControl', () => {
   });
 
   it('should call revealAnswer with correct index on button click', async () => {
-    useGameStore.getState().loadGame(MOCK_DATA);
+    useGameStore.getState().loadGame(MOCK_CONFIG);
+    useGameStore.getState().loadBank(MOCK_BANK);
     useGameStore.getState().startGame();
     render(<AnswerControl />);
 
@@ -72,7 +79,8 @@ describe('AnswerControl', () => {
   });
 
   it('should mark already-revealed answers from store on initial render', () => {
-    useGameStore.getState().loadGame(MOCK_DATA);
+    useGameStore.getState().loadGame(MOCK_CONFIG);
+    useGameStore.getState().loadBank(MOCK_BANK);
     useGameStore.getState().startGame();
     useGameStore.getState().revealAnswer(2);
     render(<AnswerControl />);

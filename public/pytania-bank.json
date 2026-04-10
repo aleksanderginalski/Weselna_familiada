@@ -1,0 +1,92 @@
+{
+  "questions": [
+    {
+      "question": "Najlepsze świąteczne dania",
+      "category": "general",
+      "answers": [
+        { "text": "Sałatka Jarzynowa", "points": 30 },
+        { "text": "Żórek", "points": 25 },
+        { "text": "Chrzan", "points": 20 },
+        { "text": "Jajko", "points": 15 },
+        { "text": "Babka", "points": 10 }
+      ]
+    },
+    {
+      "question": "Top Papieżów",
+      "category": "general",
+      "answers": [
+        { "text": "Jan Paweł II", "points": 28 },
+        { "text": "Franciszek", "points": 24 },
+        { "text": "Leon", "points": 18 },
+        { "text": "Benedyk XVI", "points": 15 },
+        { "text": "Pius IV", "points": 15 }
+      ]
+    },
+    {
+      "question": "Gothic – co jest najbardziej charakterystyczne?",
+      "category": "general",
+      "answers": [
+        { "text": "Bezimienny", "points": 30 },
+        { "text": "Gomez", "points": 25 },
+        { "text": "Diego", "points": 18 },
+        { "text": "Wrzód", "points": 15 },
+        { "text": "Bagienne Ziele", "points": 12 }
+      ]
+    },
+    {
+      "question": "Co kojarzy się z Bartoszem Walaszkiem?",
+      "category": "general",
+      "answers": [
+        { "text": "Kapitan Bomba", "points": 35 },
+        { "text": "Blok Ekipa", "points": 25 },
+        { "text": "Egzorcysta", "points": 15 },
+        { "text": "Bracia Figo Fagot", "points": 15 },
+        { "text": "SF Skurcz", "points": 10 }
+      ]
+    },
+    {
+      "question": "Co najbardziej denerwuje w pracy z LLM?",
+      "category": "general",
+      "answers": [
+        { "text": "Halucynacje", "points": 30 },
+        { "text": "Błędy w kodzie", "points": 25 },
+        { "text": "Koszty API", "points": 18 },
+        { "text": "Limit tokenów", "points": 15 },
+        { "text": "Wolne działanie", "points": 12 }
+      ]
+    },
+    {
+      "question": "Co robi programista zamiast pracować?",
+      "category": "general",
+      "answers": [
+        { "text": "Scrolluje internet", "points": 30 },
+        { "text": "Ogląda YouTube", "points": 25 },
+        { "text": "Debuguje coś niepotrzebnego", "points": 18 },
+        { "text": "Pije kawę", "points": 15 },
+        { "text": "Rozmawia na Slacku", "points": 12 }
+      ]
+    },
+    {
+      "question": "Konflikty zbrojne Izraela – co się kojarzy?",
+      "category": "general",
+      "answers": [
+        { "text": "Gaza", "points": 30 },
+        { "text": "Hamas", "points": 25 },
+        { "text": "Zbrodnie wojenne", "points": 20 },
+        { "text": "Rakiety", "points": 15 },
+        { "text": "Nataniahu", "points": 10 }
+      ]
+    },
+    {
+      "question": "Co mówi dev po deployu?",
+      "category": "general",
+      "answers": [
+        { "text": "Działa u mnie", "points": 35 },
+        { "text": "Nie ruszaj", "points": 25 },
+        { "text": "Zobaczymy na produkcji", "points": 18 },
+        { "text": "Powinno działać", "points": 12 },
+        { "text": "Rollback?", "points": 10 }
+      ]
+    }
+  ]
+}

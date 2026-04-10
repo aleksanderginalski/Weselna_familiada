@@ -2,14 +2,17 @@ import { render, screen } from '@testing-library/react';
 import { useGameStore } from '@/store/gameStore';
 import { RoundScore } from './RoundScore';
 
-const MOCK_DATA = {
+const MOCK_CONFIG = {
   config: {
     mode: 'fixed' as const,
     numberOfRounds: 2,
     multipliers: [3, 2],
     teams: { left: { name: 'A' }, right: { name: 'B' } },
   },
-  rounds: [
+};
+
+const MOCK_BANK = {
+  questions: [
     { question: 'Test?', answers: [{ text: 'Odpowiedź', points: 30 }] },
     { question: 'Test 2?', answers: [{ text: 'Odpowiedź 2', points: 50 }] },
   ],
@@ -17,11 +20,13 @@ const MOCK_DATA = {
 
 beforeEach(() => {
   useGameStore.getState().resetGame();
+  useGameStore.setState({ rounds: [], questionBank: [] });
 });
 
 describe('RoundScore', () => {
   it('should display 0 points and correct multiplier on game start', () => {
-    useGameStore.getState().loadGame(MOCK_DATA);
+    useGameStore.getState().loadGame(MOCK_CONFIG);
+    useGameStore.getState().loadBank(MOCK_BANK);
     useGameStore.getState().startGame();
     render(<RoundScore />);
 
@@ -30,7 +35,8 @@ describe('RoundScore', () => {
   });
 
   it('should update points to win when answer is revealed', () => {
-    useGameStore.getState().loadGame(MOCK_DATA);
+    useGameStore.getState().loadGame(MOCK_CONFIG);
+    useGameStore.getState().loadBank(MOCK_BANK);
     useGameStore.getState().startGame();
     useGameStore.getState().revealAnswer(0);
     render(<RoundScore />);
@@ -40,7 +46,8 @@ describe('RoundScore', () => {
   });
 
   it('should use correct multiplier for second round', () => {
-    useGameStore.getState().loadGame(MOCK_DATA);
+    useGameStore.getState().loadGame(MOCK_CONFIG);
+    useGameStore.getState().loadBank(MOCK_BANK);
     useGameStore.getState().startGame();
     useGameStore.getState().nextRound();
     useGameStore.getState().revealAnswer(0);

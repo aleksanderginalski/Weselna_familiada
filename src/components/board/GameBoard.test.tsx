@@ -2,14 +2,17 @@ import { render, screen } from '@testing-library/react';
 import { useGameStore } from '@/store/gameStore';
 import { GameBoard } from './GameBoard';
 
-const MOCK_DATA = {
+const MOCK_CONFIG = {
   config: {
     mode: 'fixed' as const,
     numberOfRounds: 2,
     multipliers: [1, 2],
     teams: { left: { name: 'Drużyna Pana Młodego' }, right: { name: 'Drużyna Panny Młodej' } },
   },
-  rounds: [
+};
+
+const MOCK_BANK = {
+  questions: [
     {
       question: 'Test?',
       answers: [
@@ -22,11 +25,13 @@ const MOCK_DATA = {
 
 beforeEach(() => {
   useGameStore.getState().resetGame();
+  useGameStore.setState({ rounds: [], questionBank: [] });
 });
 
 describe('GameBoard', () => {
   it('should render all board sections when game is loaded', () => {
-    useGameStore.getState().loadGame(MOCK_DATA);
+    useGameStore.getState().loadGame(MOCK_CONFIG);
+    useGameStore.getState().loadBank(MOCK_BANK);
     useGameStore.getState().startGame();
     render(<GameBoard />);
 
@@ -53,7 +58,8 @@ describe('GameBoard', () => {
   });
 
   it('should show right team score as 0 and left team score after round ends', () => {
-    useGameStore.getState().loadGame(MOCK_DATA);
+    useGameStore.getState().loadGame(MOCK_CONFIG);
+    useGameStore.getState().loadBank(MOCK_BANK);
     useGameStore.getState().startGame();
     useGameStore.getState().selectTeam('left');
     useGameStore.getState().revealAnswer(0);

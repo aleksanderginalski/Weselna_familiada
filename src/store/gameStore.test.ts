@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
 import { useGameStore } from './gameStore';
-import { GameDataFile } from '@/types/game';
+import { GameDataFile, QuestionBankFile } from '@/types/game';
 
 const mockGameData: GameDataFile = {
   config: {
@@ -13,7 +13,10 @@ const mockGameData: GameDataFile = {
       right: { name: 'Team B' },
     },
   },
-  rounds: [
+};
+
+const mockBankData: QuestionBankFile = {
+  questions: [
     {
       question: 'Question 1?',
       answers: [
@@ -35,6 +38,7 @@ beforeEach(() => {
       multipliers: [],
       teams: { left: { name: '' }, right: { name: '' } },
     },
+    questionBank: [],
     rounds: [],
     status: 'lobby',
     currentRoundIndex: 0,
@@ -56,18 +60,35 @@ beforeEach(() => {
 
 describe('gameStore', () => {
   describe('loadGame', () => {
-    it('should load config, rounds, and team names from JSON data', () => {
+    it('should load config and team names from JSON data', () => {
       useGameStore.getState().loadGame(mockGameData);
       const state = useGameStore.getState();
 
       expect(state.config).toEqual(mockGameData.config);
-      expect(state.rounds).toEqual(mockGameData.rounds);
       expect(state.teams.left.name).toBe('Team A');
       expect(state.teams.right.name).toBe('Team B');
       expect(state.teams.left.totalScore).toBe(0);
       expect(state.teams.right.totalScore).toBe(0);
       expect(state.status).toBe('lobby');
       expect(state.currentRoundIndex).toBe(0);
+    });
+  });
+
+  describe('loadBank', () => {
+    it('should store questions in questionBank and auto-select all as rounds', () => {
+      useGameStore.getState().loadBank(mockBankData);
+      const state = useGameStore.getState();
+
+      expect(state.questionBank).toEqual(mockBankData.questions);
+      expect(state.rounds).toEqual(mockBankData.questions);
+    });
+
+    it('should default to empty arrays when questions is undefined', () => {
+      useGameStore.getState().loadBank({ questions: undefined as unknown as [] });
+      const state = useGameStore.getState();
+
+      expect(state.questionBank).toEqual([]);
+      expect(state.rounds).toEqual([]);
     });
   });
 
@@ -98,6 +119,7 @@ describe('gameStore', () => {
   describe('revealAnswer', () => {
     it('should add index to revealedAnswers and accumulate roundScore', () => {
       useGameStore.getState().loadGame(mockGameData);
+      useGameStore.getState().loadBank(mockBankData);
       useGameStore.getState().startGame();
       useGameStore.getState().revealAnswer(0);
       useGameStore.getState().revealAnswer(1);
@@ -109,6 +131,7 @@ describe('gameStore', () => {
 
     it('should treat missing answer as 0 points', () => {
       useGameStore.getState().loadGame(mockGameData);
+      useGameStore.getState().loadBank(mockBankData);
       useGameStore.getState().startGame();
       useGameStore.getState().revealAnswer(99);
 
@@ -197,6 +220,7 @@ describe('gameStore', () => {
   describe('endRound', () => {
     it('should add roundScore × multiplier to winner totalScore and set phase to summary', () => {
       useGameStore.getState().loadGame(mockGameData);
+      useGameStore.getState().loadBank(mockBankData);
       useGameStore.getState().startGame();
       useGameStore.getState().revealAnswer(0);
       useGameStore.getState().endRound('left');
@@ -209,6 +233,7 @@ describe('gameStore', () => {
 
     it('should apply multiplier from current round index', () => {
       useGameStore.getState().loadGame(mockGameData);
+      useGameStore.getState().loadBank(mockBankData);
       useGameStore.getState().startGame();
       useGameStore.setState({ ...useGameStore.getState(), currentRoundIndex: 1 });
       useGameStore.getState().revealAnswer(0);
@@ -338,6 +363,7 @@ describe('gameStore', () => {
   describe('resetGame', () => {
     it('should reset scores and status to lobby while preserving team names and rounds', () => {
       useGameStore.getState().loadGame(mockGameData);
+      useGameStore.getState().loadBank(mockBankData);
       useGameStore.getState().startGame();
       useGameStore.getState().endRound('left');
       useGameStore.getState().resetGame();
@@ -348,7 +374,8 @@ describe('gameStore', () => {
       expect(state.teams.left.totalScore).toBe(0);
       expect(state.teams.right.totalScore).toBe(0);
       expect(state.teams.left.name).toBe('Team A');
-      expect(state.rounds).toEqual(mockGameData.rounds);
+      expect(state.rounds).toEqual(mockBankData.questions);
+      expect(state.questionBank).toEqual(mockBankData.questions);
       expect(state.currentRound.phase).toBe('showdown');
     });
   });

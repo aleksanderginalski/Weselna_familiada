@@ -3,14 +3,17 @@ import userEvent from '@testing-library/user-event';
 import { useGameStore } from '@/store/gameStore';
 import { OperatorPanel } from './OperatorPanel';
 
-const MOCK_DATA = {
+const MOCK_CONFIG = {
   config: {
     mode: 'fixed' as const,
     numberOfRounds: 1,
     multipliers: [1],
     teams: { left: { name: 'Lewa' }, right: { name: 'Prawa' } },
   },
-  rounds: [
+};
+
+const MOCK_BANK = {
+  questions: [
     {
       question: 'Co powinno zostać posprzątane przed świętami?',
       answers: [{ text: 'Kuchnia', points: 25 }],
@@ -20,7 +23,7 @@ const MOCK_DATA = {
 
 beforeEach(() => {
   useGameStore.getState().resetGame();
-  useGameStore.setState({ rounds: [], currentRoundIndex: 0 });
+  useGameStore.setState({ rounds: [], questionBank: [], currentRoundIndex: 0 });
   vi.spyOn(window, 'open').mockImplementation(() => null);
 });
 
@@ -37,7 +40,8 @@ describe('OperatorPanel', () => {
   });
 
   it('should show current question when game data is loaded', () => {
-    useGameStore.getState().loadGame(MOCK_DATA);
+    useGameStore.getState().loadGame(MOCK_CONFIG);
+    useGameStore.getState().loadBank(MOCK_BANK);
     useGameStore.getState().startGame();
     render(<OperatorPanel />);
 

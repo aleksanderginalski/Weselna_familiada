@@ -5,6 +5,7 @@ import {
   FinalRoundDataFile,
   GameDataFile,
   GameState,
+  QuestionBankFile,
   RoundState,
   TeamSide,
 } from '@/types/game';
@@ -43,6 +44,7 @@ const INITIAL_STATE: GameState = {
       right: { name: '' },
     },
   },
+  questionBank: [],
   rounds: [],
   status: 'lobby',
   currentRoundIndex: 0,
@@ -57,6 +59,7 @@ const INITIAL_STATE: GameState = {
 
 interface StoreActions {
   loadGame: (data: GameDataFile) => void;
+  loadBank: (data: QuestionBankFile) => void;
   startGame: () => void;
   selectTeam: (side: TeamSide) => void;
   revealAnswer: (index: number) => void;
@@ -93,7 +96,6 @@ export const useGameStore = create<GameState & StoreActions & SoundPreferences>(
   loadGame: (data: GameDataFile) =>
     set({
       config: data.config,
-      rounds: data.rounds,
       status: 'lobby',
       currentRoundIndex: 0,
       teams: {
@@ -101,6 +103,13 @@ export const useGameStore = create<GameState & StoreActions & SoundPreferences>(
         right: { name: data.config.teams.right.name, totalScore: 0 },
       },
       currentRound: INITIAL_ROUND_STATE,
+    }),
+
+  // Loads the question bank and auto-selects all questions as rounds (until US-030 adds selection)
+  loadBank: (data: QuestionBankFile) =>
+    set({
+      questionBank: data.questions ?? [],
+      rounds: data.questions ?? [],
     }),
 
   startGame: () =>
@@ -218,6 +227,9 @@ export const useGameStore = create<GameState & StoreActions & SoundPreferences>(
       currentRound: INITIAL_ROUND_STATE,
       showingWinner: false,
       finalRound: undefined,
+      // Preserve the loaded bank and rounds so the operator can start a new game without re-fetching
+      questionBank: state.questionBank,
+      rounds: state.rounds,
     })),
 
   toggleMute: () => set((state) => ({ isMuted: !state.isMuted })),

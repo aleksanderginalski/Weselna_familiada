@@ -2,21 +2,26 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { useGameStore } from '@/store/gameStore';
 import { App } from './App';
 
-const MOCK_GAME_DATA = {
+const MOCK_CONFIG_DATA = {
   config: {
     mode: 'fixed' as const,
     numberOfRounds: 1,
     multipliers: [1],
     teams: { left: { name: 'Lewa' }, right: { name: 'Prawa' } },
   },
-  rounds: [{ question: 'Pytanie testowe?', answers: [{ text: 'Odpowiedź', points: 10 }] }],
+};
+
+const MOCK_BANK_DATA = {
+  questions: [{ question: 'Pytanie testowe?', answers: [{ text: 'Odpowiedź', points: 10 }] }],
 };
 
 beforeEach(() => {
   useGameStore.getState().resetGame();
-  global.fetch = vi.fn().mockResolvedValue({
-    json: () => Promise.resolve(MOCK_GAME_DATA),
-  } as Response);
+  useGameStore.setState({ rounds: [], questionBank: [] });
+  global.fetch = vi.fn().mockImplementation((url: string) => {
+    const data = url === '/pytania-bank.json' ? MOCK_BANK_DATA : MOCK_CONFIG_DATA;
+    return Promise.resolve({ json: () => Promise.resolve(data) } as Response);
+  });
 });
 
 afterEach(() => {
@@ -35,7 +40,8 @@ describe('App', () => {
   });
 
   it('should render operator panel when status is playing', () => {
-    useGameStore.getState().loadGame(MOCK_GAME_DATA);
+    useGameStore.getState().loadGame(MOCK_CONFIG_DATA);
+    useGameStore.getState().loadBank(MOCK_BANK_DATA);
     useGameStore.getState().startGame();
 
     render(<App />);
@@ -46,7 +52,8 @@ describe('App', () => {
   });
 
   it('should not render lobby screen when status is playing', () => {
-    useGameStore.getState().loadGame(MOCK_GAME_DATA);
+    useGameStore.getState().loadGame(MOCK_CONFIG_DATA);
+    useGameStore.getState().loadBank(MOCK_BANK_DATA);
     useGameStore.getState().startGame();
 
     render(<App />);
@@ -55,7 +62,8 @@ describe('App', () => {
   });
 
   it('should show end game choice buttons when last round finished and winner not declared', () => {
-    useGameStore.getState().loadGame(MOCK_GAME_DATA);
+    useGameStore.getState().loadGame(MOCK_CONFIG_DATA);
+    useGameStore.getState().loadBank(MOCK_BANK_DATA);
     useGameStore.setState({
       ...useGameStore.getState(),
       status: 'finished',
@@ -77,7 +85,8 @@ describe('App', () => {
   });
 
   it('should render winner screen when status is finished and winner is declared', () => {
-    useGameStore.getState().loadGame(MOCK_GAME_DATA);
+    useGameStore.getState().loadGame(MOCK_CONFIG_DATA);
+    useGameStore.getState().loadBank(MOCK_BANK_DATA);
     useGameStore.setState({
       ...useGameStore.getState(),
       status: 'finished',
