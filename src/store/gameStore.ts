@@ -65,6 +65,7 @@ interface StoreActions {
   nextRound: () => void;
   resetGame: () => void;
   toggleMute: () => void;
+  setVolume: (volume: number) => void;
   declareWinner: () => void;
   startFinalRound: (data: FinalRoundDataFile) => void;
   startTimer: () => void;
@@ -81,11 +82,13 @@ interface StoreActions {
 
 interface SoundPreferences {
   isMuted: boolean;
+  volume: number;
 }
 
 export const useGameStore = create<GameState & StoreActions & SoundPreferences>((set) => ({
   ...INITIAL_STATE,
   isMuted: false,
+  volume: 80,
 
   loadGame: (data: GameDataFile) =>
     set({
@@ -218,6 +221,7 @@ export const useGameStore = create<GameState & StoreActions & SoundPreferences>(
     })),
 
   toggleMute: () => set((state) => ({ isMuted: !state.isMuted })),
+  setVolume: (volume: number) => set({ volume }),
 
   declareWinner: () => set({ showingWinner: true }),
 

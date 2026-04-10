@@ -12,6 +12,7 @@ const mockPlay = vi.hoisted(() => vi.fn());
 
 vi.mock('howler', () => ({
   Howl: vi.fn().mockImplementation(() => ({ play: mockPlay })),
+  Howler: { volume: vi.fn() },
 }));
 
 // ---------------------------------------------------------------------------

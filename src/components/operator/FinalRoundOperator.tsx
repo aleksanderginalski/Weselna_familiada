@@ -1,7 +1,9 @@
 import { useGameStore } from '@/store/gameStore';
-import { FinalRoundTimerPanel } from './FinalRoundTimerPanel';
-import { FinalRoundQuestionRow } from './FinalRoundQuestionRow';
+import { useSound } from '@/hooks/useSound';
 import { FinalRoundAnswer } from '@/types/game';
+import { FinalRoundQuestionRow } from './FinalRoundQuestionRow';
+import { FinalRoundTimerPanel } from './FinalRoundTimerPanel';
+import { VolumeSlider } from './VolumeSlider';
 
 const FINAL_ROUND_QUESTIONS = 5;
 
@@ -24,6 +26,7 @@ export function FinalRoundOperator() {
   const advanceToRevealPhase = useGameStore((state) => state.advanceToRevealPhase);
   const hidePlayerAAnswers = useGameStore((state) => state.hidePlayerAAnswers);
   const finishFinalRound = useGameStore((state) => state.finishFinalRound);
+  const { isMuted, toggleMute, volume, setVolume } = useSound();
 
   if (!finalRound) return null;
 
@@ -36,9 +39,20 @@ export function FinalRoundOperator() {
   return (
     <div className="min-h-screen bg-familiada-bg-dark p-4 space-y-4">
       <div className="sticky top-0 bg-familiada-bg-dark z-10 pb-2 border-b border-gray-700">
-        <h1 className="font-display text-xl text-familiada-gold uppercase tracking-widest mb-3">
-          Runda Finałowa — Panel Operatora
-        </h1>
+        <div className="flex items-center justify-between mb-3">
+          <h1 className="font-display text-xl text-familiada-gold uppercase tracking-widest">
+            Runda Finałowa — Panel Operatora
+          </h1>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={toggleMute}
+              className="operator-btn bg-familiada-bg-panel text-familiada-text-secondary border border-familiada-border hover:border-familiada-gold hover:text-familiada-gold"
+            >
+              {isMuted ? 'Włącz dźwięk' : 'Wycisz'}
+            </button>
+            <VolumeSlider volume={volume} onChange={setVolume} />
+          </div>
+        </div>
         <FinalRoundTimerPanel />
       </div>
 
