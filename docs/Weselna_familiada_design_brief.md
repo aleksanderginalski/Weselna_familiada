@@ -74,4 +74,24 @@ box-shadow: 0 0 20px rgba(251, 191, 36, 0.3);
 
 ---
 
+## 6. X Error Indicators (Mistake / Steal)
+
+**Reference:** original Familiada LED board — see `/Duży błąd.JPG` and `/Mały Błąd.JPG`
+
+| Property | Value |
+|----------|-------|
+| Color | Yellow (`#fbbf24`) — same as gold accent |
+| Style | Dot-matrix LED pattern via CSS `radial-gradient` grid |
+| Background | Dark (`#0a1628`) with visible dot grid |
+| Active state | Yellow dots |
+| Inactive/empty state | Dark/invisible dots (no bright color) |
+
+**Types:**
+- **Small X** — 3 stacked slots on the controlling team's side (one per mistake)
+- **Large X** — 1 tall slot on the opposing side (steal indicator), height = 3 small slots combined
+
+**Scope:** Game board only. Operator panel keeps current styling.
+
+---
+
 *This brief is updated when design decisions evolve.*

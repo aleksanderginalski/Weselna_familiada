@@ -1,89 +1,97 @@
 {
   "config": {
     "mode": "fixed",
-    "numberOfRounds": 7,
+    "numberOfRounds": 8,
     "winningScore": 300,
-    "multipliers": [1, 1, 2, 2, 3, 3, 3],
+    "multipliers": [1, 1, 2, 2, 3, 3, 3, 3],
     "teams": {
       "left": {
-        "name": "Drużyna Pana Młodego"
+        "name": "Team Backend"
       },
       "right": {
-        "name": "Drużyna Panny Młodej"
+        "name": "Team Frontend"
       }
     }
   },
   "rounds": [
     {
-      "question": "Co powinno zostać posprzątane w domu przed świętami?",
+      "question": "Najlepsze świąteczne dania",
       "answers": [
-        { "text": "Kuchnia", "points": 25 },
-        { "text": "Okna", "points": 20 },
-        { "text": "Łazienka", "points": 18 },
-        { "text": "Podłogi", "points": 17 },
-        { "text": "Kurz na meblach", "points": 12 },
-        { "text": "Lodówka", "points": 8 }
+        { "text": "Sałatka Jarzynowa", "points": 30 },
+        { "text": "Żórek", "points": 25 },
+        { "text": "Chrzan", "points": 20 },
+        { "text": "Jajko", "points": 15 },
+        { "text": "Babka", "points": 10 }
       ]
     },
     {
-      "question": "Jaka pieśń wielkanocna jest najlepsza?",
+      "question": "Top Papieżów",
       "answers": [
-        { "text": "Wesoły nam dzień dziś nastał", "points": 32 },
-        { "text": "Chrystus zmartwychwstan jest", "points": 24 },
-        { "text": "Alleluja, Jezus żyje", "points": 16 },
-        { "text": "Zwycięzca śmierci", "points": 14 },
-        { "text": "Otrzyjcie już łzy płaczący", "points": 14 }
+        { "text": "Jan Paweł II", "points": 28 },
+        { "text": "Franciszek", "points": 24 },
+        { "text": "Leon", "points": 18 },
+        { "text": "Benedyk XVI", "points": 15 },
+        { "text": "Pius IV", "points": 15 }
       ]
     },
     {
-      "question": "Wielkanocne danie to:",
+      "question": "Gothic – co jest najbardziej charakterystyczne?",
       "answers": [
-        { "text": "Żurek / barszcz biały", "points": 30 },
-        { "text": "Jajka", "points": 25 },
-        { "text": "Sałatka jarzynowa", "points": 18 },
-        { "text": "Biała kiełbasa", "points": 15 },
-        { "text": "Mazurek", "points": 12 }
+        { "text": "Bezimienny", "points": 30 },
+        { "text": "Gomez", "points": 25 },
+        { "text": "Diego", "points": 18 },
+        { "text": "Wrzód", "points": 15 },
+        { "text": "Bagienne Ziele", "points": 12 }
       ]
     },
     {
-      "question": "Jakich tematów powinno unikać się przy rodzinnym stole?",
+      "question": "Co kojarzy się z Bartoszem Walaszkiem?",
       "answers": [
-        { "text": "Polityka", "points": 35 },
-        { "text": "Pieniądze", "points": 20 },
-        { "text": "Religia", "points": 18 },
-        { "text": "Praca / zarobki", "points": 15 },
-        { "text": "Życie prywatne", "points": 12 }
+        { "text": "Kapitan Bomba", "points": 35 },
+        { "text": "Blok Ekipa", "points": 25 },
+        { "text": "Egzorcysta", "points": 15 },
+        { "text": "Bracia Figo Fagot", "points": 15 },
+        { "text": "SF Skurcz", "points": 10 }
       ]
     },
     {
-      "question": "Co robi maturzysta zamiast się uczyć?",
+      "question": "Co najbardziej denerwuje w pracy z LLM?",
       "answers": [
-        { "text": "Przegląda telefon", "points": 30 },
-        { "text": "Ogląda seriale/YouTube", "points": 22 },
-        { "text": "Sprząta", "points": 18 },
-        { "text": "Spotyka się ze znajomymi", "points": 15 },
-        { "text": "Śpi", "points": 15 }
+        { "text": "Halucynacje", "points": 30 },
+        { "text": "Błędy w kodzie", "points": 25 },
+        { "text": "Koszty API", "points": 18 },
+        { "text": "Limit tokenów", "points": 15 },
+        { "text": "Wolne działanie", "points": 12 }
       ]
     },
     {
-      "question": "Co najbardziej stresuje przed maturą?",
+      "question": "Co robi programista zamiast pracować?",
       "answers": [
-        { "text": "Brak nauki", "points": 32 },
-        { "text": "Trudne pytania", "points": 22 },
-        { "text": "Czas na egzaminie", "points": 18 },
-        { "text": "Wyniki / przyszłość", "points": 16 },
-        { "text": "Komisja", "points": 12 }
+        { "text": "Scrolluje internet", "points": 30 },
+        { "text": "Ogląda YouTube", "points": 25 },
+        { "text": "Debuguje coś niepotrzebnego", "points": 18 },
+        { "text": "Pije kawę", "points": 15 },
+        { "text": "Rozmawia na Slacku", "points": 12 }
       ]
     },
     {
-      "question": "Co trzeba załatwić przed ślubem?",
+      "question": "Konflikty zbrojne Izraela – co się kojarzy?",
       "answers": [
-        { "text": "Sala weselna", "points": 25 },
-        { "text": "Suknia ślubna", "points": 20 },
-        { "text": "Zaproszenia", "points": 18 },
-        { "text": "Jedzenie / catering", "points": 15 },
-        { "text": "Zespół / DJ", "points": 12 },
-        { "text": "Fotograf", "points": 10 }
+        { "text": "Gaza", "points": 30 },
+        { "text": "Hamas", "points": 25 },
+        { "text": "Zbrodnie wojenne", "points": 20 },
+        { "text": "Rakiety", "points": 15 },
+        { "text": "Nataniahu", "points": 10 }
+      ]
+    },
+    {
+      "question": "Co mówi dev po deployu?",
+      "answers": [
+        { "text": "Działa u mnie", "points": 35 },
+        { "text": "Nie ruszaj", "points": 25 },
+        { "text": "Zobaczymy na produkcji", "points": 18 },
+        { "text": "Powinno działać", "points": 12 },
+        { "text": "Rollback?", "points": 10 }
       ]
     }
   ]

@@ -142,6 +142,15 @@ MIT License — zobacz [LICENSE](./LICENSE)
 
 ## Latest
 
+**v0.29.0** — Volume control in operator panels (US-023)
+
+- `src/store/gameStore.ts` — added `volume: number` (default 80) to `SoundPreferences` and `setVolume(volume: number)` action
+- `src/hooks/useSound.ts` — reads `volume`/`setVolume` from store; `useEffect` calls `Howler.volume(volume / 100)` whenever volume changes; exposes `volume` and `setVolume` in return
+- `src/components/operator/VolumeSlider.tsx` — new component: `<input type="range" min=0 max=100>` with percentage label; props: `volume`, `onChange`
+- `src/components/operator/OperatorPanel.tsx` — `VolumeSlider` added to header between mute button and "Otwórz Tablicę"
+- `src/components/operator/FinalRoundOperator.tsx` — mute button and `VolumeSlider` added to sticky header; volume state shared with main operator panel via Zustand
+- 8 tests added: TC-125 through TC-132 (185 total)
+
 **v0.28.0** — Dot-matrix X mistake indicators on board (US-027 + US-028)
 
 - `public/fonts/Familiada-2.otf` — new custom dot-matrix font (em-square 640×896, 5:7 ratio) served as static file

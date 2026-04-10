@@ -9,9 +9,11 @@ import { useSound } from './useSound';
 // ---------------------------------------------------------------------------
 
 const mockPlay = vi.hoisted(() => vi.fn());
+const mockHowlerVolume = vi.hoisted(() => vi.fn());
 
 vi.mock('howler', () => ({
   Howl: vi.fn().mockImplementation(() => ({ play: mockPlay })),
+  Howler: { volume: mockHowlerVolume },
 }));
 
 // ---------------------------------------------------------------------------
@@ -21,7 +23,8 @@ vi.mock('howler', () => ({
 describe('useSound', () => {
   beforeEach(() => {
     mockPlay.mockClear();
-    useGameStore.setState({ isMuted: false });
+    mockHowlerVolume.mockClear();
+    useGameStore.setState({ isMuted: false, volume: 80 });
   });
 
   it('should return all play functions, isMuted false by default, and toggleMute', () => {
@@ -35,6 +38,30 @@ describe('useSound', () => {
     expect(result.current.playWin).toBeTypeOf('function');
     expect(result.current.isMuted).toBe(false);
     expect(result.current.toggleMute).toBeTypeOf('function');
+  });
+
+  it('should return volume 80 and setVolume function by default', () => {
+    // TC-127
+    const { result } = renderHook(() => useSound());
+
+    expect(result.current.volume).toBe(80);
+    expect(result.current.setVolume).toBeTypeOf('function');
+  });
+
+  it('should call Howler.volume with volume/100 on mount', () => {
+    // TC-128
+    renderHook(() => useSound());
+
+    expect(mockHowlerVolume).toHaveBeenCalledWith(0.8);
+  });
+
+  it('should call Howler.volume with updated value when setVolume is called', () => {
+    // TC-129
+    const { result } = renderHook(() => useSound());
+
+    act(() => { result.current.setVolume(50); });
+
+    expect(mockHowlerVolume).toHaveBeenCalledWith(0.5);
   });
 
   it('should call play() when a play function is invoked and not muted', () => {

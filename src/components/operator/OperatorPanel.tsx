@@ -3,11 +3,12 @@ import { useSound } from '@/hooks/useSound';
 import { AnswerControl } from './AnswerControl';
 import { RoundControls } from './RoundControls';
 import { TeamControl } from './TeamControl';
+import { VolumeSlider } from './VolumeSlider';
 
 export function OperatorPanel() {
   const rounds = useGameStore((state) => state.rounds);
   const currentRoundIndex = useGameStore((state) => state.currentRoundIndex);
-  const { isMuted, toggleMute, playIntro } = useSound();
+  const { isMuted, toggleMute, playIntro, volume, setVolume } = useSound();
 
   function handleOpenBoard() {
     window.open('/?view=board', '_blank');
@@ -23,13 +24,14 @@ export function OperatorPanel() {
         <h1 className="font-heading text-xl text-familiada-gold text-glow-gold tracking-wide">
           WESELNA FAMILIADA — Panel Operatora
         </h1>
-        <div className="flex gap-2">
+        <div className="flex items-center gap-2">
           <button
             onClick={toggleMute}
             className="operator-btn bg-familiada-bg-dark text-familiada-text-secondary border border-familiada-border hover:border-familiada-gold hover:text-familiada-gold"
           >
             {isMuted ? 'Włącz dźwięk' : 'Wycisz'}
           </button>
+          <VolumeSlider volume={volume} onChange={setVolume} />
           <button
             onClick={handleOpenBoard}
             className="operator-btn bg-familiada-gold text-familiada-bg-dark hover:bg-yellow-400 font-bold"

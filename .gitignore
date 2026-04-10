@@ -54,3 +54,5 @@ tmp/
 temp/
 *.tmp
 .claude/current_task.md
+public/pytania-final.json
+public/pytania.json

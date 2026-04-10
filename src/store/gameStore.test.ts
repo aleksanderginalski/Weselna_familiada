@@ -321,6 +321,20 @@ describe('gameStore', () => {
     });
   });
 
+  describe('setVolume', () => {
+    it('should default volume to 80', () => {
+      // TC-125
+      expect(useGameStore.getState().volume).toBe(80);
+    });
+
+    it('should update volume when setVolume is called', () => {
+      // TC-126
+      useGameStore.getState().setVolume(50);
+
+      expect(useGameStore.getState().volume).toBe(50);
+    });
+  });
+
   describe('resetGame', () => {
     it('should reset scores and status to lobby while preserving team names and rounds', () => {
       useGameStore.getState().loadGame(mockGameData);

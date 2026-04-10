@@ -5,9 +5,9 @@
 | File | Tests | Status |
 |------|-------|--------|
 | src/types/game.test.ts | 14 | ✅ |
-| src/store/gameStore.test.ts | 34 | ✅ |
+| src/store/gameStore.test.ts | 36 | ✅ |
 | src/hooks/useBroadcast.test.ts | 4 | ✅ |
-| src/hooks/useSound.test.ts | 3 | ✅ |
+| src/hooks/useSound.test.ts | 6 | ✅ |
 | src/utils/broadcast.test.ts | 4 | ✅ |
 | src/components/board/AnswerRow.test.tsx | 3 | ✅ |
 | src/components/board/AnswerBoard.test.tsx | 3 | ✅ |
@@ -22,13 +22,15 @@
 | src/components/operator/TeamControl.test.tsx | 5 | ✅ |
 | src/components/operator/RoundControls.test.tsx | 6 | ✅ |
 | src/components/operator/OperatorPanel.test.tsx | 6 | ✅ |
+| src/components/operator/VolumeSlider.test.tsx | 2 | ✅ |
+| src/components/operator/FinalRoundOperator.test.tsx | 1 | ✅ |
 | src/components/screens/LobbyScreen.test.tsx | 6 | ✅ |
 | src/components/screens/WinnerScreen.test.tsx | 6 | ✅ |
 | src/App.test.tsx | 5 | ✅ |
 | src/test/lintingConfig.test.ts | 11 | ✅ |
 | src/test/tailwindTheme.test.ts | 2 | ✅ |
 | src/test/projectStructure.test.ts | 18 | ✅ |
-| **TOTAL** | **161** | ✅ |
+| **TOTAL** | **185** | ✅ |
 
 ---
 
@@ -152,3 +154,43 @@
 | TC-091 | should transition status to lobby when NOWA GRA is clicked | interaction |
 | TC-118 | should show calculated final score and team name when finalRound is present | happy path |
 | TC-119 | should add 25000 bonus when final sum is 200 or more | boundary |
+
+---
+
+## src/store/gameStore.test.ts — setVolume (US-023)
+
+| # | Test | Type |
+|---|------|------|
+| TC-125 | should default volume to 80 | happy path |
+| TC-126 | should update volume when setVolume is called | happy path |
+
+---
+
+## src/hooks/useSound.test.ts — volume (US-023)
+
+| # | Test | Type |
+|---|------|------|
+| TC-127 | should return volume 80 and setVolume function by default | happy path |
+| TC-128 | should call Howler.volume with volume/100 on mount | happy path |
+| TC-129 | should call Howler.volume with updated value when setVolume is called | happy path |
+
+---
+
+## src/components/operator/VolumeSlider.test.tsx (US-023)
+
+**Component:** `VolumeSlider`
+
+| # | Test | Type |
+|---|------|------|
+| TC-130 | should render slider with current value and percentage label | happy path |
+| TC-131 | should call onChange with numeric value when slider changes | interaction |
+
+---
+
+## src/components/operator/FinalRoundOperator.test.tsx (US-023)
+
+**Component:** `FinalRoundOperator`
+
+| # | Test | Type |
+|---|------|------|
+| TC-132 | should render mute button and volume slider in header | happy path |
