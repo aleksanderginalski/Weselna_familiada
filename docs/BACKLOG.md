@@ -2,7 +2,7 @@
 
 **Project:** Weselna Familiada  
 **Version:** 2.0  
-**Last Updated:** 2026-04-10 (US-029 Completed — Question Bank Data Model)  
+**Last Updated:** 2026-04-11 (US-030 Completed — Question Selection Screen)  
 **Product Owner:** Aleksander Ginalski  
 **Repository:** https://github.com/AleksanderGinalworking/Weselna_familiada
 
@@ -1055,20 +1055,20 @@ EPIC-005: Weselna Familiada M5 - Desktop Distribution
 **I want to** select which questions are played before the game starts
 **So that** I can curate the game or let the app draw randomly based on game mode
 
-**Status:** 📋 Planned
+**Status:** ✅ COMPLETED
 **Story Points:** 8
 **Priority:** P0
 
 **Acceptance Criteria:**
 
-- [ ] New screen shown between Lobby and first round (pre-game setup step)
-- [ ] Operator can manually check/uncheck questions from the full bank
-- [ ] "Draw randomly" button selects N questions based on game mode:
+- [x] New screen shown between Lobby and first round (pre-game setup step)
+- [x] Operator can manually check/uncheck questions from the full bank
+- [x] "Draw randomly" button selects N questions based on game mode:
   - Fixed rounds mode: draws exactly `numberOfRounds` questions
   - Score cap mode: draws a reasonable pool (e.g. 10) to cover the session
-- [ ] Selected questions are reorderable (drag & drop or up/down arrows)
-- [ ] Confirmation button locks selection and starts the game
-- [ ] Screen accessible on operator window only (not board)
+- [x] Selected questions are reorderable (drag & drop or up/down arrows)
+- [x] Confirmation button locks selection and starts the game
+- [x] Screen accessible on operator window only (not board)
 
 ---
 
