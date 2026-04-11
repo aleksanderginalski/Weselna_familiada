@@ -1,7 +1,7 @@
 # Weselna Familiada - Test Cases Documentation
 
-**Version:** 1.5  
-**Date:** 2026-04-08  
+**Version:** 1.6  
+**Date:** 2026-04-11  
 **Author:** QA Agent  
 **Test Framework:** Vitest
 
@@ -1764,6 +1764,193 @@ beforeEach(() => {
 1. `selectTeam('left')`, `markMistake()`
 2. Render `<DotMatrixBoard />`
 3. Assert container text CONTAINS U+2003 (EM Space — center cell of pattern)
+
+**Status:** ✅ Done
+
+---
+
+### FEATURE-030: Question Selection Screen (US-030)
+
+#### TC-134: QuestionSelectionScreen — renders question list with zero counter and disabled confirm
+
+**Related US:** US-030
+**Type:** Component
+**Priority:** Critical
+**File:** `src/components/screens/QuestionSelectionScreen.test.tsx`
+
+**Test Steps:**
+1. Set `questionBank` with 3 questions, `status: 'selectingQuestions'`
+2. Render `<QuestionSelectionScreen />`
+3. Assert heading "WYBÓR PYTAŃ", counter "Wybrano: 0 / 3 pytań", all question texts, ROZPOCZNIJ GRĘ disabled
+
+**Status:** ✅ Done
+
+---
+
+#### TC-135: QuestionSelectionScreen — selecting a question shows order number, updates counter, enables confirm
+
+**Related US:** US-030
+**Type:** Component
+**Priority:** Critical
+**File:** `src/components/screens/QuestionSelectionScreen.test.tsx`
+
+**Test Steps:**
+1. Click first checkbox
+2. Assert counter "Wybrano: 1 / 3 pytań", badge "1." visible, ROZPOCZNIJ GRĘ enabled
+
+**Status:** ✅ Done
+
+---
+
+#### TC-136: QuestionSelectionScreen — deselecting removes order number and disables confirm
+
+**Related US:** US-030
+**Type:** Component
+**Priority:** High
+**File:** `src/components/screens/QuestionSelectionScreen.test.tsx`
+
+**Test Steps:**
+1. Check then uncheck first checkbox
+2. Assert counter "Wybrano: 0 / 3 pytań", no "1." badge, ROZPOCZNIJ GRĘ disabled
+
+**Status:** ✅ Done
+
+---
+
+#### TC-137: QuestionSelectionScreen — up/down buttons reorder selected questions
+
+**Related US:** US-030
+**Type:** Component
+**Priority:** High
+**File:** `src/components/screens/QuestionSelectionScreen.test.tsx`
+
+**Test Steps:**
+1. Select Q1 (1st) and Q2 (2nd)
+2. Click "Przesuń w górę" on Q2
+3. Assert Q2 shows badge "1.", Q1 shows badge "2."
+
+**Status:** ✅ Done
+
+---
+
+#### TC-138: QuestionSelectionScreen — ROZPOCZNIJ GRĘ calls selectQuestions with questions in selection order
+
+**Related US:** US-030
+**Type:** Component
+**Priority:** Critical
+**File:** `src/components/screens/QuestionSelectionScreen.test.tsx`
+
+**Test Steps:**
+1. Select Q3 first, then Q1
+2. Click ROZPOCZNIJ GRĘ
+3. Assert `status === 'playing'`, `rounds[0].question === 'Pytanie 3?'`, `rounds[1].question === 'Pytanie 1?'`
+
+**Status:** ✅ Done
+
+---
+
+#### TC-139: QuestionSelectionScreen — ← Wróć calls backToLobby
+
+**Related US:** US-030
+**Type:** Component
+**Priority:** High
+**File:** `src/components/screens/QuestionSelectionScreen.test.tsx`
+
+**Test Steps:**
+1. Click "← Wróć" button
+2. Assert `status === 'lobby'`
+
+**Status:** ✅ Done
+
+---
+
+#### TC-140: QuestionSelectionScreen — LOSUJ selects questions for fixed mode (numberOfRounds count)
+
+**Related US:** US-030
+**Type:** Component
+**Priority:** High
+**File:** `src/components/screens/QuestionSelectionScreen.test.tsx`
+
+**Test Steps:**
+1. Config fixed mode with `numberOfRounds: 2`, bank has 3 questions
+2. Click LOSUJ
+3. Assert exactly 2 checkboxes are checked, ROZPOCZNIJ GRĘ enabled
+
+**Status:** ✅ Done
+
+---
+
+#### TC-141: QuestionSelectionScreen — shows "Liczba rund" for fixed mode and "Gra do pkt" for score mode
+
+**Related US:** US-030
+**Type:** Component
+**Priority:** Medium
+**File:** `src/components/screens/QuestionSelectionScreen.test.tsx`
+
+**Test Steps:**
+1. Fixed mode: select 1 question → assert "Liczba rund: 1" visible, "Gra do" absent
+2. Score mode (winningScore: 150): assert "Gra do 150 pkt" visible, "Liczba rund" absent
+
+**Status:** ✅ Done
+
+---
+
+#### TC-142: selectQuestions — sets rounds, transitions to playing, resets round state
+
+**Related US:** US-030
+**Type:** Unit (store)
+**Priority:** Critical
+**File:** `src/store/gameStore.test.ts`
+
+**Test Steps:**
+1. `loadGame` + `loadBank` + `selectQuestions(questions)`
+2. Assert `rounds === questions`, `status === 'playing'`, `currentRoundIndex === 0`, `currentRound.phase === 'showdown'`
+
+**Status:** ✅ Done
+
+---
+
+#### TC-143: backToLobby — sets status to lobby while preserving questionBank
+
+**Related US:** US-030
+**Type:** Unit (store)
+**Priority:** High
+**File:** `src/store/gameStore.test.ts`
+
+**Test Steps:**
+1. `loadBank(mockBankData)` → `backToLobby()`
+2. Assert `status === 'lobby'`, `questionBank === mockBankData.questions`
+
+**Status:** ✅ Done
+
+---
+
+#### TC-144: endRound — sets status to finished when score mode questions exhausted without reaching threshold
+
+**Related US:** US-030
+**Type:** Unit (store)
+**Priority:** High
+**File:** `src/store/gameStore.test.ts`
+
+**Test Steps:**
+1. Score mode with `winningScore: 200`, 1 round, reveal answer (30 pts), `endRound('left')`
+2. Assert `status === 'finished'`, `teams.left.totalScore === 30`
+
+**Status:** ✅ Done
+
+---
+
+#### TC-145: App — renders QuestionSelectionScreen when status is selectingQuestions
+
+**Related US:** US-030
+**Type:** Component (routing)
+**Priority:** High
+**File:** `src/App.test.tsx`
+
+**Test Steps:**
+1. Set `status: 'selectingQuestions'`, `questionBank` with 1 question
+2. Render `<App />`
+3. Assert heading "WYBÓR PYTAŃ" visible, "DALEJ" absent
 
 **Status:** ✅ Done
 

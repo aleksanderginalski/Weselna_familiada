@@ -117,6 +117,33 @@ describe('gameStore', () => {
     });
   });
 
+  // TC-142
+  describe('selectQuestions', () => {
+    it('should set rounds, transition to playing, and reset round state', () => {
+      useGameStore.getState().loadGame(mockGameData);
+      useGameStore.getState().loadBank(mockBankData);
+      useGameStore.getState().selectQuestions(mockBankData.questions);
+      const state = useGameStore.getState();
+
+      expect(state.rounds).toEqual(mockBankData.questions);
+      expect(state.status).toBe('playing');
+      expect(state.currentRoundIndex).toBe(0);
+      expect(state.currentRound.phase).toBe('showdown');
+    });
+  });
+
+  // TC-143
+  describe('backToLobby', () => {
+    it('should set status to lobby while preserving questionBank', () => {
+      useGameStore.getState().loadBank(mockBankData);
+      useGameStore.getState().backToLobby();
+      const state = useGameStore.getState();
+
+      expect(state.status).toBe('lobby');
+      expect(state.questionBank).toEqual(mockBankData.questions);
+    });
+  });
+
   describe('startGame', () => {
     it('should set status to playing and reset round state', () => {
       useGameStore.getState().loadGame(mockGameData);
@@ -304,6 +331,27 @@ describe('gameStore', () => {
       useGameStore.getState().endRound('left');
 
       expect(useGameStore.getState().status).toBe('playing');
+    });
+
+    // TC-144
+    it('should set status to finished when score mode questions are exhausted without reaching threshold', () => {
+      useGameStore.setState({
+        ...useGameStore.getState(),
+        status: 'playing',
+        config: {
+          mode: 'score',
+          winningScore: 200,
+          multipliers: [1],
+          teams: { left: { name: 'A' }, right: { name: 'B' } },
+        },
+        rounds: [{ question: 'Q1', answers: [{ text: 'A1', points: 30 }] }],
+        teams: { left: { name: 'A', totalScore: 0 }, right: { name: 'B', totalScore: 0 } },
+      });
+      useGameStore.getState().revealAnswer(0);
+      useGameStore.getState().endRound('left');
+
+      expect(useGameStore.getState().status).toBe('finished');
+      expect(useGameStore.getState().teams.left.totalScore).toBe(30);
     });
 
     it('should set stealAttempted to true when ending a steal phase', () => {

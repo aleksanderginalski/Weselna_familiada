@@ -39,6 +39,20 @@ describe('App', () => {
     expect(screen.getByText('DALEJ')).toBeInTheDocument();
   });
 
+  // TC-145
+  it('should render question selection screen when status is selectingQuestions', () => {
+    useGameStore.setState({
+      ...useGameStore.getState(),
+      questionBank: MOCK_BANK_DATA.questions,
+      status: 'selectingQuestions',
+    });
+
+    render(<App />);
+
+    expect(screen.getByRole('heading', { name: 'WYBÓR PYTAŃ' })).toBeInTheDocument();
+    expect(screen.queryByText('DALEJ')).not.toBeInTheDocument();
+  });
+
   it('should render operator panel when status is playing', () => {
     useGameStore.getState().loadGame(MOCK_CONFIG_DATA);
     useGameStore.getState().selectQuestions(MOCK_BANK_DATA.questions);
