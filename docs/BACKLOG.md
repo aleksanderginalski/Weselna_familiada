@@ -2,7 +2,7 @@
 
 **Project:** Weselna Familiada  
 **Version:** 2.0  
-**Last Updated:** 2026-04-11 (US-030 Completed — Question Selection Screen)  
+**Last Updated:** 2026-04-11 (Discovery: US-035, US-036, US-037 added)  
 **Product Owner:** Aleksander Ginalski  
 **Repository:** https://github.com/AleksanderGinalworking/Weselna_familiada
 
@@ -1091,6 +1091,72 @@ EPIC-005: Weselna Familiada M5 - Desktop Distribution
 - [ ] Changes reflected immediately in question selection screen
 - [ ] Validation: question text required, at least 2 answers, points must be positive integers
 - [ ] Non-technical UX: clear labels, no JSON visible
+
+---
+
+### US-035: Transfer last round points ("Przekaż punkty")
+
+**As an** operator
+**I want to** transfer the last round's points from one team to the other
+**So that** I can correct a mistake when I accidentally assigned the round to the wrong team
+
+**Status:** 📋 Planned
+**Story Points:** 3
+**Priority:** P1
+
+**Acceptance Criteria:**
+
+- [ ] After each round ends, store tracks `lastRoundPoints: { amount: number; holder: TeamSide } | null`
+- [ ] `endRound` saves the amount awarded and which team received it
+- [ ] Button "Przekaż punkty (X pkt)" visible in the operator panel next to the team that currently holds the last round's points
+- [ ] Button is available throughout the entire following round (not just in summary phase)
+- [ ] Clicking the button: subtracts X pts from current holder, adds X pts to the other team, updates holder
+- [ ] After transfer, button moves to the other team (can be transferred back)
+- [ ] Button resets (disappears) when the next round ends and new `lastRoundPoints` are recorded
+- [ ] New store action: `transferLastRoundPoints()`
+
+---
+
+### US-036: Manual score adjustment (+/- 5 pts)
+
+**As an** operator
+**I want to** manually add or subtract 5 points from any team at any time
+**So that** the jury can award bonuses or corrections outside of the standard round mechanics
+
+**Status:** 📋 Planned
+**Story Points:** 2
+**Priority:** P1
+
+**Acceptance Criteria:**
+
+- [ ] Two buttons `−5` and `+5` visible next to each team's score in the operator panel (`TeamPanel`)
+- [ ] Buttons available at all times during the game (any phase)
+- [ ] Score cannot go below 0 (floor at 0)
+- [ ] New store action: `adjustScore(side: TeamSide, delta: number)`
+- [ ] Change reflected immediately in both operator panel and game board
+
+---
+
+### US-037: Score milestone visual effects and 2000pt game end
+
+**As a** player / operator
+**I want to** see a visual signal when a team's score crosses 1000 or 2000 points
+**So that** everyone understands the score has "wrapped around" on the 3-digit display, and the game ends appropriately at 2000+
+
+**Status:** 📋 Planned
+**Story Points:** 3
+**Priority:** P2
+
+**Context:** The `DigitDisplay` component is capped at 999 (3 digits). Scores ≥1000 show the last 3 digits only (e.g. 1050 → 050). A glow effect communicates the wrap to players. At 2000+, no further rounds make sense.
+
+**Acceptance Criteria:**
+
+- [ ] When a team's `totalScore >= 1000`: gold glow effect applied to that team's `DigitDisplay` border on the game board
+- [ ] When a team's `totalScore >= 2000`: gold glow effect applied (same as 1000+ but team has lapped once more)
+- [ ] Thresholds are fixed: 1000 and 2000 (not configurable)
+- [ ] When a team's score reaches or exceeds 2000 after `endRound`: `status` transitions to `'finished'` — operator sees only "OGŁOŚ ZWYCIĘSTWO" and "RUNDA FINAŁOWA", no "NASTĘPNA RUNDA"
+- [ ] Glow does not affect layout or component dimensions
+- [ ] New `endRound` condition: `isScoreMilestoneEnd` — triggers when either team's new total ≥ 2000
 
 ---
 
