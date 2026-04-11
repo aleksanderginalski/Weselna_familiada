@@ -31,8 +31,7 @@ beforeEach(() => {
 describe('AnswerSum', () => {
   it('should display Suma label and 0 on game start', () => {
     useGameStore.getState().loadGame(MOCK_CONFIG);
-    useGameStore.getState().loadBank(MOCK_BANK);
-    useGameStore.getState().startGame();
+    useGameStore.getState().selectQuestions(MOCK_BANK.questions);
     render(<AnswerSum />);
 
     expect(screen.getByText(/Suma:/i)).toBeInTheDocument();
@@ -41,8 +40,7 @@ describe('AnswerSum', () => {
 
   it('should update sum when answers are revealed', () => {
     useGameStore.getState().loadGame(MOCK_CONFIG);
-    useGameStore.getState().loadBank(MOCK_BANK);
-    useGameStore.getState().startGame();
+    useGameStore.getState().selectQuestions(MOCK_BANK.questions);
     useGameStore.getState().revealAnswer(0);
     useGameStore.getState().revealAnswer(1);
     render(<AnswerSum />);

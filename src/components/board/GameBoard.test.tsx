@@ -31,8 +31,7 @@ beforeEach(() => {
 describe('GameBoard', () => {
   it('should render all board sections when game is loaded', () => {
     useGameStore.getState().loadGame(MOCK_CONFIG);
-    useGameStore.getState().loadBank(MOCK_BANK);
-    useGameStore.getState().startGame();
+    useGameStore.getState().selectQuestions(MOCK_BANK.questions);
     render(<GameBoard />);
 
     // TeamScore — both team names
@@ -59,8 +58,7 @@ describe('GameBoard', () => {
 
   it('should show right team score as 0 and left team score after round ends', () => {
     useGameStore.getState().loadGame(MOCK_CONFIG);
-    useGameStore.getState().loadBank(MOCK_BANK);
-    useGameStore.getState().startGame();
+    useGameStore.getState().selectQuestions(MOCK_BANK.questions);
     useGameStore.getState().selectTeam('left');
     useGameStore.getState().revealAnswer(0);
     useGameStore.getState().endRound('left');

@@ -91,8 +91,17 @@ interface AnswerData {
 ```
 LobbyScreen mount
   → Promise.all([fetch('/pytania.json'), fetch('/pytania-bank.json')])
+  → stores configData + bankData in local state (no store action yet)
+
+LobbyScreen "DALEJ" button click
   → loadGame(configData)   — sets config, teams
-  → loadBank(bankData)     — sets questionBank[], rounds[] (all questions auto-selected)
+  → loadBank(bankData)     — sets questionBank[], clears rounds[], status → 'selectingQuestions'
+
+QuestionSelectionScreen "ROZPOCZNIJ GRĘ" button click
+  → selectQuestions(orderedQuestions)  — sets rounds[], status → 'playing'
+
+QuestionSelectionScreen "← Wróć" button click
+  → backToLobby()  — status → 'lobby', questionBank preserved
 ```
 
 ### Runtime State
@@ -102,9 +111,9 @@ interface GameState {
   config: GameConfig;
   /** Full question bank loaded from pytania-bank.json */
   questionBank: QuestionBankEntry[];
-  /** Selected subset for this game session (US-030 will allow manual selection) */
+  /** Selected and ordered subset for this game session */
   rounds: RoundData[];
-  status: 'lobby' | 'playing' | 'finished' | 'finalRound';
+  status: 'lobby' | 'selectingQuestions' | 'playing' | 'finished' | 'finalRound';
   currentRoundIndex: number;
   teams: {
     left: TeamState;
@@ -188,6 +197,7 @@ src/
 │   │   └── DigitDisplay.tsx        # 3-digit LED display; gold/black double border; font-heading labels
 │   └── screens/
 │       ├── LobbyScreen.tsx
+│       ├── QuestionSelectionScreen.tsx
 │       ├── GameScreen.tsx
 │       └── WinnerScreen.tsx
 ├── hooks/

@@ -10,14 +10,23 @@ const MOCK_GAME_DATA = {
     multipliers: [1, 2, 3],
     teams: { left: { name: 'Drużyna A' }, right: { name: 'Drużyna B' } },
   },
-  rounds: [{ question: 'Pytanie?', answers: [{ text: 'Odpowiedź', points: 10 }] }],
 };
+
+const MOCK_BANK_DATA = {
+  questions: [{ question: 'Bank Q?', answers: [{ text: 'Bank A', points: 15 }] }],
+};
+
+function mockFetch(configData = MOCK_GAME_DATA, bankData = MOCK_BANK_DATA) {
+  global.fetch = vi.fn().mockImplementation((url: string) => {
+    const data = url === '/pytania-bank.json' ? bankData : configData;
+    return Promise.resolve({ json: () => Promise.resolve(data) } as Response);
+  });
+}
 
 beforeEach(() => {
   useGameStore.getState().resetGame();
-  global.fetch = vi.fn().mockResolvedValue({
-    json: () => Promise.resolve(MOCK_GAME_DATA),
-  } as Response);
+  useGameStore.setState({ status: 'lobby', questionBank: [], rounds: [] });
+  mockFetch();
 });
 
 afterEach(() => {
@@ -36,8 +45,8 @@ describe('LobbyScreen', () => {
 
     expect(screen.getByDisplayValue('Drużyna A')).toBeInTheDocument();
     expect(screen.getByDisplayValue('Drużyna B')).toBeInTheDocument();
-    expect(screen.getByDisplayValue('3')).toBeInTheDocument();
-    expect(screen.getByText('ROZPOCZNIJ GRĘ')).toBeInTheDocument();
+    expect(screen.queryByText('Liczba rund')).not.toBeInTheDocument();
+    expect(screen.getByText('DALEJ')).toBeInTheDocument();
   });
 
   it('should show error message when fetch fails', async () => {
@@ -60,17 +69,17 @@ describe('LobbyScreen', () => {
     expect(screen.queryByText('Liczba rund')).not.toBeInTheDocument();
   });
 
-  it('should disable Start Game button when a team name is empty', async () => {
+  it('should disable DALEJ button when a team name is empty', async () => {
     render(<LobbyScreen />);
     await waitFor(() => screen.getByRole('heading', { name: 'WESELNA FAMILIADA' }));
 
     const leftInput = screen.getByDisplayValue('Drużyna A');
     await userEvent.clear(leftInput);
 
-    expect(screen.getByText('ROZPOCZNIJ GRĘ')).toBeDisabled();
+    expect(screen.getByText('DALEJ')).toBeDisabled();
   });
 
-  it('should call loadGame and startGame with edited config when Start Game is clicked', async () => {
+  it('should call loadGame and loadBank with edited config when DALEJ is clicked', async () => {
     render(<LobbyScreen />);
     await waitFor(() => screen.getByRole('heading', { name: 'WESELNA FAMILIADA' }));
 
@@ -78,45 +87,38 @@ describe('LobbyScreen', () => {
     await userEvent.clear(leftInput);
     await userEvent.type(leftInput, 'Nowa Lewa');
 
-    await userEvent.click(screen.getByText('ROZPOCZNIJ GRĘ'));
+    await userEvent.click(screen.getByText('DALEJ'));
 
     const state = useGameStore.getState();
-    expect(state.status).toBe('playing');
+    expect(state.status).toBe('selectingQuestions');
     expect(state.teams.left.name).toBe('Nowa Lewa');
     expect(state.teams.right.name).toBe('Drużyna B');
   });
 
-  it('should populate questionBank in store after fetching pytania-bank.json', async () => {
-    const bankQuestion = { question: 'Bank Q?', answers: [{ text: 'Bank A', points: 15 }] };
-    global.fetch = vi.fn().mockImplementation((url: string) => {
-      if (url === '/pytania-bank.json') {
-        return Promise.resolve({ json: () => Promise.resolve({ questions: [bankQuestion] }) } as Response);
-      }
-      return Promise.resolve({ json: () => Promise.resolve(MOCK_GAME_DATA) } as Response);
-    });
-
+  it('should populate questionBank in store after DALEJ is clicked', async () => {
     render(<LobbyScreen />);
     await waitFor(() => screen.getByRole('heading', { name: 'WESELNA FAMILIADA' }));
+
+    await userEvent.click(screen.getByText('DALEJ'));
 
     const state = useGameStore.getState();
     expect(state.questionBank).toHaveLength(1);
     expect(state.questionBank[0].question).toBe('Bank Q?');
-    expect(state.rounds).toHaveLength(1);
+    expect(state.rounds).toHaveLength(0);
   });
 
-  it('should pass winningScore config when score mode selected before starting', async () => {
+  it('should pass winningScore config when score mode selected before clicking DALEJ', async () => {
     render(<LobbyScreen />);
     await waitFor(() => screen.getByRole('heading', { name: 'WESELNA FAMILIADA' }));
 
     await userEvent.click(screen.getByRole('radio', { name: 'Do progu punktów' }));
 
-    // After switching to score mode there is exactly one spinbutton (winningScore)
     // fireEvent.change used because userEvent.clear on number input triggers
     // onChange with '' → Math.max fallback to 1, causing type('200') to append as '1200'
     const scoreInput = screen.getByRole('spinbutton');
     fireEvent.change(scoreInput, { target: { value: '200' } });
 
-    await userEvent.click(screen.getByText('ROZPOCZNIJ GRĘ'));
+    await userEvent.click(screen.getByText('DALEJ'));
 
     const state = useGameStore.getState();
     expect(state.config.mode).toBe('score');

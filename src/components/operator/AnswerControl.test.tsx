@@ -38,8 +38,7 @@ describe('AnswerControl', () => {
 
   it('should display all answers with number, text, points and ODKRYJ buttons', () => {
     useGameStore.getState().loadGame(MOCK_CONFIG);
-    useGameStore.getState().loadBank(MOCK_BANK);
-    useGameStore.getState().startGame();
+    useGameStore.getState().selectQuestions(MOCK_BANK.questions);
     render(<AnswerControl />);
 
     expect(screen.getByText('1')).toBeInTheDocument();
@@ -55,8 +54,7 @@ describe('AnswerControl', () => {
 
   it('should replace ODKRYJ button with revealed indicator after clicking', async () => {
     useGameStore.getState().loadGame(MOCK_CONFIG);
-    useGameStore.getState().loadBank(MOCK_BANK);
-    useGameStore.getState().startGame();
+    useGameStore.getState().selectQuestions(MOCK_BANK.questions);
     render(<AnswerControl />);
 
     const buttons = screen.getAllByRole('button', { name: 'ODKRYJ' });
@@ -68,8 +66,7 @@ describe('AnswerControl', () => {
 
   it('should call revealAnswer with correct index on button click', async () => {
     useGameStore.getState().loadGame(MOCK_CONFIG);
-    useGameStore.getState().loadBank(MOCK_BANK);
-    useGameStore.getState().startGame();
+    useGameStore.getState().selectQuestions(MOCK_BANK.questions);
     render(<AnswerControl />);
 
     const buttons = screen.getAllByRole('button', { name: 'ODKRYJ' });
@@ -80,8 +77,7 @@ describe('AnswerControl', () => {
 
   it('should mark already-revealed answers from store on initial render', () => {
     useGameStore.getState().loadGame(MOCK_CONFIG);
-    useGameStore.getState().loadBank(MOCK_BANK);
-    useGameStore.getState().startGame();
+    useGameStore.getState().selectQuestions(MOCK_BANK.questions);
     useGameStore.getState().revealAnswer(2);
     render(<AnswerControl />);
 

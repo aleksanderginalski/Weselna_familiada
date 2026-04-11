@@ -54,8 +54,9 @@ Otwórz projekt w VS Code — pojawi się sugestia instalacji rekomendowanych ro
 1. Uruchom aplikację (`npm run dev`)
 2. W Panelu Operatora kliknij "Otwórz Tablicę w Nowym Oknie"
 3. Przeciągnij okno Tablicy na rzutnik (rozszerz pulpit)
-4. Załaduj pytania z pliku `public/pytania.json`
-5. Prowadź grę używając Panelu Operatora
+4. Skonfiguruj nazwy drużyn i tryb gry, kliknij "DALEJ"
+5. Wybierz pytania z banku lub kliknij "LOSUJ", następnie "ROZPOCZNIJ GRĘ"
+6. Prowadź grę używając Panelu Operatora
 
 ## 📁 Struktura projektu
 
@@ -154,6 +155,15 @@ MIT License — zobacz [LICENSE](./LICENSE)
 ---
 
 ## Latest
+
+**v0.31.0** — Question selection screen (US-030)
+
+- `src/components/screens/QuestionSelectionScreen.tsx` — new screen between Lobby and game; operator checks/unchecks questions from the bank, reorders with ▲/▼ arrows, draws a random set via "LOSUJ", and confirms with "ROZPOCZNIJ GRĘ"
+- `src/store/gameStore.ts` — new `selectQuestions(questions)` action: locks selection into `rounds` and transitions to `'playing'`; new `backToLobby()` action: returns to `'lobby'` without clearing the bank; `loadBank` now sets `status: 'selectingQuestions'` and clears `rounds` instead of auto-selecting; `endRound()` extended with `isScoreModeExhausted`: game ends automatically when score mode runs out of questions before the threshold is reached (leader wins)
+- `src/types/game.ts` — `GameStatus` extended with `'selectingQuestions'`
+- `src/components/screens/LobbyScreen.tsx` — "Liczba rund" input removed; button label changed to "DALEJ"; `loadBank` moved from `useEffect` to button handler so team names are committed before navigating away
+- `src/App.tsx` — `status === 'selectingQuestions'` routes to `<QuestionSelectionScreen />` (operator window only)
+- 13 tests added: TC-134 through TC-145 (206 total)
 
 **v0.30.0** — Question bank data model (US-029)
 

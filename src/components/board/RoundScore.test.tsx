@@ -26,8 +26,7 @@ beforeEach(() => {
 describe('RoundScore', () => {
   it('should display 0 points and correct multiplier on game start', () => {
     useGameStore.getState().loadGame(MOCK_CONFIG);
-    useGameStore.getState().loadBank(MOCK_BANK);
-    useGameStore.getState().startGame();
+    useGameStore.getState().selectQuestions(MOCK_BANK.questions);
     render(<RoundScore />);
 
     expect(screen.getByText('0')).toBeInTheDocument();
@@ -36,8 +35,7 @@ describe('RoundScore', () => {
 
   it('should update points to win when answer is revealed', () => {
     useGameStore.getState().loadGame(MOCK_CONFIG);
-    useGameStore.getState().loadBank(MOCK_BANK);
-    useGameStore.getState().startGame();
+    useGameStore.getState().selectQuestions(MOCK_BANK.questions);
     useGameStore.getState().revealAnswer(0);
     render(<RoundScore />);
 
@@ -47,8 +45,7 @@ describe('RoundScore', () => {
 
   it('should use correct multiplier for second round', () => {
     useGameStore.getState().loadGame(MOCK_CONFIG);
-    useGameStore.getState().loadBank(MOCK_BANK);
-    useGameStore.getState().startGame();
+    useGameStore.getState().selectQuestions(MOCK_BANK.questions);
     useGameStore.getState().nextRound();
     useGameStore.getState().revealAnswer(0);
     render(<RoundScore />);

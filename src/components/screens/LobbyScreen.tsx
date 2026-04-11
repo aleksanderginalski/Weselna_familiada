@@ -9,7 +9,6 @@ interface LobbyFormState {
   leftName: string;
   rightName: string;
   mode: GameMode;
-  numberOfRounds: number;
   winningScore: number;
 }
 
@@ -17,16 +16,15 @@ const DEFAULT_FORM: LobbyFormState = {
   leftName: 'Drużyna Pana Młodego',
   rightName: 'Drużyna Panny Młodej',
   mode: 'fixed',
-  numberOfRounds: 4,
-  winningScore: 100,
+  winningScore: 300,
 };
 
 export function LobbyScreen() {
   const loadGame = useGameStore((state) => state.loadGame);
   const loadBank = useGameStore((state) => state.loadBank);
-  const startGame = useGameStore((state) => state.startGame);
 
   const [gameData, setGameData] = useState<GameDataFile | null>(null);
+  const [bankData, setBankData] = useState<QuestionBankFile | null>(null);
   const [form, setForm] = useState<LobbyFormState>(DEFAULT_FORM);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
@@ -36,14 +34,13 @@ export function LobbyScreen() {
       fetch('/pytania.json').then((res) => res.json() as Promise<GameDataFile>),
       fetch('/pytania-bank.json').then((res) => res.json() as Promise<QuestionBankFile>),
     ])
-      .then(([configData, bankData]) => {
+      .then(([configData, fetchedBankData]) => {
         setGameData(configData);
-        loadBank(bankData);
+        setBankData(fetchedBankData);
         setForm({
           leftName: configData.config.teams.left.name,
           rightName: configData.config.teams.right.name,
           mode: configData.config.mode,
-          numberOfRounds: configData.config.numberOfRounds ?? DEFAULT_FORM.numberOfRounds,
           winningScore: configData.config.winningScore ?? DEFAULT_FORM.winningScore,
         });
         setIsLoading(false);
@@ -52,10 +49,10 @@ export function LobbyScreen() {
         setHasError(true);
         setIsLoading(false);
       });
-  }, [loadBank]);
+  }, []);
 
   function handleStartGame() {
-    if (!gameData) return;
+    if (!gameData || !bankData) return;
 
     const data: GameDataFile = {
       config: {
@@ -65,13 +62,14 @@ export function LobbyScreen() {
           left: { name: form.leftName },
           right: { name: form.rightName },
         },
-        numberOfRounds: form.mode === 'fixed' ? form.numberOfRounds : undefined,
+        numberOfRounds: undefined,
         winningScore: form.mode === 'score' ? form.winningScore : undefined,
       },
     };
 
     loadGame(data);
-    startGame();
+    // loadBank sets status to 'selectingQuestions', routing App to QuestionSelectionScreen
+    loadBank(bankData);
   }
 
   if (isLoading) {
@@ -127,11 +125,11 @@ export function LobbyScreen() {
           </div>
         </section>
 
-        <section className="mb-6">
+        <section className="mb-8">
           <h2 className="text-familiada-text-secondary text-sm font-bold uppercase mb-3">
             Tryb gry
           </h2>
-          <div className="space-y-2">
+          <div className="space-y-2 mb-4">
             <label className="flex items-center gap-3 cursor-pointer">
               <input
                 type="radio"
@@ -155,26 +153,7 @@ export function LobbyScreen() {
               <span className="text-familiada-text-primary">Do progu punktów</span>
             </label>
           </div>
-        </section>
 
-        <section className="mb-8">
-          {form.mode === 'fixed' && (
-            <div>
-              <label className="block text-familiada-text-secondary text-sm mb-1">
-                Liczba rund
-              </label>
-              <input
-                type="number"
-                min={1}
-                max={20}
-                value={form.numberOfRounds}
-                onChange={(e) =>
-                  setForm({ ...form, numberOfRounds: Math.max(1, parseInt(e.target.value) || 1) })
-                }
-                className="w-full bg-familiada-bg-dark border-2 border-familiada-border rounded-lg px-4 py-2 text-familiada-text-primary focus:border-familiada-gold focus:outline-none"
-              />
-            </div>
-          )}
           {form.mode === 'score' && (
             <div>
               <label className="block text-familiada-text-secondary text-sm mb-1">
@@ -198,7 +177,7 @@ export function LobbyScreen() {
           disabled={!form.leftName.trim() || !form.rightName.trim()}
           className="operator-btn-primary w-full text-xl"
         >
-          ROZPOCZNIJ GRĘ
+          DALEJ
         </button>
       </div>
     </div>

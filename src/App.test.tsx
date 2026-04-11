@@ -17,7 +17,7 @@ const MOCK_BANK_DATA = {
 
 beforeEach(() => {
   useGameStore.getState().resetGame();
-  useGameStore.setState({ rounds: [], questionBank: [] });
+  useGameStore.setState({ rounds: [], questionBank: [], status: 'lobby' });
   global.fetch = vi.fn().mockImplementation((url: string) => {
     const data = url === '/pytania-bank.json' ? MOCK_BANK_DATA : MOCK_CONFIG_DATA;
     return Promise.resolve({ json: () => Promise.resolve(data) } as Response);
@@ -36,13 +36,26 @@ describe('App', () => {
     await waitFor(() => {
       expect(screen.getByRole('heading', { name: /WESELNA FAMILIADA/i })).toBeInTheDocument();
     });
-    expect(screen.getByText('ROZPOCZNIJ GRĘ')).toBeInTheDocument();
+    expect(screen.getByText('DALEJ')).toBeInTheDocument();
+  });
+
+  // TC-145
+  it('should render question selection screen when status is selectingQuestions', () => {
+    useGameStore.setState({
+      ...useGameStore.getState(),
+      questionBank: MOCK_BANK_DATA.questions,
+      status: 'selectingQuestions',
+    });
+
+    render(<App />);
+
+    expect(screen.getByRole('heading', { name: 'WYBÓR PYTAŃ' })).toBeInTheDocument();
+    expect(screen.queryByText('DALEJ')).not.toBeInTheDocument();
   });
 
   it('should render operator panel when status is playing', () => {
     useGameStore.getState().loadGame(MOCK_CONFIG_DATA);
-    useGameStore.getState().loadBank(MOCK_BANK_DATA);
-    useGameStore.getState().startGame();
+    useGameStore.getState().selectQuestions(MOCK_BANK_DATA.questions);
 
     render(<App />);
 
@@ -53,17 +66,16 @@ describe('App', () => {
 
   it('should not render lobby screen when status is playing', () => {
     useGameStore.getState().loadGame(MOCK_CONFIG_DATA);
-    useGameStore.getState().loadBank(MOCK_BANK_DATA);
-    useGameStore.getState().startGame();
+    useGameStore.getState().selectQuestions(MOCK_BANK_DATA.questions);
 
     render(<App />);
 
-    expect(screen.queryByText('ROZPOCZNIJ GRĘ')).not.toBeInTheDocument();
+    expect(screen.queryByText('DALEJ')).not.toBeInTheDocument();
   });
 
   it('should show end game choice buttons when last round finished and winner not declared', () => {
     useGameStore.getState().loadGame(MOCK_CONFIG_DATA);
-    useGameStore.getState().loadBank(MOCK_BANK_DATA);
+    useGameStore.getState().loadBank(MOCK_BANK_DATA); // populates questionBank
     useGameStore.setState({
       ...useGameStore.getState(),
       status: 'finished',
@@ -86,7 +98,7 @@ describe('App', () => {
 
   it('should render winner screen when status is finished and winner is declared', () => {
     useGameStore.getState().loadGame(MOCK_CONFIG_DATA);
-    useGameStore.getState().loadBank(MOCK_BANK_DATA);
+    useGameStore.getState().loadBank(MOCK_BANK_DATA); // populates questionBank
     useGameStore.setState({
       ...useGameStore.getState(),
       status: 'finished',

@@ -51,7 +51,7 @@ export interface GameDataFile {
 // Game State Types (runtime state)
 // ============================================
 
-export type GameStatus = 'lobby' | 'playing' | 'finished' | 'finalRound';
+export type GameStatus = 'lobby' | 'selectingQuestions' | 'playing' | 'finished' | 'finalRound';
 export type RoundPhase = 'showdown' | 'guessing' | 'steal' | 'summary';
 export type TeamSide = 'left' | 'right';
 

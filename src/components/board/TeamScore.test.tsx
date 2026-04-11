@@ -23,8 +23,7 @@ beforeEach(() => {
 describe('TeamScore', () => {
   it('should display team name and zero score on game start', () => {
     useGameStore.getState().loadGame(MOCK_CONFIG);
-    useGameStore.getState().loadBank(MOCK_BANK);
-    useGameStore.getState().startGame();
+    useGameStore.getState().selectQuestions(MOCK_BANK.questions);
     render(<TeamScore side="left" />);
 
     expect(screen.getByText('Drużyna Pana Młodego')).toBeInTheDocument();
@@ -33,8 +32,7 @@ describe('TeamScore', () => {
 
   it('should display right team name and score', () => {
     useGameStore.getState().loadGame(MOCK_CONFIG);
-    useGameStore.getState().loadBank(MOCK_BANK);
-    useGameStore.getState().startGame();
+    useGameStore.getState().selectQuestions(MOCK_BANK.questions);
     render(<TeamScore side="right" />);
 
     expect(screen.getByText('Drużyna Panny Młodej')).toBeInTheDocument();
@@ -42,8 +40,7 @@ describe('TeamScore', () => {
 
   it('should update score after endRound', () => {
     useGameStore.getState().loadGame(MOCK_CONFIG);
-    useGameStore.getState().loadBank(MOCK_BANK);
-    useGameStore.getState().startGame();
+    useGameStore.getState().selectQuestions(MOCK_BANK.questions);
     useGameStore.getState().revealAnswer(0);
     useGameStore.getState().endRound('left');
     render(<TeamScore side="left" />);
