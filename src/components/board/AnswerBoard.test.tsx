@@ -37,8 +37,7 @@ describe('AnswerBoard', () => {
 
   it('should render all answer rows after game starts', () => {
     useGameStore.getState().loadGame(MOCK_CONFIG);
-    useGameStore.getState().loadBank(MOCK_BANK);
-    useGameStore.getState().startGame();
+    useGameStore.getState().selectQuestions(MOCK_BANK.questions);
     render(<AnswerBoard />);
 
     expect(screen.getAllByText('████████████████████')).toHaveLength(3);
@@ -49,8 +48,7 @@ describe('AnswerBoard', () => {
 
   it('should show revealed answer text and hide mask after revealAnswer', () => {
     useGameStore.getState().loadGame(MOCK_CONFIG);
-    useGameStore.getState().loadBank(MOCK_BANK);
-    useGameStore.getState().startGame();
+    useGameStore.getState().selectQuestions(MOCK_BANK.questions);
     useGameStore.getState().revealAnswer(1);
     render(<AnswerBoard />);
 

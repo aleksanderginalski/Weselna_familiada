@@ -75,12 +75,13 @@ describe('gameStore', () => {
   });
 
   describe('loadBank', () => {
-    it('should store questions in questionBank and auto-select all as rounds', () => {
+    it('should store questions in questionBank and set status to selectingQuestions', () => {
       useGameStore.getState().loadBank(mockBankData);
       const state = useGameStore.getState();
 
       expect(state.questionBank).toEqual(mockBankData.questions);
-      expect(state.rounds).toEqual(mockBankData.questions);
+      expect(state.rounds).toEqual([]);
+      expect(state.status).toBe('selectingQuestions');
     });
 
     it('should default to empty arrays when questions is undefined', () => {
@@ -91,7 +92,7 @@ describe('gameStore', () => {
       expect(state.rounds).toEqual([]);
     });
 
-    it('should replace questionBank and rounds when called a second time', () => {
+    it('should replace questionBank when called a second time', () => {
       const secondBank: QuestionBankFile = {
         questions: [{ question: 'New Q?', answers: [{ text: 'New A', points: 99 }] }],
       };
@@ -100,17 +101,17 @@ describe('gameStore', () => {
       const state = useGameStore.getState();
 
       expect(state.questionBank).toEqual(secondBank.questions);
-      expect(state.rounds).toEqual(secondBank.questions);
+      expect(state.rounds).toEqual([]);
       expect(state.questionBank).toHaveLength(1);
     });
 
-    it('should not affect config, status, or team scores', () => {
+    it('should update config and set status to selectingQuestions after loadGame + loadBank', () => {
       useGameStore.getState().loadGame(mockGameData);
       useGameStore.getState().loadBank(mockBankData);
       const state = useGameStore.getState();
 
       expect(state.config).toEqual(mockGameData.config);
-      expect(state.status).toBe('lobby');
+      expect(state.status).toBe('selectingQuestions');
       expect(state.teams.left.totalScore).toBe(0);
       expect(state.teams.right.totalScore).toBe(0);
     });
@@ -143,8 +144,7 @@ describe('gameStore', () => {
   describe('revealAnswer', () => {
     it('should add index to revealedAnswers and accumulate roundScore', () => {
       useGameStore.getState().loadGame(mockGameData);
-      useGameStore.getState().loadBank(mockBankData);
-      useGameStore.getState().startGame();
+      useGameStore.getState().selectQuestions(mockBankData.questions);
       useGameStore.getState().revealAnswer(0);
       useGameStore.getState().revealAnswer(1);
       const state = useGameStore.getState();
@@ -155,8 +155,7 @@ describe('gameStore', () => {
 
     it('should treat missing answer as 0 points', () => {
       useGameStore.getState().loadGame(mockGameData);
-      useGameStore.getState().loadBank(mockBankData);
-      useGameStore.getState().startGame();
+      useGameStore.getState().selectQuestions(mockBankData.questions);
       useGameStore.getState().revealAnswer(99);
 
       expect(useGameStore.getState().currentRound.roundScore).toBe(0);
@@ -244,8 +243,7 @@ describe('gameStore', () => {
   describe('endRound', () => {
     it('should add roundScore × multiplier to winner totalScore and set phase to summary', () => {
       useGameStore.getState().loadGame(mockGameData);
-      useGameStore.getState().loadBank(mockBankData);
-      useGameStore.getState().startGame();
+      useGameStore.getState().selectQuestions(mockBankData.questions);
       useGameStore.getState().revealAnswer(0);
       useGameStore.getState().endRound('left');
       const state = useGameStore.getState();
@@ -257,8 +255,7 @@ describe('gameStore', () => {
 
     it('should apply multiplier from current round index', () => {
       useGameStore.getState().loadGame(mockGameData);
-      useGameStore.getState().loadBank(mockBankData);
-      useGameStore.getState().startGame();
+      useGameStore.getState().selectQuestions(mockBankData.questions);
       useGameStore.setState({ ...useGameStore.getState(), currentRoundIndex: 1 });
       useGameStore.getState().revealAnswer(0);
       useGameStore.getState().endRound('right');
@@ -293,10 +290,14 @@ describe('gameStore', () => {
         config: {
           mode: 'score',
           winningScore: 100,
-          multipliers: [1],
+          multipliers: [1, 1],
           teams: { left: { name: 'A' }, right: { name: 'B' } },
         },
-        rounds: [{ question: 'Q', answers: [{ text: 'A1', points: 30 }] }],
+        // Two rounds so questions are not exhausted after round 0
+        rounds: [
+          { question: 'Q1', answers: [{ text: 'A1', points: 30 }] },
+          { question: 'Q2', answers: [{ text: 'A2', points: 30 }] },
+        ],
         teams: { left: { name: 'A', totalScore: 0 }, right: { name: 'B', totalScore: 0 } },
       });
       useGameStore.getState().revealAnswer(0);
@@ -385,10 +386,10 @@ describe('gameStore', () => {
   });
 
   describe('resetGame', () => {
-    it('should reset scores and status to lobby while preserving team names and rounds', () => {
+    it('should reset scores and return to lobby while preserving team names and bank', () => {
       useGameStore.getState().loadGame(mockGameData);
       useGameStore.getState().loadBank(mockBankData);
-      useGameStore.getState().startGame();
+      useGameStore.getState().selectQuestions(mockBankData.questions);
       useGameStore.getState().endRound('left');
       useGameStore.getState().resetGame();
       const state = useGameStore.getState();
@@ -398,7 +399,7 @@ describe('gameStore', () => {
       expect(state.teams.left.totalScore).toBe(0);
       expect(state.teams.right.totalScore).toBe(0);
       expect(state.teams.left.name).toBe('Team A');
-      expect(state.rounds).toEqual(mockBankData.questions);
+      expect(state.rounds).toEqual([]);
       expect(state.questionBank).toEqual(mockBankData.questions);
       expect(state.currentRound.phase).toBe('showdown');
     });

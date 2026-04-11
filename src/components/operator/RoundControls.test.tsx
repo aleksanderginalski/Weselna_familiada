@@ -19,7 +19,7 @@ const MOCK_DATA = {
 beforeEach(() => {
   useGameStore.getState().resetGame();
   useGameStore.getState().loadGame(MOCK_DATA);
-  useGameStore.getState().startGame();
+  useGameStore.getState().selectQuestions(MOCK_DATA.rounds);
 });
 
 describe('RoundControls', () => {

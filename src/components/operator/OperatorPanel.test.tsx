@@ -41,8 +41,7 @@ describe('OperatorPanel', () => {
 
   it('should show current question when game data is loaded', () => {
     useGameStore.getState().loadGame(MOCK_CONFIG);
-    useGameStore.getState().loadBank(MOCK_BANK);
-    useGameStore.getState().startGame();
+    useGameStore.getState().selectQuestions(MOCK_BANK.questions);
     render(<OperatorPanel />);
 
     expect(screen.getByText('Co powinno zostać posprzątane przed świętami?')).toBeInTheDocument();

@@ -5,6 +5,7 @@ import {
   FinalRoundDataFile,
   GameDataFile,
   GameState,
+  QuestionBankEntry,
   QuestionBankFile,
   RoundState,
   TeamSide,
@@ -60,6 +61,8 @@ const INITIAL_STATE: GameState = {
 interface StoreActions {
   loadGame: (data: GameDataFile) => void;
   loadBank: (data: QuestionBankFile) => void;
+  selectQuestions: (questions: QuestionBankEntry[]) => void;
+  backToLobby: () => void;
   startGame: () => void;
   selectTeam: (side: TeamSide) => void;
   revealAnswer: (index: number) => void;
@@ -105,12 +108,25 @@ export const useGameStore = create<GameState & StoreActions & SoundPreferences>(
       currentRound: INITIAL_ROUND_STATE,
     }),
 
-  // Loads the question bank and auto-selects all questions as rounds (until US-030 adds selection)
+  // Loads the question bank and moves to the question selection screen
   loadBank: (data: QuestionBankFile) =>
     set({
       questionBank: data.questions ?? [],
-      rounds: data.questions ?? [],
+      rounds: [],
+      status: 'selectingQuestions',
     }),
+
+  // Locks the operator's question selection and starts the game
+  selectQuestions: (questions: QuestionBankEntry[]) =>
+    set({
+      rounds: questions,
+      status: 'playing',
+      currentRoundIndex: 0,
+      currentRound: INITIAL_ROUND_STATE,
+    }),
+
+  // Returns to lobby (team name config) while preserving the loaded bank
+  backToLobby: () => set({ status: 'lobby' }),
 
   startGame: () =>
     set({
@@ -180,13 +196,18 @@ export const useGameStore = create<GameState & StoreActions & SoundPreferences>(
         state.config.winningScore !== undefined &&
         newScore >= state.config.winningScore;
 
+      // Score mode: game also ends when all questions are exhausted (leader wins)
+      const isScoreModeExhausted =
+        state.config.mode === 'score' &&
+        state.currentRoundIndex + 1 >= state.rounds.length;
+
       // Fixed mode: game ends when this is the last round
       const totalRounds = state.config.numberOfRounds ?? state.rounds.length;
       const isFixedModeEnd =
         state.config.mode === 'fixed' && state.currentRoundIndex + 1 >= totalRounds;
 
       return {
-        status: isScoreModeWin || isFixedModeEnd ? 'finished' : state.status,
+        status: isScoreModeWin || isFixedModeEnd || isScoreModeExhausted ? 'finished' : state.status,
         teams: {
           ...state.teams,
           [winner]: {
@@ -218,6 +239,7 @@ export const useGameStore = create<GameState & StoreActions & SoundPreferences>(
 
   resetGame: () =>
     set((state) => ({
+      // Return to lobby so the operator can re-configure team names for the new game
       status: 'lobby',
       currentRoundIndex: 0,
       teams: {
@@ -227,9 +249,8 @@ export const useGameStore = create<GameState & StoreActions & SoundPreferences>(
       currentRound: INITIAL_ROUND_STATE,
       showingWinner: false,
       finalRound: undefined,
-      // Preserve the loaded bank and rounds so the operator can start a new game without re-fetching
       questionBank: state.questionBank,
-      rounds: state.rounds,
+      rounds: [],
     })),
 
   toggleMute: () => set((state) => ({ isMuted: !state.isMuted })),
