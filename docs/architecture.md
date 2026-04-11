@@ -151,6 +151,9 @@ interface RoundState {
   stealAttempted: boolean;
   stealFailed: boolean;      // true when opposing team guesses wrong during steal phase
   roundScore: number;
+  // Tracks which team has an active wrong attempt during showdown phase (US-038).
+  // Only one team can hold this at a time; cleared when a controlling team is selected.
+  showdownWrongTeam: 'left' | 'right' | null;
 }
 ```
 

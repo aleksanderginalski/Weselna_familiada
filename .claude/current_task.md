@@ -1,82 +1,83 @@
-# Current Task — US-027
+# Current Task — US-030
 
 ## Context
 
-Apply the custom `familiada.ttf` font to the game board so it looks like the real TV show.
-The font file already exists at `src/assets/fonts/familiada.ttf` (untracked).
-The `font-display` Tailwind utility class is already used on all board elements
-(`AnswerRow`, `TeamScore`, `RoundScore`, `AnswerSum`, `FinalRoundBoard`),
-so registering the font and updating the Tailwind config is all that's needed.
-Operator panel typography must remain unchanged.
+Add a question selection screen between Lobby and the first round. After configuring the game in LobbyScreen, the operator is taken to a new `QuestionSelectionScreen` instead of directly starting the game. Here they can manually check/uncheck questions from the full bank, use a "Draw randomly" button, and reorder the selection with up/down arrows. Confirming the selection locks the chosen questions as `rounds` in the store and starts the game.
+
+Currently `loadBank` auto-selects all questions as rounds (placeholder for this US). After this US, the user explicitly selects which questions to play.
+
+A new `GameStatus` value `'selectingQuestions'` is introduced to route to the new screen.
 
 ## Read
 
-- `src/index.css` — add `@font-face` declaration here
-- `tailwind.config.js` — update `font-display` family to prepend `Familiada`
-- `src/components/board/AnswerRow.tsx` — uses `font-display`, verify no override needed
-- `src/components/board/TeamScore.tsx` — uses `font-display`, verify no override needed
-- `src/components/board/RoundScore.tsx` — uses `font-display`, verify no override needed
-- `src/components/board/AnswerSum.tsx` — uses `font-display`, verify no override needed
-- `src/components/board/FinalRoundBoard.tsx` — uses `font-display`, verify no override needed
+- `src/types/game.ts` — `GameStatus`, `GameState`, `QuestionBankEntry`
+- `src/store/gameStore.ts` — `loadBank`, `startGame`, `StoreActions`, `INITIAL_STATE`
+- `src/components/screens/LobbyScreen.tsx` — current flow: calls `loadGame` + `startGame` directly
+- `src/App.tsx` — routing by `status`
+- `public/pytania-bank.json` — reference structure of bank entries
 
 ## Tasks
 
-### 1. Register `@font-face` in `src/index.css`
+1. **TASK-030.1 — GameStatus:** In `src/types/game.ts`, add `'selectingQuestions'` to the `GameStatus` union type.
 
-Add before `@tailwind base;` (or inside `@layer base`):
+2. **TASK-030.2 — Store actions:** In `src/store/gameStore.ts`:
+   - Add `selectQuestions: (questions: QuestionBankEntry[]) => void` to `StoreActions`
+   - Implement `selectQuestions`: sets `rounds` to the provided questions array and sets `status` to `'playing'`
+   - Update `loadBank`: remove the auto-select of `rounds` (set `rounds: []` instead of `data.questions`), and set `status: 'selectingQuestions'` after loading the bank
+   - Update `resetGame`: set `status: 'selectingQuestions'` (so after a reset the operator goes back to question selection, not lobby — the bank is already loaded)
+   - Keep `startGame` unchanged (it is still called by LobbyScreen to transition from lobby)
 
-```css
-@font-face {
-  font-family: 'Familiada';
-  src: url('/fonts/familiada.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-```
+3. **TASK-030.3 — LobbyScreen:** In `src/components/screens/LobbyScreen.tsx`:
+   - Change `handleStartGame`: call `loadGame(data)` only — do NOT call `startGame()`. The `loadBank` call (in `useEffect`) will now set `status: 'selectingQuestions'` automatically.
+   - Button label stays "DALEJ" (change from "ROZPOCZNIJ GRĘ")
 
-### 2. Copy font to `public/fonts/`
+4. **TASK-030.4 — QuestionSelectionScreen:** Create `src/components/screens/QuestionSelectionScreen.tsx`:
 
-The font must be served as a static asset. Copy `src/assets/fonts/familiada.ttf`
-to `public/fonts/familiada.ttf` so it is accessible at `/fonts/familiada.ttf`.
+   The screen reads `questionBank` and `config` from the store. Local state:
+   - `selected: boolean[]` — one flag per bank entry, initially all `false`
+   - `order: number[]` — indices into `questionBank` of currently checked items, in display order
 
-> Note: Vite does not serve files from `src/assets/` at a public URL by default —
-> only files in `public/` are served as-is. So the font must live in `public/fonts/`.
+   **Layout:**
+   - Header: "WYBÓR PYTAŃ" title + subtitle showing e.g. "Wybrano: 3 / 8 pytań"
+   - "LOSUJ" button: shuffles `questionBank`, picks the correct count (fixed mode: `config.numberOfRounds ?? 4`; score mode: `10`), sets `selected` and `order`
+   - Question list: renders questions in `questionBank` order. Each row shows:
+     - Checkbox (checked = selected)
+     - Question text (truncated if long)
+     - Category badge if `entry.category` exists
+     - Up/Down arrow buttons — only for selected questions, moves them within the `order` array
+   - Footer: "ROZPOCZNIJ GRĘ" button — disabled when `order.length === 0`; on click: calls `selectQuestions(order.map(i => questionBank[i]))` from the store
 
-### 3. Update `font-display` in `tailwind.config.js`
+   **Helper functions** (keep each ≤ 50 lines):
+   - `toggleQuestion(index: number)`: adds/removes `index` from `order`, updates `selected`
+   - `moveQuestion(index: number, direction: 'up' | 'down')`: reorders within `order`
+   - `handleDraw()`: picks random subset based on game mode
 
-Change the `display` font family from:
-
-```js
-'display': ['Impact', 'Haettenschweiler', 'Arial Narrow Bold', 'sans-serif'],
-```
-
-to:
-
-```js
-'display': ['Familiada', 'Impact', 'Haettenschweiler', 'Arial Narrow Bold', 'sans-serif'],
-```
-
-### 4. Verify board components use `font-display`
-
-Read each board component listed above and confirm they use `font-display` (or `font-body`
-for operator-only elements). No code changes expected — this is a read-and-confirm step.
+5. **TASK-030.5 — App routing:** In `src/App.tsx`:
+   - Import `QuestionSelectionScreen`
+   - Add: `if (status === 'selectingQuestions') return <QuestionSelectionScreen />;` — operator only (before the `<OperatorPanel />` fallback)
+   - Board window (`isBoard`) ignores `selectingQuestions` — stays on `<GameBoard />` (shows empty board while operator selects)
 
 ## Constraints
 
+- `QuestionSelectionScreen` is operator-only — not shown on the board window
+- No drag & drop — use up/down arrow buttons only (simpler, more reliable)
 - No `any` types
-- Do not create tests — that is `/qa` scope
-- Operator panel components must NOT use `font-display` on any new elements
-- Font file goes in `public/fonts/` (not `src/assets/fonts/`) so Vite serves it correctly
-- No layout changes — font swap only
+- Max file length: 300 lines; max function length: 50 lines
+- Use existing Tailwind/Familiada theme classes (`operator-btn-primary`, `bg-familiada-bg-dark`, `text-familiada-gold`, etc.)
+- `selectQuestions` replaces the temporary auto-select in `loadBank` — `rounds` must not be populated until the operator confirms
 
 ## After implementation
 
 - Run linter: `npm run lint`
 - Run tests: `npm test`
 - Manual verification steps (in Polish):
-  1. Uruchom `npm run dev`, otwórz tablicę (`?view=board`) — sprawdź czy tekst odpowiedzi wyświetla się krojem Familiada (nie Impact)
-  2. Sprawdź wyniki drużyn, punkty rundy i sumę odpowiedzi — wszystkie powinny używać Familiada
-  3. Otwórz Panel Operatora (bez `?view=board`) — sprawdź czy typografia NIE zmieniła się (nadal Arial/Impact)
-  4. Sprawdź konsolę przeglądarki — brak błędów 404 dla pliku czcionki
-  5. Sprawdź w DevTools > Network że `familiada.ttf` ładuje się poprawnie (status 200)
+  1. Uruchom aplikację (`npm run dev`) — lobby ładuje się normalnie
+  2. Wypełnij nazwy drużyn, kliknij "DALEJ" — pojawia się ekran wyboru pytań
+  3. Sprawdź listę — widać wszystkie pytania z banku (8 sztuk), żadne nie jest zaznaczone
+  4. Kliknij "LOSUJ" — wybrana zostaje odpowiednia liczba pytań (domyślnie 4 w trybie fixed)
+  5. Ręcznie odznacz 1 pytanie i zaznacz inne — licznik "Wybrano: X / 8" aktualizuje się
+  6. Użyj strzałek góra/dół na zaznaczonych pytaniach — kolejność zmienia się
+  7. Przycisk "ROZPOCZNIJ GRĘ" jest aktywny gdy wybrano co najmniej 1 pytanie
+  8. Kliknij "ROZPOCZNIJ GRĘ" — gra startuje z wybranymi pytaniami w wybranej kolejności
+  9. Przejdź przez rundy — pytania pojawiają się w wybranej kolejności
+  10. Po zakończeniu gry kliknij "NOWA GRA" — wraca do ekranu wyboru pytań (nie do lobby)
