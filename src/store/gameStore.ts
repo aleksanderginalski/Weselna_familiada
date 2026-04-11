@@ -10,6 +10,7 @@ import {
   RoundState,
   TeamSide,
 } from '@/types/game';
+import { loadQuestionBank, saveQuestionBank } from '@/utils/questionBankStorage';
 
 const MAX_MISTAKES = 3;
 const FINAL_ROUND_QUESTIONS = 5;
@@ -62,7 +63,10 @@ interface StoreActions {
   loadGame: (data: GameDataFile) => void;
   loadBank: (data: QuestionBankFile) => void;
   selectQuestions: (questions: QuestionBankEntry[]) => void;
+  updateQuestionBank: (questions: QuestionBankEntry[]) => void;
   backToLobby: () => void;
+  goToQuestionEditor: () => void;
+  backToLobbyFromEditor: () => void;
   startGame: () => void;
   selectTeam: (side: TeamSide) => void;
   revealAnswer: (index: number) => void;
@@ -108,13 +112,15 @@ export const useGameStore = create<GameState & StoreActions & SoundPreferences>(
       currentRound: INITIAL_ROUND_STATE,
     }),
 
-  // Loads the question bank and moves to the question selection screen
-  loadBank: (data: QuestionBankFile) =>
+  // Loads the question bank; localStorage edits take precedence over the JSON file
+  loadBank: (data: QuestionBankFile) => {
+    const stored = loadQuestionBank();
     set({
-      questionBank: data.questions ?? [],
+      questionBank: stored ?? data.questions ?? [],
       rounds: [],
       status: 'selectingQuestions',
-    }),
+    });
+  },
 
   // Locks the operator's question selection and starts the game
   selectQuestions: (questions: QuestionBankEntry[]) =>
@@ -125,8 +131,18 @@ export const useGameStore = create<GameState & StoreActions & SoundPreferences>(
       currentRound: INITIAL_ROUND_STATE,
     }),
 
+  // Persists an edited question bank to the store and localStorage
+  updateQuestionBank: (questions: QuestionBankEntry[]) => {
+    saveQuestionBank(questions);
+    set({ questionBank: questions });
+  },
+
   // Returns to lobby (team name config) while preserving the loaded bank
   backToLobby: () => set({ status: 'lobby' }),
+
+  goToQuestionEditor: () => set({ status: 'editingQuestions' }),
+
+  backToLobbyFromEditor: () => set({ status: 'lobby' }),
 
   startGame: () =>
     set({

@@ -32,9 +32,13 @@ export interface AnswerData {
   points: number;
 }
 
-/** A question entry in the bank — same as RoundData with an optional category tag */
+/** A question entry in the bank — same as RoundData with optional category and usage flags */
 export interface QuestionBankEntry extends RoundData {
   category?: string;
+  /** Whether this question appears in the main game pool (default: true when undefined) */
+  isMainQuestion?: boolean;
+  /** Whether this question appears in the final round pool */
+  isFinalQuestion?: boolean;
 }
 
 /** The pytania-bank.json file format */
@@ -51,7 +55,7 @@ export interface GameDataFile {
 // Game State Types (runtime state)
 // ============================================
 
-export type GameStatus = 'lobby' | 'selectingQuestions' | 'playing' | 'finished' | 'finalRound';
+export type GameStatus = 'lobby' | 'editingQuestions' | 'selectingQuestions' | 'playing' | 'finished' | 'finalRound';
 export type RoundPhase = 'showdown' | 'guessing' | 'steal' | 'summary';
 export type TeamSide = 'left' | 'right';
 

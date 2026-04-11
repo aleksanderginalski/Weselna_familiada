@@ -2,17 +2,9 @@ import { useState } from 'react';
 
 import { useGameStore } from '@/store/gameStore';
 import { QuestionBankEntry } from '@/types/game';
+import { shuffled } from '@/utils/shuffle';
 
 const SCORE_MODE_DRAW_COUNT = 10;
-
-function shuffled<T>(arr: T[]): T[] {
-  const copy = [...arr];
-  for (let i = copy.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [copy[i], copy[j]] = [copy[j], copy[i]];
-  }
-  return copy;
-}
 
 function buildInitialSelected(bankLength: number): boolean[] {
   return Array(bankLength).fill(false);
@@ -170,11 +162,18 @@ function QuestionRow({
 
       <span className="text-familiada-text-primary flex-1 truncate">{entry.question}</span>
 
-      {entry.category && (
-        <span className="text-xs px-2 py-0.5 rounded bg-familiada-bg-dark text-familiada-text-secondary border border-familiada-border flex-shrink-0">
-          {entry.category}
-        </span>
-      )}
+      <div className="flex items-center gap-1 flex-shrink-0">
+        {entry.category && (
+          <span className="text-xs px-2 py-0.5 rounded bg-familiada-bg-dark text-familiada-text-secondary border border-familiada-border">
+            {entry.category}
+          </span>
+        )}
+        {entry.isFinalQuestion && (
+          <span className="text-xs px-2 py-0.5 rounded bg-familiada-gold text-familiada-bg-dark font-bold">
+            F
+          </span>
+        )}
+      </div>
 
       {isSelected && (
         <div className="flex flex-col gap-0.5 flex-shrink-0">

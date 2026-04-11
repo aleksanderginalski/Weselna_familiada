@@ -1,6 +1,9 @@
 import { useGameStore } from '@/store/gameStore';
 import { useSound } from '@/hooks/useSound';
-import { FinalRoundDataFile, TeamSide } from '@/types/game';
+import { TeamSide } from '@/types/game';
+import { shuffled } from '@/utils/shuffle';
+
+const FINAL_ROUND_QUESTION_COUNT = 5;
 
 function getOpposingTeam(side: TeamSide): TeamSide {
   return side === 'left' ? 'right' : 'left';
@@ -18,11 +21,6 @@ function resolveWinner(
   return controllingTeam;
 }
 
-async function fetchFinalRoundData(): Promise<FinalRoundDataFile> {
-  const response = await fetch('/pytania-final.json');
-  return response.json();
-}
-
 export function RoundControls() {
   const currentRoundIndex = useGameStore((state) => state.currentRoundIndex);
   const config = useGameStore((state) => state.config);
@@ -30,6 +28,7 @@ export function RoundControls() {
   const currentRound = useGameStore((state) => state.currentRound);
   const status = useGameStore((state) => state.status);
   const teams = useGameStore((state) => state.teams);
+  const questionBank = useGameStore((state) => state.questionBank);
   const endRound = useGameStore((state) => state.endRound);
   const nextRound = useGameStore((state) => state.nextRound);
   const declareWinner = useGameStore((state) => state.declareWinner);
@@ -56,10 +55,12 @@ export function RoundControls() {
   const isGameFinished = status === 'finished' && phase === 'summary';
   const canNextRound = phase === 'summary' && status === 'playing';
 
-  async function handleFinalRound() {
-    const data = await fetchFinalRoundData();
+  const hasFinalQuestions = questionBank.length >= FINAL_ROUND_QUESTION_COUNT;
+
+  function handleFinalRound() {
+    const picked = shuffled(questionBank).slice(0, FINAL_ROUND_QUESTION_COUNT);
     playFinalRound();
-    startFinalRound(data);
+    startFinalRound({ questions: picked });
   }
 
   return (
@@ -112,10 +113,17 @@ export function RoundControls() {
           </button>
           <button
             onClick={handleFinalRound}
-            className="operator-btn w-full"
+            disabled={!hasFinalQuestions}
+            className="operator-btn w-full disabled:opacity-40 disabled:cursor-not-allowed"
+            title={!hasFinalQuestions ? `Wymagane ${FINAL_ROUND_QUESTION_COUNT} pytań w banku (masz ${questionBank.length})` : undefined}
           >
             RUNDA FINAŁOWA
           </button>
+          {!hasFinalQuestions && (
+            <p className="text-familiada-red text-xs text-center">
+              Za mało pytań w banku: {questionBank.length}/{FINAL_ROUND_QUESTION_COUNT} — dodaj pytania w Edytorze
+            </p>
+          )}
         </div>
       )}
     </div>
