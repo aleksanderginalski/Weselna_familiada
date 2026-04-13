@@ -1182,7 +1182,7 @@ EPIC-005: Weselna Familiada M5 - Desktop Distribution
 **I want to** see a visual signal when a team's score crosses 1000 or 2000 points
 **So that** everyone understands the score has "wrapped around" on the 3-digit display, and the game ends appropriately at 2000+
 
-**Status:** 📋 Planned
+**Status:** ✅ COMPLETED
 **Story Points:** 3
 **Priority:** P2
 
@@ -1190,12 +1190,12 @@ EPIC-005: Weselna Familiada M5 - Desktop Distribution
 
 **Acceptance Criteria:**
 
-- [ ] When a team's `totalScore >= 1000`: gold glow effect applied to that team's `DigitDisplay` border on the game board
-- [ ] When a team's `totalScore >= 2000`: gold glow effect applied (same as 1000+ but team has lapped once more)
-- [ ] Thresholds are fixed: 1000 and 2000 (not configurable)
-- [ ] When a team's score reaches or exceeds 2000 after `endRound`: `status` transitions to `'finished'` — operator sees only "OGŁOŚ ZWYCIĘSTWO" and "RUNDA FINAŁOWA", no "NASTĘPNA RUNDA"
-- [ ] Glow does not affect layout or component dimensions
-- [ ] New `endRound` condition: `isScoreMilestoneEnd` — triggers when either team's new total ≥ 2000
+- [x] When a team's `totalScore >= 1000`: gold glow effect applied to that team's `DigitDisplay` border on the game board
+- [x] When a team's `totalScore >= 2000`: gold glow effect applied (same as 1000+ but team has lapped once more)
+- [x] Thresholds are fixed: 1000 and 2000 (not configurable)
+- [x] When a team's score reaches or exceeds 2000 after `endRound`: `status` transitions to `'finished'` — operator sees only "OGŁOŚ ZWYCIĘSTWO" and "RUNDA FINAŁOWA", no "NASTĘPNA RUNDA"
+- [x] Glow does not affect layout or component dimensions
+- [x] New `endRound` condition: `isScoreMilestoneEnd` — triggers when either team's new total ≥ 2000
 
 ---
 
