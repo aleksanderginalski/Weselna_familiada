@@ -161,6 +161,12 @@ MIT License — zobacz [LICENSE](./LICENSE)
 
 ## Latest
 
+**v0.33.0** — Manual score adjustment +/−5 pts (US-036)
+
+- `src/store/gameStore.ts` — new `adjustScore(side: TeamSide, delta: number)` action; score floored at 0 via `Math.max(0, current + delta)`
+- `src/components/operator/TeamControl.tsx` — `−5` and `+5` buttons rendered below each `TeamPanel`; always enabled regardless of game phase; `−5` plays `bledna-familiada.mp3`, `+5` plays `dobra-odpowiedz-familiada.mp3`
+- 5 tests added: TC-165 through TC-169 (234 total)
+
 **v0.32.0** — In-app question editor with two-phase question selection (US-031)
 
 - `src/components/screens/QuestionEditorScreen.tsx` — new orchestrator screen (list ↔ form); loads bank from `localStorage` on mount, falls back to `pytania-bank.json`
