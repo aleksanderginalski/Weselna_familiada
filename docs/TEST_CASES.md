@@ -5,7 +5,7 @@
 | File | Tests | Status |
 |------|-------|--------|
 | src/types/game.test.ts | 17 | ✅ |
-| src/store/gameStore.test.ts | 54 | ✅ |
+| src/store/gameStore.test.ts | 61 | ✅ |
 | src/hooks/useBroadcast.test.ts | 4 | ✅ |
 | src/hooks/useSound.test.ts | 6 | ✅ |
 | src/utils/broadcast.test.ts | 4 | ✅ |
@@ -20,7 +20,7 @@
 | src/components/board/FinalRoundBoard.test.tsx | 5 | ✅ |
 | src/components/operator/AnswerControl.test.tsx | 5 | ✅ |
 | src/components/operator/TeamPanel.test.tsx | 4 | ✅ |
-| src/components/operator/TeamControl.test.tsx | 10 | ✅ |
+| src/components/operator/TeamControl.test.tsx | 12 | ✅ |
 | src/components/operator/RoundControls.test.tsx | 6 | ✅ |
 | src/components/operator/OperatorPanel.test.tsx | 6 | ✅ |
 | src/components/operator/VolumeSlider.test.tsx | 2 | ✅ |
@@ -31,7 +31,7 @@
 | src/test/lintingConfig.test.ts | 11 | ✅ |
 | src/test/tailwindTheme.test.ts | 5 | ✅ |
 | src/test/projectStructure.test.ts | 21 | ✅ |
-| **TOTAL** | **241** | ✅ |
+| **TOTAL** | **256** | ✅ |
 
 ---
 
@@ -308,4 +308,25 @@
 | # | Test | Type |
 |---|------|------|
 | TC-184 | should render hundreds digit in SUMA row when roundScore reaches 100 | boundary |
+
+---
+
+## src/store/gameStore.test.ts — lastRoundPoints (US-035)
+
+| # | Test | Type |
+|---|------|------|
+| TC-185 | should save lastRoundPoints with correct amount and holder after endRound | happy path |
+| TC-186 | should set lastRoundPoints to null when roundScore is 0 | boundary |
+| TC-187 | should subtract from holder and add to other team, then update holder | happy path |
+| TC-188 | should be reversible — transferring back restores original scores | boundary |
+| TC-189 | should clear lastRoundPoints when resetGame is called | boundary |
+
+---
+
+## src/components/operator/TeamControl.test.tsx — Przekaż punkty button (US-035)
+
+| # | Test | Type |
+|---|------|------|
+| TC-190 | should show Przekaż punkty button only under holder team after round ends | happy path |
+| TC-191 | should transfer points and move button to other team when Przekaż punkty is clicked | happy path |
 

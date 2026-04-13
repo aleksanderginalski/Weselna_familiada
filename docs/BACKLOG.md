@@ -1139,20 +1139,20 @@ EPIC-005: Weselna Familiada M5 - Desktop Distribution
 **I want to** transfer the last round's points from one team to the other
 **So that** I can correct a mistake when I accidentally assigned the round to the wrong team
 
-**Status:** 📋 Planned
+**Status:** ✅ COMPLETED
 **Story Points:** 3
 **Priority:** P1
 
 **Acceptance Criteria:**
 
-- [ ] After each round ends, store tracks `lastRoundPoints: { amount: number; holder: TeamSide } | null`
-- [ ] `endRound` saves the amount awarded and which team received it
-- [ ] Button "Przekaż punkty (X pkt)" visible in the operator panel next to the team that currently holds the last round's points
-- [ ] Button is available throughout the entire following round (not just in summary phase)
-- [ ] Clicking the button: subtracts X pts from current holder, adds X pts to the other team, updates holder
-- [ ] After transfer, button moves to the other team (can be transferred back)
-- [ ] Button resets (disappears) when the next round ends and new `lastRoundPoints` are recorded
-- [ ] New store action: `transferLastRoundPoints()`
+- [x] After each round ends, store tracks `lastRoundPoints: { amount: number; holder: TeamSide } | null`
+- [x] `endRound` saves the amount awarded and which team received it
+- [x] Button "Przekaż punkty (X pkt)" visible in the operator panel next to the team that currently holds the last round's points
+- [x] Button is available throughout the entire following round (not just in summary phase)
+- [x] Clicking the button: subtracts X pts from current holder, adds X pts to the other team, updates holder
+- [x] After transfer, button moves to the other team (can be transferred back)
+- [x] Button resets (disappears) when the next round ends and new `lastRoundPoints` are recorded
+- [x] New store action: `transferLastRoundPoints()`
 
 ---
 

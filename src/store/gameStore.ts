@@ -60,6 +60,7 @@ const INITIAL_STATE: GameState = {
   currentRound: INITIAL_ROUND_STATE,
   showingWinner: false,
   finalRound: undefined,
+  lastRoundPoints: null,
 };
 
 interface StoreActions {
@@ -95,6 +96,7 @@ interface StoreActions {
   showPlayerAAnswers: () => void;
   finishFinalRound: () => void;
   adjustScore: (side: TeamSide, delta: number) => void;
+  transferLastRoundPoints: () => void;
 }
 
 interface SoundPreferences {
@@ -268,6 +270,8 @@ export const useGameStore = create<GameState & StoreActions & SoundPreferences>(
           phase: 'summary',
           stealAttempted: state.currentRound.phase === 'steal' ? true : state.currentRound.stealAttempted,
         },
+        // Record the points awarded this round so operator can transfer them if needed
+        lastRoundPoints: pointsEarned > 0 ? { amount: pointsEarned, holder: winner } : null,
       };
     }),
 
@@ -297,6 +301,7 @@ export const useGameStore = create<GameState & StoreActions & SoundPreferences>(
       currentRound: INITIAL_ROUND_STATE,
       showingWinner: false,
       finalRound: undefined,
+      lastRoundPoints: null,
       questionBank: state.questionBank,
       rounds: [],
       availableForFinal: [],
@@ -430,4 +435,26 @@ export const useGameStore = create<GameState & StoreActions & SoundPreferences>(
         },
       },
     })),
+
+  // Moves last round's points from the current holder to the other team
+  transferLastRoundPoints: () =>
+    set((state) => {
+      if (!state.lastRoundPoints) return {};
+      const { amount, holder } = state.lastRoundPoints;
+      const recipient: TeamSide = holder === 'left' ? 'right' : 'left';
+      return {
+        teams: {
+          ...state.teams,
+          [holder]: {
+            ...state.teams[holder],
+            totalScore: Math.max(0, state.teams[holder].totalScore - amount),
+          },
+          [recipient]: {
+            ...state.teams[recipient],
+            totalScore: state.teams[recipient].totalScore + amount,
+          },
+        },
+        lastRoundPoints: { amount, holder: recipient },
+      };
+    }),
 }));
