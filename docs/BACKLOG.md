@@ -1213,7 +1213,7 @@ EPIC-005: Weselna Familiada M5 - Desktop Distribution
 
 **Priority:** P1 (High)
 **Total Points:** 13
-**Status:** 📋 Planned
+**Status:** 🔄 In Progress
 
 ### US-032: Electron setup and two-window management
 
@@ -1221,23 +1221,24 @@ EPIC-005: Weselna Familiada M5 - Desktop Distribution
 **I want to** set up Electron with proper two-window management
 **So that** the operator panel and game board run as native desktop windows
 
-**Status:** 📋 Planned
+**Status:** ✅ COMPLETED
 **Story Points:** 5
 **Priority:** P0
 
 **Acceptance Criteria:**
 
-- [ ] Electron added as dependency with minimal main process (`electron/main.ts`)
-- [ ] App opens Operator window on launch
-- [ ] BroadcastChannel verified to work between two Electron BrowserWindows (same session)
-- [ ] If BroadcastChannel fails between windows: fallback implemented via Electron IPC
-- [ ] `npm run electron:dev` starts Electron in dev mode (Vite + Electron together)
-- [ ] Existing functionality (game flow, sound, final round) works without regression
+- [x] Electron added as dependency with minimal main process (`electron/main.ts`)
+- [x] App opens Operator window on launch
+- [x] BroadcastChannel verified to work between two Electron BrowserWindows (same session)
+- [x] If BroadcastChannel fails between windows: fallback implemented via Electron IPC
+- [x] `npm run electron:dev` starts Electron in dev mode (Vite + Electron together)
+- [x] Existing functionality (game flow, sound, final round) works without regression
 
 **Technical Notes:**
 
-- Risk: BroadcastChannel may not propagate between separate BrowserWindow processes — must verify in Electron's Chromium
-- Fallback: Electron IPC (`ipcMain` / `ipcRenderer`) as message relay if needed
+- BroadcastChannel works natively between Electron v20+ renderer processes (same session/partition) — no IPC relay needed
+- `electron/main.ts` uses ESM (`"module": "ESNext"` in tsconfig.electron.json) to match `"type": "module"` in package.json
+- `__dirname` re-derived via `fileURLToPath(import.meta.url)` since it's unavailable in ESM scope
 
 ---
 

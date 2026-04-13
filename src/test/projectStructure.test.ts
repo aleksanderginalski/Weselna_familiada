@@ -35,6 +35,9 @@ describe('Project Structure', () => {
     'public/fonts/Familiada-2.otf',
     'public/fonts/familiada.ttf',
     'public/fonts/familiada.woff2',
+    // TC-192: US-032 Electron entry files must exist
+    'electron/main.ts',
+    'tsconfig.electron.json',
   ];
 
   it.each(requiredFiles)('should have required file: %s', (file) => {

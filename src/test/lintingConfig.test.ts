@@ -101,3 +101,40 @@ describe('TypeScript Configuration', () => {
     expect(content).toContain('src/test/**/*');
   });
 });
+
+// TC-193 through TC-197: US-032 Electron setup
+describe('Electron Configuration', () => {
+  it('TC-193: package.json should point main to compiled Electron entry', () => {
+    const pkg = JSON.parse(readFileSync(resolve(root, 'package.json'), 'utf-8'));
+
+    expect(pkg.main).toBe('dist-electron/main.js');
+  });
+
+  it('TC-194: package.json should define electron:dev and electron:build scripts', () => {
+    const pkg = JSON.parse(readFileSync(resolve(root, 'package.json'), 'utf-8'));
+
+    expect(pkg.scripts['electron:dev']).toBeDefined();
+    expect(pkg.scripts['electron:build']).toBeDefined();
+    expect(pkg.scripts['electron:compile']).toBeDefined();
+  });
+
+  it('TC-195: tsconfig.electron.json should compile to ESNext module targeting dist-electron', () => {
+    const config = JSON.parse(readFileSync(resolve(root, 'tsconfig.electron.json'), 'utf-8'));
+
+    expect(config.compilerOptions.module).toBe('ESNext');
+    expect(config.compilerOptions.outDir).toBe('dist-electron');
+    expect(config.include).toContain('electron');
+  });
+
+  it('TC-196: vite.config.ts should not auto-open browser (Electron opens its own window)', () => {
+    const content = readFileSync(resolve(root, 'vite.config.ts'), 'utf-8');
+
+    expect(content).toContain('open: false');
+  });
+
+  it('TC-197: .gitignore should exclude Electron build output', () => {
+    const content = readFileSync(resolve(root, '.gitignore'), 'utf-8');
+
+    expect(content).toContain('dist-electron/');
+  });
+});
