@@ -25,14 +25,16 @@ export function TeamControl() {
   const mistakes = useGameStore((state) => state.currentRound.mistakes);
   const phase = useGameStore((state) => state.currentRound.phase);
   const stealFailed = useGameStore((state) => state.currentRound.stealFailed);
+  const showdownWrongTeam = useGameStore((state) => state.currentRound.showdownWrongTeam);
   const selectTeam = useGameStore((state) => state.selectTeam);
   const markMistake = useGameStore((state) => state.markMistake);
+  const markShowdownAttempt = useGameStore((state) => state.markShowdownAttempt);
   const adjustScore = useGameStore((state) => state.adjustScore);
   const { playWrong, playCorrect } = useSound();
 
   const isStealPhase = phase === 'steal';
-  // Radios locked during steal — selectTeam would reset phase to 'guessing'
-  const isSelectDisabled = isStealPhase;
+  // Radios locked during steal and summary — selectTeam would reset phase to 'guessing'
+  const isSelectDisabled = isStealPhase || phase === 'summary';
 
   const isMistakeDisabled =
     phase === 'showdown' || phase === 'summary' || (isStealPhase && stealFailed);
@@ -73,6 +75,30 @@ export function TeamControl() {
 
   return (
     <div className="flex flex-col gap-4">
+      {/* Showdown wrong attempt bar — visible only during showdown phase */}
+      {phase === 'showdown' && (
+        <div className="grid grid-cols-2 gap-4">
+          {(['left', 'right'] as TeamSide[]).map((side) => {
+            const isDisabled = showdownWrongTeam === side;
+            return (
+              <button
+                key={side}
+                disabled={isDisabled}
+                onClick={() => { playWrong(); markShowdownAttempt(side); }}
+                className={[
+                  'operator-btn font-bold text-sm',
+                  isDisabled
+                    ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                    : 'bg-familiada-red text-white hover:bg-red-700',
+                ].join(' ')}
+              >
+                Błędna Próba {teams[side].name}
+              </button>
+            );
+          })}
+        </div>
+      )}
+
       {/* Team panels */}
       <div className="grid grid-cols-2 gap-4">
         {(['left', 'right'] as TeamSide[]).map((side) => (

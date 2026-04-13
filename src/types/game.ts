@@ -73,6 +73,8 @@ export interface RoundState {
   stealAttempted: boolean;
   /** Whether the steal attempt failed (stealing team gave wrong answer) */
   stealFailed: boolean;
+  /** Team that made a wrong attempt during the showdown phase (null = none) */
+  showdownWrongTeam: TeamSide | null;
   /** Sum of revealed answer points (before multiplier) */
   roundScore: number;
 }
