@@ -10,7 +10,8 @@
       "Bash(pip install:*)",
       "Bash(python -c \"import json; data=json.load\\(open\\('public/pytania-final.json'\\)\\); print\\(json.dumps\\(data['questions'][0], indent=2, ensure_ascii=False\\)\\)\")",
       "Bash(npx tsc:*)",
-      "Bash(npm ls:*)"
+      "Bash(npm ls:*)",
+      "Bash(sort -t- -k2 -n)"
     ]
   }
 }

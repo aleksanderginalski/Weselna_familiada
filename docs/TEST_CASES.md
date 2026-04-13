@@ -28,10 +28,10 @@
 | src/components/screens/LobbyScreen.test.tsx | 7 | ✅ |
 | src/components/screens/WinnerScreen.test.tsx | 6 | ✅ |
 | src/App.test.tsx | 5 | ✅ |
-| src/test/lintingConfig.test.ts | 11 | ✅ |
+| src/test/lintingConfig.test.ts | 16 | ✅ |
 | src/test/tailwindTheme.test.ts | 5 | ✅ |
-| src/test/projectStructure.test.ts | 21 | ✅ |
-| **TOTAL** | **256** | ✅ |
+| src/test/projectStructure.test.ts | 23 | ✅ |
+| **TOTAL** | **263** | ✅ |
 
 ---
 
@@ -329,4 +329,25 @@
 |---|------|------|
 | TC-190 | should show Przekaż punkty button only under holder team after round ends | happy path |
 | TC-191 | should transfer points and move button to other team when Przekaż punkty is clicked | happy path |
+
+---
+
+## src/test/projectStructure.test.ts — Electron files (US-032)
+
+| # | Test | Type |
+|---|------|------|
+| TC-192 | should have required file: electron/main.ts | structure |
+| TC-193 | should have required file: tsconfig.electron.json | structure |
+
+---
+
+## src/test/lintingConfig.test.ts — Electron configuration (US-032)
+
+| # | Test | Type |
+|---|------|------|
+| TC-193 | package.json should point main to compiled Electron entry | happy path |
+| TC-194 | package.json should define electron:dev, electron:build, electron:compile scripts | happy path |
+| TC-195 | tsconfig.electron.json should compile to ESNext module targeting dist-electron | happy path |
+| TC-196 | vite.config.ts should not auto-open browser | happy path |
+| TC-197 | .gitignore should exclude Electron build output | happy path |
 
