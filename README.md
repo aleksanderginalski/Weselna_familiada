@@ -161,6 +161,15 @@ MIT License — zobacz [LICENSE](./LICENSE)
 
 ## Latest
 
+**v0.35.0** — Score milestone visual effects and 2000pt game end (US-037)
+
+- `src/components/shared/DigitDisplay.tsx` — new `glowLevel?: 0 | 1 | 2` prop and `padWithZeros?: boolean` prop; exports `SCORE_MILESTONE_1 = 1000`, `SCORE_MILESTONE_2 = 2000`
+- `src/index.css` — two new CSS keyframe animations: `glow-pulse-gold` (slow gold pulse, ≥1000) and `glow-pulse-milestone` (fast gold→red alternating, ≥2000)
+- `src/components/board/TeamScore.tsx` — computes `glowLevel` and `displayScore` (`totalScore % 1000` when ≥1000, with leading zeros via `padWithZeros`); passes both to `DigitDisplay`
+- `src/store/gameStore.ts` — `endRound()` extended with `isScoreMilestoneEnd`: sets `status: 'finished'` when either team's score reaches or exceeds 2000
+- `src/components/board/DotMatrixBoard.tsx` — `COL_POINTS_HUNDREDS = 23` added; SUMA row now supports 3-digit totals (previously capped at 99); bugfix: sum of 28+24+18+15+15=100 now displays correctly
+- 8 tests added: TC-177 through TC-184 (249 total)
+
 **v0.34.0** — Showdown wrong attempt indicators (US-038)
 
 - `src/types/game.ts` — `RoundState` extended with `showdownWrongTeam: TeamSide | null`

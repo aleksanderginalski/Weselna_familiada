@@ -273,3 +273,39 @@
 |---|------|------|
 | TC-176 | should render big mistake Figure Space chars during showdown when markShowdownAttempt is called | happy path |
 
+---
+
+## src/store/gameStore.test.ts — isScoreMilestoneEnd (US-037)
+
+| # | Test | Type |
+|---|------|------|
+| TC-177 | should set status to finished when winner score reaches 2000 | happy path |
+| TC-178 | should set status to finished when other team already has score >= 2000 | boundary |
+
+---
+
+## src/components/shared/DigitDisplay.test.tsx — glowLevel / padWithZeros (US-037)
+
+| # | Test | Type |
+|---|------|------|
+| TC-179 | should apply glow-pulse-gold class when glowLevel is 1 | happy path |
+| TC-180 | should apply glow-pulse-milestone class when glowLevel is 2 | happy path |
+| TC-181 | should pad with zeros when padWithZeros is true | boundary |
+
+---
+
+## src/components/board/TeamScore.test.tsx — score wrap / milestone glow (US-037)
+
+| # | Test | Type |
+|---|------|------|
+| TC-182 | should display score mod 1000 and apply glow when totalScore >= 1000 | happy path |
+| TC-183 | should display score mod 1000 with milestone glow when totalScore >= 2000 | boundary |
+
+---
+
+## src/components/board/DotMatrixBoard.test.tsx — SUMA 3-digit (US-037)
+
+| # | Test | Type |
+|---|------|------|
+| TC-184 | should render hundreds digit in SUMA row when roundScore reaches 100 | boundary |
+

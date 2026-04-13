@@ -14,6 +14,7 @@ const COL_NUMBER = 4;
 const COL_TEXT_START = 6;
 const COL_TEXT_LEN = 17;
 const COL_SUMA_LABEL = 18;
+const COL_POINTS_HUNDREDS = 23;
 const COL_POINTS_TENS = 24;
 const COL_POINTS_UNITS = 25;
 
@@ -128,10 +129,15 @@ function buildGrid(
   });
 
   if (roundScore > 0) {
-    const sum = Math.min(roundScore, 99);
-    const tens = Math.floor(sum / 10);
-    const units = sum % 10;
-    if (tens > 0) set(sumaRow, COL_POINTS_TENS, digit(String(tens)));
+    const hundreds = Math.floor(roundScore / 100);
+    const tens = Math.floor((roundScore % 100) / 10);
+    const units = roundScore % 10;
+    if (hundreds > 0) {
+      set(sumaRow, COL_POINTS_HUNDREDS, digit(String(hundreds)));
+      set(sumaRow, COL_POINTS_TENS, digit(String(tens)));
+    } else if (tens > 0) {
+      set(sumaRow, COL_POINTS_TENS, digit(String(tens)));
+    }
     set(sumaRow, COL_POINTS_UNITS, digit(String(units)));
   }
 

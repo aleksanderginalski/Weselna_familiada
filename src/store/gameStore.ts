@@ -249,8 +249,13 @@ export const useGameStore = create<GameState & StoreActions & SoundPreferences>(
       const isFixedModeEnd =
         state.config.mode === 'fixed' && state.currentRoundIndex + 1 >= totalRounds;
 
+      // Either team reaching 2000+ ends the game immediately regardless of mode
+      const otherSide: TeamSide = winner === 'left' ? 'right' : 'left';
+      const otherTeamScore = state.teams[otherSide].totalScore;
+      const isScoreMilestoneEnd = newScore >= 2000 || otherTeamScore >= 2000;
+
       return {
-        status: isScoreModeWin || isFixedModeEnd || isScoreModeExhausted ? 'finished' : state.status,
+        status: isScoreModeWin || isFixedModeEnd || isScoreModeExhausted || isScoreMilestoneEnd ? 'finished' : state.status,
         teams: {
           ...state.teams,
           [winner]: {
