@@ -27,7 +27,8 @@ export function TeamControl() {
   const stealFailed = useGameStore((state) => state.currentRound.stealFailed);
   const selectTeam = useGameStore((state) => state.selectTeam);
   const markMistake = useGameStore((state) => state.markMistake);
-  const { playWrong } = useSound();
+  const adjustScore = useGameStore((state) => state.adjustScore);
+  const { playWrong, playCorrect } = useSound();
 
   const isStealPhase = phase === 'steal';
   // Radios locked during steal — selectTeam would reset phase to 'guessing'
@@ -75,16 +76,32 @@ export function TeamControl() {
       {/* Team panels */}
       <div className="grid grid-cols-2 gap-4">
         {(['left', 'right'] as TeamSide[]).map((side) => (
-          <TeamPanel
-            key={side}
-            team={teams[side]}
-            side={side}
-            teamStatus={getTeamStatus(side, controllingTeam, isStealPhase)}
-            mistakes={getTeamMistakes(side)}
-            maxMistakes={getTeamMaxMistakes(side)}
-            onSelect={() => selectTeam(side)}
-            isSelectDisabled={isSelectDisabled}
-          />
+          <div key={side} className="flex flex-col gap-2">
+            <TeamPanel
+              team={teams[side]}
+              side={side}
+              teamStatus={getTeamStatus(side, controllingTeam, isStealPhase)}
+              mistakes={getTeamMistakes(side)}
+              maxMistakes={getTeamMaxMistakes(side)}
+              onSelect={() => selectTeam(side)}
+              isSelectDisabled={isSelectDisabled}
+            />
+            {/* Manual score adjustment — always available, floor at 0 */}
+            <div className="flex gap-2 justify-center">
+              <button
+                onClick={() => { playWrong(); adjustScore(side, -5); }}
+                className="operator-btn bg-familiada-red text-white hover:bg-red-700 font-bold text-sm px-4 py-1"
+              >
+                −5
+              </button>
+              <button
+                onClick={() => { playCorrect(); adjustScore(side, 5); }}
+                className="operator-btn bg-green-700 text-white hover:bg-green-600 font-bold text-sm px-4 py-1"
+              >
+                +5
+              </button>
+            </div>
+          </div>
         ))}
       </div>
 
