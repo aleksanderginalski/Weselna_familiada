@@ -92,6 +92,7 @@ interface StoreActions {
   hidePlayerAAnswers: () => void;
   showPlayerAAnswers: () => void;
   finishFinalRound: () => void;
+  adjustScore: (side: TeamSide, delta: number) => void;
 }
 
 interface SoundPreferences {
@@ -401,4 +402,16 @@ export const useGameStore = create<GameState & StoreActions & SoundPreferences>(
         finalRound: { ...state.finalRound, phase: 'finished', timerRunning: false },
       };
     }),
+
+  // Adds delta to a team's total score, floored at 0 to prevent negative scores
+  adjustScore: (side: TeamSide, delta: number) =>
+    set((state) => ({
+      teams: {
+        ...state.teams,
+        [side]: {
+          ...state.teams[side],
+          totalScore: Math.max(0, state.teams[side].totalScore + delta),
+        },
+      },
+    })),
 }));

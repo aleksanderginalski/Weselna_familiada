@@ -1158,17 +1158,17 @@ EPIC-005: Weselna Familiada M5 - Desktop Distribution
 **I want to** manually add or subtract 5 points from any team at any time
 **So that** the jury can award bonuses or corrections outside of the standard round mechanics
 
-**Status:** 📋 Planned
+**Status:** ✅ COMPLETED
 **Story Points:** 2
 **Priority:** P1
 
 **Acceptance Criteria:**
 
-- [ ] Two buttons `−5` and `+5` visible next to each team's score in the operator panel (`TeamPanel`)
-- [ ] Buttons available at all times during the game (any phase)
-- [ ] Score cannot go below 0 (floor at 0)
-- [ ] New store action: `adjustScore(side: TeamSide, delta: number)`
-- [ ] Change reflected immediately in both operator panel and game board
+- [x] Two buttons `−5` and `+5` visible next to each team's score in the operator panel (`TeamPanel`)
+- [x] Buttons available at all times during the game (any phase)
+- [x] Score cannot go below 0 (floor at 0)
+- [x] New store action: `adjustScore(side: TeamSide, delta: number)`
+- [x] Change reflected immediately in both operator panel and game board
 
 ---
 

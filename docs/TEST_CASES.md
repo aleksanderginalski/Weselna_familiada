@@ -5,7 +5,7 @@
 | File | Tests | Status |
 |------|-------|--------|
 | src/types/game.test.ts | 17 | ✅ |
-| src/store/gameStore.test.ts | 40 | ✅ |
+| src/store/gameStore.test.ts | 43 | ✅ |
 | src/hooks/useBroadcast.test.ts | 4 | ✅ |
 | src/hooks/useSound.test.ts | 6 | ✅ |
 | src/utils/broadcast.test.ts | 4 | ✅ |
@@ -19,7 +19,7 @@
 | src/components/board/FinalRoundBoard.test.tsx | 5 | ✅ |
 | src/components/operator/AnswerControl.test.tsx | 5 | ✅ |
 | src/components/operator/TeamPanel.test.tsx | 4 | ✅ |
-| src/components/operator/TeamControl.test.tsx | 5 | ✅ |
+| src/components/operator/TeamControl.test.tsx | 7 | ✅ |
 | src/components/operator/RoundControls.test.tsx | 6 | ✅ |
 | src/components/operator/OperatorPanel.test.tsx | 6 | ✅ |
 | src/components/operator/VolumeSlider.test.tsx | 2 | ✅ |
@@ -30,7 +30,7 @@
 | src/test/lintingConfig.test.ts | 11 | ✅ |
 | src/test/tailwindTheme.test.ts | 5 | ✅ |
 | src/test/projectStructure.test.ts | 21 | ✅ |
-| **TOTAL** | **193** | ✅ |
+| **TOTAL** | **234** | ✅ |
 
 ---
 
@@ -224,3 +224,22 @@
 | # | Test | Type |
 |---|------|------|
 | TC-141 | should populate questionBank in store after fetching pytania-bank.json | integration |
+
+---
+
+## src/store/gameStore.test.ts — adjustScore (US-036)
+
+| # | Test | Type |
+|---|------|------|
+| TC-165 | should increase team score by delta and leave the other team unchanged | happy path |
+| TC-166 | should decrease team score by delta when result is above 0 | happy path |
+| TC-167 | should floor score at 0 when delta would make it negative | boundary |
+
+---
+
+## src/components/operator/TeamControl.test.tsx — score adjustment buttons (US-036)
+
+| # | Test | Type |
+|---|------|------|
+| TC-168 | should render −5 and +5 buttons for each team | happy path |
+| TC-169 | should increase team score when +5 is clicked and decrease when −5 is clicked, floored at 0 | interaction + boundary |
