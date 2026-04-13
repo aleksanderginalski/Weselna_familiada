@@ -134,4 +134,33 @@ describe('TeamControl', () => {
     await userEvent.click(minusButtons[0]); // −5 for left team with score 3 → floor at 0
     expect(useGameStore.getState().teams.left.totalScore).toBe(0);
   });
+
+  it('should show Przekaż punkty button only under holder team after round ends', () => {
+    // TC-190
+    useGameStore.setState({
+      ...useGameStore.getState(),
+      lastRoundPoints: { amount: 150, holder: 'left' },
+    });
+    render(<TeamControl />);
+
+    expect(screen.getByRole('button', { name: /Przekaż punkty \(150 pkt\)/ })).toBeInTheDocument();
+    // Only one such button exists — on the left (holder) side
+    expect(screen.getAllByRole('button', { name: /Przekaż punkty/ })).toHaveLength(1);
+  });
+
+  it('should transfer points and move button to other team when Przekaż punkty is clicked', async () => {
+    // TC-191
+    useGameStore.setState({
+      ...useGameStore.getState(),
+      teams: { left: { name: 'Drużyna A', totalScore: 200 }, right: { name: 'Drużyna B', totalScore: 50 } },
+      lastRoundPoints: { amount: 100, holder: 'left' },
+    });
+    render(<TeamControl />);
+
+    await userEvent.click(screen.getByRole('button', { name: /Przekaż punkty/ }));
+
+    expect(useGameStore.getState().teams.left.totalScore).toBe(100);
+    expect(useGameStore.getState().teams.right.totalScore).toBe(150);
+    expect(useGameStore.getState().lastRoundPoints).toEqual({ amount: 100, holder: 'right' });
+  });
 });
