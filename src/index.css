@@ -140,4 +140,34 @@
     box-shadow: 0 0 10px rgba(255, 215, 0, 0.5),
                 0 0 20px rgba(255, 215, 0, 0.3);
   }
+
+  /* Score milestone glow animations — applied to DigitDisplay border wrapper */
+
+  /* Level 1 (≥ 1000 pts): slow gold pulse */
+  .glow-pulse-gold {
+    animation: glowPulseGold 1.8s ease-in-out infinite;
+  }
+
+  /* Level 2 (≥ 2000 pts): fast gold/red alternating pulse */
+  .glow-pulse-milestone {
+    animation: glowPulseMilestone 1.2s ease-in-out infinite;
+  }
+}
+
+@keyframes glowPulseGold {
+  0%, 100% {
+    box-shadow: 0 0 8px 2px #d4af37;
+  }
+  50% {
+    box-shadow: 0 0 22px 8px #d4af37;
+  }
+}
+
+@keyframes glowPulseMilestone {
+  0%, 100% {
+    box-shadow: 0 0 10px 3px #d4af37;
+  }
+  50% {
+    box-shadow: 0 0 28px 10px #dc2626;
+  }
 }

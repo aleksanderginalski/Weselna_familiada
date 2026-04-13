@@ -1,107 +1,53 @@
-# Current Task — US-031
+# Current Task — US-037
 
 ## Context
-Implement an in-app question editor accessible from the Lobby screen.
-Non-technical operators need to add, edit, and delete questions directly
-in the UI without touching JSON files. Edits persist in `localStorage`
-and are reflected immediately in QuestionSelectionScreen.
+Add score milestone visual effects and 2000-point game end condition.
+The `DigitDisplay` component is capped at 999 — scores ≥1000 already wrap around visually.
+A gold glow on the display border communicates the wrap to players. When a team's score
+reaches or exceeds 2000 after `endRound`, the game ends immediately (status → 'finished').
 
-Architecture decision (ADR-004): localStorage stores the full edited bank;
-on load, if localStorage has data it takes precedence over pytania-bank.json.
-
-## Read Before Starting
-
-- `src/components/screens/LobbyScreen.tsx`
-- `src/App.tsx`
-- `src/store/gameStore.ts`
-- `src/types/game.ts`
-- `docs/architecture.md` (ADR-004, lines ~290-305)
+## Read
+- src/components/shared/DigitDisplay.tsx — add `glowLevel` prop for milestone glow
+- src/components/board/TeamScore.tsx — pass `glowLevel` based on totalScore
+- src/store/gameStore.ts — add `isScoreMilestoneEnd` condition in `endRound`
 
 ## Tasks
 
-### 1. Add `'editingQuestions'` to `GameStatus` in `src/types/game.ts`
+1. **src/components/shared/DigitDisplay.tsx**:
+   - Add optional prop `glowLevel?: 0 | 1 | 2` (default `0`)
+   - Add constant `SCORE_MILESTONE_1 = 1000` and `SCORE_MILESTONE_2 = 2000`
+   - Apply a gold box-shadow/ring to the outer border `<div>` when `glowLevel >= 1`:
+     - `glowLevel === 1` (score ≥ 1000): `shadow-[0_0_12px_4px_#d4af37]`
+     - `glowLevel === 2` (score ≥ 2000): `shadow-[0_0_24px_8px_#d4af37]`
+   - Glow must NOT change layout or dimensions (use `shadow-*` only, no border change)
 
-### 2. Create `src/utils/questionBankStorage.ts`
-- `STORAGE_KEY = 'familiada-question-bank'`
-- `saveQuestionBank(questions: QuestionBankEntry[]): void` — JSON.stringify to localStorage
-- `loadQuestionBank(): QuestionBankEntry[] | null` — parse or return null on error/empty
-- Both functions handle localStorage exceptions silently (try/catch)
+2. **src/components/board/TeamScore.tsx**:
+   - Read `team.totalScore` (already available)
+   - Compute `glowLevel`: `totalScore >= 2000 ? 2 : totalScore >= 1000 ? 1 : 0`
+   - Pass `glowLevel` to `<DigitDisplay>`
 
-### 3. Add `updateQuestionBank` action to `src/store/gameStore.ts`
-- Signature: `updateQuestionBank: (questions: QuestionBankEntry[]) => void`
-- Sets `questionBank` in store + calls `saveQuestionBank` from the new util
-- No status change (editing happens pre-game, outside the game flow)
-
-### 4. Modify `loadBank` in `src/store/gameStore.ts`
-- After receiving `data` param, call `loadQuestionBank()` from util
-- If localStorage returns data (non-null), use it instead of `data.questions`
-- This makes localStorage edits survive page reloads
-
-### 5. Add store action `goToQuestionEditor` and `backToLobbyFromEditor`
-- `goToQuestionEditor`: sets `status: 'editingQuestions'`
-- `backToLobbyFromEditor`: sets `status: 'lobby'`
-
-### 6. Create `src/components/screens/QuestionEditorForm.tsx`
-Props: `initialQuestion?: QuestionBankEntry`, `onSave: (q: QuestionBankEntry) => void`, `onCancel: () => void`
-
-- Local state: question text + array of up to 8 answers `{ text, points }`
-- "Add answer" button (up to 8 max)
-- "Remove" button per answer row (if more than 2)
-- Validation on submit:
-  - question text non-empty
-  - at least 2 answers
-  - each answer text non-empty
-  - each points value is a positive integer
-- Shows inline error messages under failing fields
-- "Zapisz" and "Anuluj" buttons
-
-### 7. Create `src/components/screens/QuestionEditorList.tsx`
-Props: `questions: QuestionBankEntry[]`, `onEdit: (index: number) => void`, `onDelete: (index: number) => void`, `onAddNew: () => void`
-
-- Renders scrollable list of questions
-- Each row: question text + answer count badge + "Edytuj" + "Usuń" buttons
-- "Dodaj pytanie" button at the top
-
-### 8. Create `src/components/screens/QuestionEditorScreen.tsx`
-- Reads `questionBank` from store
-- Local state: `editingIndex: number | null` (null = list view, -1 = add new, >=0 = edit existing)
-- When `editingIndex === null`: renders `QuestionEditorList`
-- When `editingIndex >= 0`: renders `QuestionEditorForm` with `initialQuestion={questionBank[editingIndex]}`
-- When `editingIndex === -1`: renders `QuestionEditorForm` without initialQuestion
-- `onSave` handler: builds updated array, calls `updateQuestionBank`, returns to list view
-- `onDelete` handler: removes question at index, calls `updateQuestionBank`
-- Header: title "Edytor pytań" + "Powrót do Lobby" button calling `backToLobbyFromEditor`
-
-### 9. Update `src/components/screens/LobbyScreen.tsx`
-- Add "Zarządzaj pytaniami" button (secondary style, below the DALEJ button)
-- On click: calls `goToQuestionEditor()` from store
-
-### 10. Update `src/App.tsx`
-- Add route: `if (status === 'editingQuestions') return <QuestionEditorScreen />;`
-- Place it just before the `if (status === 'lobby')` check (editor is operator-only, skip for board)
+3. **src/store/gameStore.ts** — inside `endRound`:
+   - After computing `newScore`, also compute `otherTeamScore = state.teams[otherSide].totalScore`
+   - Add `isScoreMilestoneEnd`: `newScore >= 2000 || otherTeamScore >= 2000`
+   - Add `isScoreMilestoneEnd` to the `status: 'finished'` condition alongside existing flags
 
 ## Constraints
+- `glowLevel` is computed in `TeamScore`, not inside `DigitDisplay` — keep display logic dumb
+- Do not add the glow to `RoundScore`, `FinalRoundGameBoard`, or any other `DigitDisplay` usage
+- No layout changes — `shadow-*` utilities only
+- Do not use `any` type
+- Keep each modified function under 50 lines
 
-- No new npm packages — use only existing stack
-- `QuestionEditorScreen.tsx` must stay under 300 lines — split into List + Form components
-- No `any` type, no `@ts-ignore`
-- All labels and button text in Polish (non-technical UX)
-- The board window (`?view=board`) must never show the editor — guard in App.tsx using `isBoard`
+## After implementation
+- Run linter: `npm run lint`
+- Run tests: `npm test`
 
-## After Implementation
-
-1. Run linter: `npm run lint`
-2. Run tests: `npm test`
-3. Manual verification steps (in Polish):
-   - Otwórz aplikację — na ekranie Lobby widoczny przycisk "Zarządzaj pytaniami"
-   - Kliknij "Zarządzaj pytaniami" — pojawia się ekran z listą pytań z pytania-bank.json
-   - Kliknij "Dodaj pytanie" — pojawia się formularz
-   - Spróbuj zapisać pusty formularz — pojawia się błąd walidacji
-   - Spróbuj zapisać z 1 odpowiedzią — pojawia się błąd walidacji
-   - Wpisz pytanie + 2 odpowiedzi z punktami — kliknij "Zapisz" — pytanie pojawia się na liście
-   - Kliknij "Edytuj" na istniejącym pytaniu — formularz wypełniony istniejącymi danymi
-   - Zmień treść i zapisz — lista zaktualizowana
-   - Kliknij "Usuń" na pytaniu — pytanie znika z listy
-   - Kliknij "Powrót do Lobby" — wracasz do Lobby
-   - Kliknij "DALEJ" — nowe pytanie widoczne w ekranie wyboru pytań
-   - Odśwież stronę (F5) — wróć do Lobby → "Zarządzaj pytaniami" — edytowane pytania nadal widoczne (localStorage)
+## Manual verification steps (Polish)
+1. Uruchom aplikację (`npm run dev`), otwórz tablicę w nowym oknie
+2. Przejdź przez Lobby → wybór pytań → rozpocznij grę
+3. Użyj przycisku `+5` lub zmień wynik ręcznie do wartości ≥ 1000 dla jednej drużyny
+4. Sprawdź, że na tablicy wynik tej drużyny otacza złota poświata (słabsza)
+5. Zwiększ wynik do ≥ 2000 — sprawdź, że poświata jest silniejsza/szersza
+6. Zakończ rundę — sprawdź, że gra kończy się automatycznie (ekran zwycięstwa lub przyciski
+   "Ogłoś zwycięstwo" / "Runda finałowa", bez "Następna runda")
+7. Sprawdź, że pozostałe wyświetlacze (pula punktów, finał) NIE mają poświaty

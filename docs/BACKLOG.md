@@ -768,6 +768,7 @@ EPIC-005: Weselna Familiada M5 - Desktop Distribution
 - [x] Sounds can be muted in operator panel
 
 **Notes:**
+
 - `public/sounds/przed-finalem-familiada.mp3` is in the folder but intentionally NOT wired for final round — reserved for US-026
 - Win sound placeholder: `przed-finalem-familiada.mp3` — will be replaced by `wygrana-familiada.mp3` in US-026
 - Sound on last round fixed: "NASTĘPNA RUNDA" does not play `przed-i-po-rundzie` when it would trigger game end (WinnerScreen plays its own sound instead)
@@ -822,22 +823,22 @@ EPIC-005: Weselna Familiada M5 - Desktop Distribution
 **I want to** see answers animate when revealed  
 **So that** reveals feel more dramatic
 
-**Status:** 📋 Planned  
+**Status:** ✅ COMPLETED  
 **Story Points:** 2  
 **Priority:** P3
 
 **Acceptance Criteria:**
 
-- [ ] Answer rows animate when revealed (flip or slide)
-- [ ] Animation is smooth (CSS transitions)
-- [ ] Animation completes in ~500ms
+- [x] Answer rows animate when revealed (flip or slide)
+- [x] Animation is smooth (CSS transitions)
+- [x] Animation completes in ~500ms
 
 **Tasks:**
 
-- [ ] **TASK-024.1:** Design reveal animation (CSS) - 20min
-- [ ] **TASK-024.2:** Implement animation on AnswerRow - 20min
-- [ ] **TASK-024.3:** Write tests for animation states (/qa) - 15min
-- [ ] **TASK-024.4:** Manual verification: animation looks good - 10min
+- [x] **TASK-024.1:** Design reveal animation (CSS) - 20min
+- [x] **TASK-024.2:** Implement animation on AnswerRow - 20min
+- [x] **TASK-024.3:** Write tests for animation states (/qa) - 15min
+- [x] **TASK-024.4:** Manual verification: animation looks good - 10min
 
 ---
 
@@ -866,24 +867,24 @@ EPIC-005: Weselna Familiada M5 - Desktop Distribution
 **I want to** see the authentic Familiada typeface on the game board  
 **So that** the game looks and feels like the real TV show
 
-**Status:** 📋 Planned  
+**Status:** ✅ COMPLETED  
 **Story Points:** 2  
 **Priority:** P2
 
 **Acceptance Criteria:**
 
-- [ ] `familiada.ttf` loaded via `@font-face` in `src/index.css`
-- [ ] `font-display` family in `tailwind.config.js` updated to use `Familiada` with Impact as fallback
-- [ ] Custom font applied on game board: answer text, scores, team names, question title
-- [ ] Operator panel typography unchanged
-- [ ] No layout regressions at 1920×1080
+- [x] `familiada.ttf` loaded via `@font-face` in `src/index.css`
+- [x] `font-display` family in `tailwind.config.js` updated to use `Familiada` with Impact as fallback
+- [x] Custom font applied on game board: answer text, scores, team names, question title
+- [x] Operator panel typography unchanged
+- [x] No layout regressions at 1920×1080
 
 **Tasks:**
 
-- [ ] **TASK-027.1:** Register `@font-face` for `familiada.ttf` in `src/index.css` - 10min
-- [ ] **TASK-027.2:** Update `font-display` in `tailwind.config.js` to `['Familiada', 'Impact', ...]` - 5min
-- [ ] **TASK-027.3:** Verify font renders on all board elements (answers, scores, team names, question) - 15min
-- [ ] **TASK-027.4:** Manual verification: board looks authentic at 1920×1080 - 10min
+- [x] **TASK-027.1:** Register `@font-face` for `familiada.ttf` in `src/index.css` - 10min
+- [x] **TASK-027.2:** Update `font-display` in `tailwind.config.js` to `['Familiada', 'Impact', ...]` - 5min
+- [x] **TASK-027.3:** Verify font renders on all board elements (answers, scores, team names, question) - 15min
+- [x] **TASK-027.4:** Manual verification: board looks authentic at 1920×1080 - 10min
 
 ---
 
@@ -943,6 +944,7 @@ EPIC-005: Weselna Familiada M5 - Desktop Distribution
 - [x] `FinalRoundDotMatrix` uses same 10×30 grid for projector view during final round
 
 **Notes:**
+
 - Familiada-2 em-square: 640×896 (5:7 ratio) — cell must use `aspect-ratio: 5/7`
 - Grid math: 30 cols × 5 + 29 gaps × 1 = 179 units → `FONT_SIZE = 'calc(700cqi / 179)'`
 - Intro sound (`playIntro`) moved from LobbyScreen "Nowa Gra" to OperatorPanel "Otwórz Tablicę"
@@ -980,6 +982,7 @@ EPIC-005: Weselna Familiada M5 - Desktop Distribution
 - [x] X glyphs use Unicode spacing characters (U+2000–U+200A) rendered via Familiada-2 font
 
 **Notes:**
+
 - Small mistake pattern: 7 cells forming an X in a 3×3 block; anchored at rows 1, 4, 7 (0-indexed)
 - Big mistake pattern: 9 cells spanning rows 3–7 (0-indexed), 3 columns wide
 - Left team anchor col: 0; right team anchor col: 27 (0-indexed)
@@ -1031,6 +1034,7 @@ EPIC-005: Weselna Familiada M5 - Desktop Distribution
 - [x] Points accumulated based on correct matches; final score = (team score + final sum) × 15; +25 000 bonus if final sum ≥ 200
 
 **Notes:**
+
 - End-game choice ("OGŁOŚ ZWYCIĘSTWO" / "RUNDA FINAŁOWA") appears inside RoundControls after the last round ends — no separate screen
 - Questions loaded from `public/pytania-final.json` (5 questions, each with up to 5 answers)
 - `wygrana-familiada.mp3` not yet available — win sound still uses `przed-finalem-familiada.mp3` as placeholder
@@ -1231,6 +1235,7 @@ EPIC-005: Weselna Familiada M5 - Desktop Distribution
 - [ ] Existing functionality (game flow, sound, final round) works without regression
 
 **Technical Notes:**
+
 - Risk: BroadcastChannel may not propagate between separate BrowserWindow processes — must verify in Electron's Chromium
 - Fallback: Electron IPC (`ipcMain` / `ipcRenderer`) as message relay if needed
 
