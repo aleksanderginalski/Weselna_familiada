@@ -822,4 +822,80 @@ describe('gameStore', () => {
       expect(useGameStore.getState().currentRound.showdownWrongTeam).toBeNull();
     });
   });
+
+  describe('endRound — lastRoundPoints', () => {
+    it('should save lastRoundPoints with correct amount and holder after endRound', () => {
+      // TC-185
+      useGameStore.setState({
+        ...useGameStore.getState(),
+        status: 'playing',
+        config: { mode: 'fixed', numberOfRounds: 2, multipliers: [3], teams: { left: { name: 'A' }, right: { name: 'B' } } },
+        rounds: [{ question: 'Q', answers: [{ text: 'A', points: 20 }] }, { question: 'Q2', answers: [] }],
+        teams: { left: { name: 'A', totalScore: 0 }, right: { name: 'B', totalScore: 0 } },
+        currentRound: { phase: 'guessing', controllingTeam: 'right', revealedAnswers: [], mistakes: 0, stealAttempted: false, stealFailed: false, showdownWrongTeam: null, roundScore: 40 },
+        currentRoundIndex: 0,
+        lastRoundPoints: null,
+      });
+
+      useGameStore.getState().endRound('right');
+
+      expect(useGameStore.getState().lastRoundPoints).toEqual({ amount: 120, holder: 'right' });
+    });
+
+    it('should set lastRoundPoints to null when roundScore is 0', () => {
+      // TC-186
+      useGameStore.setState({
+        ...useGameStore.getState(),
+        status: 'playing',
+        config: { mode: 'fixed', numberOfRounds: 2, multipliers: [1], teams: { left: { name: 'A' }, right: { name: 'B' } } },
+        rounds: [{ question: 'Q', answers: [] }, { question: 'Q2', answers: [] }],
+        teams: { left: { name: 'A', totalScore: 0 }, right: { name: 'B', totalScore: 0 } },
+        currentRound: { phase: 'guessing', controllingTeam: 'left', revealedAnswers: [], mistakes: 0, stealAttempted: false, stealFailed: false, showdownWrongTeam: null, roundScore: 0 },
+        currentRoundIndex: 0,
+        lastRoundPoints: null,
+      });
+
+      useGameStore.getState().endRound('left');
+
+      expect(useGameStore.getState().lastRoundPoints).toBeNull();
+    });
+  });
+
+  describe('transferLastRoundPoints', () => {
+    beforeEach(() => {
+      useGameStore.setState({
+        ...useGameStore.getState(),
+        teams: { left: { name: 'A', totalScore: 200 }, right: { name: 'B', totalScore: 50 } },
+        lastRoundPoints: { amount: 100, holder: 'left' },
+      });
+    });
+
+    it('should subtract from holder and add to other team, then update holder', () => {
+      // TC-187
+      useGameStore.getState().transferLastRoundPoints();
+      const state = useGameStore.getState();
+
+      expect(state.teams.left.totalScore).toBe(100);
+      expect(state.teams.right.totalScore).toBe(150);
+      expect(state.lastRoundPoints).toEqual({ amount: 100, holder: 'right' });
+    });
+
+    it('should be reversible — transferring back restores original scores', () => {
+      // TC-188
+      useGameStore.getState().transferLastRoundPoints();
+      useGameStore.getState().transferLastRoundPoints();
+      const state = useGameStore.getState();
+
+      expect(state.teams.left.totalScore).toBe(200);
+      expect(state.teams.right.totalScore).toBe(50);
+      expect(state.lastRoundPoints).toEqual({ amount: 100, holder: 'left' });
+    });
+
+    it('should clear lastRoundPoints when resetGame is called', () => {
+      // TC-189
+      useGameStore.getState().resetGame();
+
+      expect(useGameStore.getState().lastRoundPoints).toBeNull();
+    });
+  });
 });
