@@ -79,6 +79,12 @@ export interface RoundState {
   roundScore: number;
 }
 
+/** Points awarded at the end of the last completed round, enabling cross-team transfer */
+export interface LastRoundPoints {
+  amount: number;
+  holder: TeamSide;
+}
+
 export interface GameState {
   // Configuration (loaded from JSON, immutable during game)
   config: GameConfig;
@@ -108,6 +114,9 @@ export interface GameState {
 
   // Present only when a final round has been started
   finalRound?: FinalRoundState;
+
+  /** Points from the last completed round — null until first round ends, reset each round end */
+  lastRoundPoints: LastRoundPoints | null;
 }
 
 // ============================================

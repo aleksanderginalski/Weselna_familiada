@@ -26,10 +26,12 @@ export function TeamControl() {
   const phase = useGameStore((state) => state.currentRound.phase);
   const stealFailed = useGameStore((state) => state.currentRound.stealFailed);
   const showdownWrongTeam = useGameStore((state) => state.currentRound.showdownWrongTeam);
+  const lastRoundPoints = useGameStore((state) => state.lastRoundPoints);
   const selectTeam = useGameStore((state) => state.selectTeam);
   const markMistake = useGameStore((state) => state.markMistake);
   const markShowdownAttempt = useGameStore((state) => state.markShowdownAttempt);
   const adjustScore = useGameStore((state) => state.adjustScore);
+  const transferLastRoundPoints = useGameStore((state) => state.transferLastRoundPoints);
   const { playWrong, playCorrect } = useSound();
 
   const isStealPhase = phase === 'steal';
@@ -127,6 +129,15 @@ export function TeamControl() {
                 +5
               </button>
             </div>
+            {/* Transfer last round points — visible only on the holder's side */}
+            {lastRoundPoints && lastRoundPoints.holder === side && (
+              <button
+                onClick={() => transferLastRoundPoints()}
+                className="operator-btn bg-familiada-gold text-black hover:brightness-110 font-bold text-sm w-full"
+              >
+                Przekaż punkty ({lastRoundPoints.amount} pkt)
+              </button>
+            )}
           </div>
         ))}
       </div>
