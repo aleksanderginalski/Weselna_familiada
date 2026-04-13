@@ -161,6 +161,16 @@ MIT License — zobacz [LICENSE](./LICENSE)
 
 ## Latest
 
+**v0.37.0** — Electron desktop app with two-window management (US-032)
+
+- `electron/main.ts` — new Electron main process; creates Operator BrowserWindow (1280×900) on launch; loads Vite dev server in dev mode, `dist/index.html` in production; retries URL on `did-fail-load` while Vite starts
+- `tsconfig.electron.json` — new TS config for Electron main process (`"module": "ESNext"`, `outDir: dist-electron`); separate from the React/Vite config to avoid CommonJS/ESM conflict with `"type": "module"` in `package.json`
+- `package.json` — added `"main": "dist-electron/main.js"`; new scripts: `electron:compile`, `electron:dev` (compiles then runs Vite + Electron via concurrently), `electron:build`; new devDependencies: `electron`, `concurrently`, `cross-env`
+- `vite.config.ts` — `server.open` changed to `false` (Electron opens its own window)
+- `.gitignore` — `dist-electron/` added
+- BroadcastChannel works natively between Electron v20+ renderer processes — no IPC relay needed
+- 7 tests added: TC-192 through TC-197 (263 total)
+
 **v0.36.0** — Transfer last round points ("Przekaż punkty") (US-035)
 
 - `src/types/game.ts` — new `LastRoundPoints` interface (`{ amount: number; holder: TeamSide }`); `GameState` gains `lastRoundPoints: LastRoundPoints | null` field

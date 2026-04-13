@@ -335,11 +335,12 @@ Operator Panel                    Game Board
 
 **Risk & Mitigation:**
 - **Risk:** BroadcastChannel may not propagate between separate Electron `BrowserWindow` processes
-- **Mitigation:** Verify in US-032; if broken, implement Electron IPC relay (`ipcMain` as message bus between renderer windows)
+- **Result (US-032):** BroadcastChannel works natively in Electron v20+ — all renderer processes in the same session share it. No IPC relay needed.
 
 **Impact:**
-- New `electron/main.ts` — main process, manages two `BrowserWindow` instances
-- Board window opened via IPC from operator panel (US-034) instead of `window.open()`
+- New `electron/main.ts` — main process; creates Operator BrowserWindow on launch; uses ESM (matches `"type": "module"` in package.json)
+- New `tsconfig.electron.json` — separate TS config for main process (`"module": "ESNext"`, `outDir: dist-electron`)
+- Board window opened via `window.open('/?view=board', '_blank')` from renderer (unchanged from browser mode)
 - `npm run electron:dev` and `npm run electron:build` scripts added
 
 ---
