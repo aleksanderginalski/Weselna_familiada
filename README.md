@@ -54,9 +54,11 @@ Otwórz projekt w VS Code — pojawi się sugestia instalacji rekomendowanych ro
 1. Uruchom aplikację (`npm run dev`)
 2. W Panelu Operatora kliknij "Otwórz Tablicę w Nowym Oknie"
 3. Przeciągnij okno Tablicy na rzutnik (rozszerz pulpit)
-4. Skonfiguruj nazwy drużyn i tryb gry, kliknij "DALEJ"
-5. Wybierz pytania z banku lub kliknij "LOSUJ", następnie "ROZPOCZNIJ GRĘ"
-6. Prowadź grę używając Panelu Operatora
+4. (Opcjonalnie) Kliknij "Zarządzaj pytaniami" aby dodać/edytować/usunąć pytania z banku
+5. Skonfiguruj nazwy drużyn i tryb gry, kliknij "DALEJ"
+6. Wybierz pytania do rundy głównej lub kliknij "LOSUJ", następnie "Wybór pytań do rundy finałowej →"
+7. Wybierz 5 pytań finałowych lub kliknij "LOSUJ", następnie "ROZPOCZNIJ GRĘ"
+8. Prowadź grę używając Panelu Operatora
 
 ## 📁 Struktura projektu
 
@@ -81,7 +83,10 @@ Weselna_familiada/
 
 ## 📝 Edycja pytań
 
-Pytania i konfiguracja są teraz w **dwóch osobnych plikach**:
+Pytania można edytować bezpośrednio w aplikacji (**Zarządzaj pytaniami** na ekranie Lobby) — zmiany są persystowane w `localStorage`.
+
+Alternatywnie, edytuj plik JSON (**uwaga:** zmiany w pliku są widoczne tylko gdy localStorage jest pusty lub wyczyszczony):
+
 
 ### `public/pytania.json` — konfiguracja gry
 
@@ -156,10 +161,27 @@ MIT License — zobacz [LICENSE](./LICENSE)
 
 ## Latest
 
+**v0.32.0** — In-app question editor with two-phase question selection (US-031)
+
+- `src/components/screens/QuestionEditorScreen.tsx` — new orchestrator screen (list ↔ form); loads bank from `localStorage` on mount, falls back to `pytania-bank.json`
+- `src/components/screens/QuestionEditorList.tsx` — list view: question count, edit/delete buttons per row, "Dodaj pytanie" button
+- `src/components/screens/QuestionEditorForm.tsx` — form view: question text + up to 8 answer rows with points; validation (text required, ≥2 answers, positive integer points); "Zapisz" / "Anuluj"
+- `src/components/screens/FinalRoundSelectionScreen.tsx` — new step-2 selection screen: shows questions not picked for main round; auto-selects all when exactly 5 available; "LOSUJ" button (visible when >5 available) randomly picks 5; "ROZPOCZNIJ GRĘ" enabled only when exactly 5 selected
+- `src/components/screens/QuestionSelectionScreen.tsx` — rewritten: `maxSelectable = bank.length − 5` (5 reserved for final); confirm button now reads "Wybór pytań do rundy finałowej →" and transitions to `selectingFinalQuestions`
+- `src/utils/questionBankStorage.ts` — new util: `saveQuestionBank` / `loadQuestionBank` via `localStorage` (`familiada-question-bank` key)
+- `src/utils/shuffle.ts` — new util: Fisher-Yates `shuffled<T>()` (shared by both selection screens)
+- `src/store/gameStore.ts` — new actions: `updateQuestionBank`, `goToQuestionEditor`, `backToLobbyFromEditor`, `selectFinalQuestions`, `backToMainSelection`; `selectQuestions` now computes `availableForFinal` and transitions to `selectingFinalQuestions` instead of `playing`; `loadBank` prefers localStorage over JSON file
+- `src/types/game.ts` — `GameStatus` extended with `'editingQuestions'` and `'selectingFinalQuestions'`; `GameState` gains `availableForFinal` and `finalRoundQuestions` fields
+- `src/components/screens/LobbyScreen.tsx` — "Zarządzaj pytaniami" button added below DALEJ
+- `src/components/operator/RoundControls.tsx` — `RUNDA FINAŁOWA` button now uses pre-selected `finalRoundQuestions` directly (no random shuffle at runtime)
+- `public/pytania-bank.json` — merged with `pytania-final.json`; now contains all questions (main + final) in a single pool
+- `public/pytania-final.json` — removed (questions moved to `pytania-bank.json`)
+- 23 tests added: TC-146 through TC-164 + store action fixes (229 total)
+
 **v0.31.0** — Question selection screen (US-030)
 
 - `src/components/screens/QuestionSelectionScreen.tsx` — new screen between Lobby and game; operator checks/unchecks questions from the bank, reorders with ▲/▼ arrows, draws a random set via "LOSUJ", and confirms with "ROZPOCZNIJ GRĘ"
-- `src/store/gameStore.ts` — new `selectQuestions(questions)` action: locks selection into `rounds` and transitions to `'playing'`; new `backToLobby()` action: returns to `'lobby'` without clearing the bank; `loadBank` now sets `status: 'selectingQuestions'` and clears `rounds` instead of auto-selecting; `endRound()` extended with `isScoreModeExhausted`: game ends automatically when score mode runs out of questions before the threshold is reached (leader wins)
+- `src/store/gameStore.ts` — new `selectQuestions(questions)` action; new `backToLobby()` action: returns to `'lobby'` without clearing the bank; `loadBank` now sets `status: 'selectingQuestions'` and clears `rounds` instead of auto-selecting; `endRound()` extended with `isScoreModeExhausted`: game ends automatically when score mode runs out of questions before the threshold is reached (leader wins)
 - `src/types/game.ts` — `GameStatus` extended with `'selectingQuestions'`
 - `src/components/screens/LobbyScreen.tsx` — "Liczba rund" input removed; button label changed to "DALEJ"; `loadBank` moved from `useEffect` to button handler so team names are committed before navigating away
 - `src/App.tsx` — `status === 'selectingQuestions'` routes to `<QuestionSelectionScreen />` (operator window only)

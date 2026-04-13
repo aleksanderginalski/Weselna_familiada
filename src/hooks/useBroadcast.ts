@@ -14,6 +14,8 @@ function extractGameState(store: ReturnType<typeof useGameStore.getState>): Game
     currentRoundIndex: store.currentRoundIndex,
     teams: store.teams,
     currentRound: store.currentRound,
+    availableForFinal: store.availableForFinal,
+    finalRoundQuestions: store.finalRoundQuestions,
     showingWinner: store.showingWinner,
     finalRound: store.finalRound,
   };

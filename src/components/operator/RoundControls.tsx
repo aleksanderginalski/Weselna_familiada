@@ -1,6 +1,6 @@
 import { useGameStore } from '@/store/gameStore';
 import { useSound } from '@/hooks/useSound';
-import { FinalRoundDataFile, TeamSide } from '@/types/game';
+import { TeamSide } from '@/types/game';
 
 function getOpposingTeam(side: TeamSide): TeamSide {
   return side === 'left' ? 'right' : 'left';
@@ -18,11 +18,6 @@ function resolveWinner(
   return controllingTeam;
 }
 
-async function fetchFinalRoundData(): Promise<FinalRoundDataFile> {
-  const response = await fetch('/pytania-final.json');
-  return response.json();
-}
-
 export function RoundControls() {
   const currentRoundIndex = useGameStore((state) => state.currentRoundIndex);
   const config = useGameStore((state) => state.config);
@@ -30,6 +25,7 @@ export function RoundControls() {
   const currentRound = useGameStore((state) => state.currentRound);
   const status = useGameStore((state) => state.status);
   const teams = useGameStore((state) => state.teams);
+  const finalRoundQuestions = useGameStore((state) => state.finalRoundQuestions);
   const endRound = useGameStore((state) => state.endRound);
   const nextRound = useGameStore((state) => state.nextRound);
   const declareWinner = useGameStore((state) => state.declareWinner);
@@ -56,10 +52,11 @@ export function RoundControls() {
   const isGameFinished = status === 'finished' && phase === 'summary';
   const canNextRound = phase === 'summary' && status === 'playing';
 
-  async function handleFinalRound() {
-    const data = await fetchFinalRoundData();
+  const hasFinalQuestions = finalRoundQuestions.length > 0;
+
+  function handleFinalRound() {
     playFinalRound();
-    startFinalRound(data);
+    startFinalRound({ questions: finalRoundQuestions });
   }
 
   return (
@@ -112,10 +109,17 @@ export function RoundControls() {
           </button>
           <button
             onClick={handleFinalRound}
-            className="operator-btn w-full"
+            disabled={!hasFinalQuestions}
+            className="operator-btn w-full disabled:opacity-40 disabled:cursor-not-allowed"
+            title={!hasFinalQuestions ? 'Nie wybrano pytań do rundy finałowej' : undefined}
           >
             RUNDA FINAŁOWA
           </button>
+          {!hasFinalQuestions && (
+            <p className="text-familiada-red text-xs text-center">
+              Nie wybrano pytań do rundy finałowej podczas konfiguracji gry
+            </p>
+          )}
         </div>
       )}
     </div>

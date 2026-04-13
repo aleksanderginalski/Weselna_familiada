@@ -51,7 +51,7 @@ export interface GameDataFile {
 // Game State Types (runtime state)
 // ============================================
 
-export type GameStatus = 'lobby' | 'selectingQuestions' | 'playing' | 'finished' | 'finalRound';
+export type GameStatus = 'lobby' | 'editingQuestions' | 'selectingQuestions' | 'selectingFinalQuestions' | 'playing' | 'finished' | 'finalRound';
 export type RoundPhase = 'showdown' | 'guessing' | 'steal' | 'summary';
 export type TeamSide = 'left' | 'right';
 
@@ -83,6 +83,10 @@ export interface GameState {
   /** Full question bank loaded from pytania-bank.json */
   questionBank: QuestionBankEntry[];
   rounds: RoundData[];
+  /** Questions available for final round selection (bank minus main round selection) */
+  availableForFinal: QuestionBankEntry[];
+  /** Pre-selected 5 questions for the final round */
+  finalRoundQuestions: QuestionBankEntry[];
 
   // Game progress
   status: GameStatus;

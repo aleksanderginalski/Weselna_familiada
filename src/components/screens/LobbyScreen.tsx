@@ -22,6 +22,7 @@ const DEFAULT_FORM: LobbyFormState = {
 export function LobbyScreen() {
   const loadGame = useGameStore((state) => state.loadGame);
   const loadBank = useGameStore((state) => state.loadBank);
+  const goToQuestionEditor = useGameStore((state) => state.goToQuestionEditor);
 
   const [gameData, setGameData] = useState<GameDataFile | null>(null);
   const [bankData, setBankData] = useState<QuestionBankFile | null>(null);
@@ -178,6 +179,13 @@ export function LobbyScreen() {
           className="operator-btn-primary w-full text-xl"
         >
           DALEJ
+        </button>
+
+        <button
+          onClick={goToQuestionEditor}
+          className="operator-btn w-full mt-3"
+        >
+          Zarządzaj pytaniami
         </button>
       </div>
     </div>

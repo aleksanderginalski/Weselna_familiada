@@ -37,16 +37,6 @@
         { "text": "Świebodzin", "points": 19 },
         { "text": "Kraków", "points": 16 }
       ]
-    },
-    {
-      "question": "Kraje z którymi koojarzysz zbrodnie wojenne",
-      "answers": [
-        { "text": "Izrael", "points": 30 },
-        { "text": "Rosja", "points": 25 },
-        { "text": "USA", "points": 20 },
-        { "text": "Iran", "points": 15 },
-        { "text": "Palestyna", "points": 10 }
-      ]
     }
   ]
 }

@@ -126,7 +126,7 @@ describe('gameStore', () => {
       const state = useGameStore.getState();
 
       expect(state.rounds).toEqual(mockBankData.questions);
-      expect(state.status).toBe('playing');
+      expect(state.status).toBe('selectingFinalQuestions');
       expect(state.currentRoundIndex).toBe(0);
       expect(state.currentRound.phase).toBe('showdown');
     });
@@ -647,6 +647,63 @@ describe('gameStore', () => {
       expect(state.status).toBe('finished');
       expect(state.showingWinner).toBe(true);
       expect(state.finalRound!.phase).toBe('finished');
+    });
+  });
+
+  // TC-160
+  describe('updateQuestionBank', () => {
+    it('should update questionBank in store and persist to localStorage', () => {
+      const questions = [{ question: 'Q?', answers: [{ text: 'A', points: 10 }] }];
+      useGameStore.getState().updateQuestionBank(questions);
+      const state = useGameStore.getState();
+
+      expect(state.questionBank).toEqual(questions);
+      expect(localStorage.getItem('familiada-question-bank')).not.toBeNull();
+    });
+  });
+
+  // TC-161
+  describe('goToQuestionEditor', () => {
+    it('should set status to editingQuestions', () => {
+      useGameStore.getState().goToQuestionEditor();
+
+      expect(useGameStore.getState().status).toBe('editingQuestions');
+    });
+  });
+
+  // TC-162
+  describe('backToLobbyFromEditor', () => {
+    it('should set status to lobby', () => {
+      useGameStore.getState().goToQuestionEditor();
+      useGameStore.getState().backToLobbyFromEditor();
+
+      expect(useGameStore.getState().status).toBe('lobby');
+    });
+  });
+
+  // TC-163
+  describe('selectFinalQuestions', () => {
+    it('should set finalRoundQuestions, transition to playing, and reset round state', () => {
+      const questions = Array.from({ length: 5 }, (_, i) => ({
+        question: `Q${i + 1}?`,
+        answers: [{ text: 'A', points: 10 }],
+      }));
+      useGameStore.getState().selectFinalQuestions(questions);
+      const state = useGameStore.getState();
+
+      expect(state.finalRoundQuestions).toEqual(questions);
+      expect(state.status).toBe('playing');
+      expect(state.currentRoundIndex).toBe(0);
+      expect(state.currentRound.phase).toBe('showdown');
+    });
+  });
+
+  // TC-164
+  describe('backToMainSelection', () => {
+    it('should set status to selectingQuestions', () => {
+      useGameStore.getState().backToMainSelection();
+
+      expect(useGameStore.getState().status).toBe('selectingQuestions');
     });
   });
 

@@ -1,7 +1,7 @@
 # Weselna Familiada - Test Cases Documentation
 
-**Version:** 1.6  
-**Date:** 2026-04-11  
+**Version:** 1.7  
+**Date:** 2026-04-13  
 **Author:** QA Agent  
 **Test Framework:** Vitest
 
@@ -1951,6 +1951,309 @@ beforeEach(() => {
 1. Set `status: 'selectingQuestions'`, `questionBank` with 1 question
 2. Render `<App />`
 3. Assert heading "WYBÓR PYTAŃ" visible, "DALEJ" absent
+
+**Status:** ✅ Done
+
+---
+
+### FEATURE-013: In-App Question Editor (US-031)
+
+#### TC-146: questionBankStorage — saveQuestionBank persists; loadQuestionBank retrieves
+
+**Related US:** US-031
+**Type:** Unit
+**Priority:** Critical
+**File:** `src/utils/questionBankStorage.test.ts`
+
+**Test Steps:**
+1. Call `saveQuestionBank` with mock questions
+2. Call `loadQuestionBank`
+3. Assert returned array equals saved questions and localStorage key is set
+
+**Status:** ✅ Done
+
+---
+
+#### TC-147: questionBankStorage — loadQuestionBank returns null when nothing stored
+
+**Related US:** US-031
+**Type:** Unit
+**Priority:** High
+**File:** `src/utils/questionBankStorage.test.ts`
+
+**Test Steps:**
+1. Clear localStorage
+2. Call `loadQuestionBank`
+3. Assert result is null
+
+**Status:** ✅ Done
+
+---
+
+#### TC-148: questionBankStorage — loadQuestionBank returns null for invalid JSON or non-array
+
+**Related US:** US-031
+**Type:** Unit
+**Priority:** High
+**File:** `src/utils/questionBankStorage.test.ts`
+
+**Test Steps:**
+1. Store invalid JSON string under the key
+2. Assert `loadQuestionBank` returns null
+3. Store a JSON object (non-array)
+4. Assert `loadQuestionBank` returns null
+
+**Status:** ✅ Done
+
+---
+
+#### TC-149: shuffle — shuffled preserves all elements without mutating original
+
+**Related US:** US-031
+**Type:** Unit
+**Priority:** High
+**File:** `src/utils/shuffle.test.ts`
+
+**Test Steps:**
+1. Call `shuffled([1,2,3,4,5])`
+2. Assert result has same length and same elements (sorted)
+3. Assert original array is unchanged
+
+**Status:** ✅ Done
+
+---
+
+#### TC-150: shuffle — shuffled handles empty array
+
+**Related US:** US-031
+**Type:** Unit
+**Priority:** Medium
+**File:** `src/utils/shuffle.test.ts`
+
+**Test Steps:**
+1. Call `shuffled([])`
+2. Assert result is `[]`
+
+**Status:** ✅ Done
+
+---
+
+#### TC-151: QuestionEditorList — renders question list, count, empty state, and add button
+
+**Related US:** US-031
+**Type:** Component
+**Priority:** High
+**File:** `src/components/screens/QuestionEditorList.test.tsx`
+
+**Test Steps:**
+1. Render with empty questions array
+2. Assert "Brak pytań w banku", empty state message, and add button visible
+3. Render with 2 questions
+4. Assert "2 pytań w banku" and both question texts visible
+
+**Status:** ✅ Done
+
+---
+
+#### TC-152: QuestionEditorList — onEdit/onDelete/onAddNew callbacks fired with correct index
+
+**Related US:** US-031
+**Type:** Component
+**Priority:** High
+**File:** `src/components/screens/QuestionEditorList.test.tsx`
+
+**Test Steps:**
+1. Render with 2 questions
+2. Click second Edytuj → assert `onEdit(1)` called
+3. Click first Usuń → assert `onDelete(0)` called
+4. Click + Dodaj pytanie → assert `onAddNew` called
+
+**Status:** ✅ Done
+
+---
+
+#### TC-153: QuestionEditorForm — renders empty form for new question and pre-fills when editing
+
+**Related US:** US-031
+**Type:** Component
+**Priority:** High
+**File:** `src/components/screens/QuestionEditorForm.test.tsx`
+
+**Test Steps:**
+1. Render without `initialQuestion` — assert question input empty, 2 empty answer rows
+2. Render with `initialQuestion` — assert question text, answer text, and points pre-filled
+
+**Status:** ✅ Done
+
+---
+
+#### TC-154: QuestionEditorForm — valid form calls onSave with trimmed data
+
+**Related US:** US-031
+**Type:** Component
+**Priority:** Critical
+**File:** `src/components/screens/QuestionEditorForm.test.tsx`
+
+**Test Steps:**
+1. Fill question text, 2 answers with points
+2. Click Zapisz
+3. Assert `onSave` called with correct `{ question, answers }` structure and parsed integer points
+
+**Status:** ✅ Done
+
+---
+
+#### TC-155: QuestionEditorForm — shows validation errors for empty/invalid input
+
+**Related US:** US-031
+**Type:** Component
+**Priority:** High
+**File:** `src/components/screens/QuestionEditorForm.test.tsx`
+
+**Test Steps:**
+1. Click Zapisz without filling anything
+2. Assert "Treść pytania jest wymagana", "Treść odpowiedzi jest wymagana", "Punkty muszą być liczbą całkowitą większą od 0" visible
+
+**Status:** ✅ Done
+
+---
+
+#### TC-156: FinalRoundSelectionScreen — auto-selects all and hides LOSUJ when exactly 5 available
+
+**Related US:** US-031
+**Type:** Component
+**Priority:** High
+**File:** `src/components/screens/FinalRoundSelectionScreen.test.tsx`
+
+**Test Steps:**
+1. Set `availableForFinal` to exactly 5 questions
+2. Assert all checkboxes checked, LOSUJ button absent, ROZPOCZNIJ GRĘ enabled
+
+**Status:** ✅ Done
+
+---
+
+#### TC-157: FinalRoundSelectionScreen — LOSUJ visible for >5 available; selects exactly 5
+
+**Related US:** US-031
+**Type:** Component
+**Priority:** High
+**File:** `src/components/screens/FinalRoundSelectionScreen.test.tsx`
+
+**Test Steps:**
+1. Set `availableForFinal` to 8 questions
+2. Assert LOSUJ button visible
+3. Click LOSUJ — assert exactly 5 checkboxes checked
+
+**Status:** ✅ Done
+
+---
+
+#### TC-158: FinalRoundSelectionScreen — ROZPOCZNIJ GRĘ calls selectFinalQuestions when 5 selected
+
+**Related US:** US-031
+**Type:** Component
+**Priority:** Critical
+**File:** `src/components/screens/FinalRoundSelectionScreen.test.tsx`
+
+**Test Steps:**
+1. Set `availableForFinal` to 6 questions
+2. Assert confirm button disabled initially
+3. Select 5 questions — assert button enabled
+4. Click ROZPOCZNIJ GRĘ — assert `finalRoundQuestions.length === 5`, `status === 'playing'`
+
+**Status:** ✅ Done
+
+---
+
+#### TC-159: FinalRoundSelectionScreen — ← Wróć calls backToMainSelection
+
+**Related US:** US-031
+**Type:** Component
+**Priority:** Medium
+**File:** `src/components/screens/FinalRoundSelectionScreen.test.tsx`
+
+**Test Steps:**
+1. Render screen
+2. Click ← Wróć do pytań głównych
+3. Assert `status === 'selectingQuestions'`
+
+**Status:** ✅ Done
+
+---
+
+#### TC-160: updateQuestionBank — updates store and persists to localStorage
+
+**Related US:** US-031
+**Type:** Unit (store)
+**Priority:** Critical
+**File:** `src/store/gameStore.test.ts`
+
+**Test Steps:**
+1. Call `updateQuestionBank` with mock questions
+2. Assert `questionBank` in store equals mock
+3. Assert `localStorage.getItem('familiada-question-bank')` is not null
+
+**Status:** ✅ Done
+
+---
+
+#### TC-161: goToQuestionEditor — sets status to editingQuestions
+
+**Related US:** US-031
+**Type:** Unit (store)
+**Priority:** High
+**File:** `src/store/gameStore.test.ts`
+
+**Test Steps:**
+1. Call `goToQuestionEditor`
+2. Assert `status === 'editingQuestions'`
+
+**Status:** ✅ Done
+
+---
+
+#### TC-162: backToLobbyFromEditor — sets status to lobby
+
+**Related US:** US-031
+**Type:** Unit (store)
+**Priority:** High
+**File:** `src/store/gameStore.test.ts`
+
+**Test Steps:**
+1. Call `goToQuestionEditor` then `backToLobbyFromEditor`
+2. Assert `status === 'lobby'`
+
+**Status:** ✅ Done
+
+---
+
+#### TC-163: selectFinalQuestions — sets finalRoundQuestions, transitions to playing, resets round
+
+**Related US:** US-031
+**Type:** Unit (store)
+**Priority:** Critical
+**File:** `src/store/gameStore.test.ts`
+
+**Test Steps:**
+1. Call `selectFinalQuestions` with 5 mock questions
+2. Assert `finalRoundQuestions` equals passed questions
+3. Assert `status === 'playing'`, `currentRoundIndex === 0`, `currentRound.phase === 'showdown'`
+
+**Status:** ✅ Done
+
+---
+
+#### TC-164: backToMainSelection — sets status to selectingQuestions
+
+**Related US:** US-031
+**Type:** Unit (store)
+**Priority:** High
+**File:** `src/store/gameStore.test.ts`
+
+**Test Steps:**
+1. Call `backToMainSelection`
+2. Assert `status === 'selectingQuestions'`
 
 **Status:** ✅ Done
 

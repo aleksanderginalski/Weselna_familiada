@@ -1,82 +1,107 @@
-# Current Task — US-027
+# Current Task — US-031
 
 ## Context
+Implement an in-app question editor accessible from the Lobby screen.
+Non-technical operators need to add, edit, and delete questions directly
+in the UI without touching JSON files. Edits persist in `localStorage`
+and are reflected immediately in QuestionSelectionScreen.
 
-Apply the custom `familiada.ttf` font to the game board so it looks like the real TV show.
-The font file already exists at `src/assets/fonts/familiada.ttf` (untracked).
-The `font-display` Tailwind utility class is already used on all board elements
-(`AnswerRow`, `TeamScore`, `RoundScore`, `AnswerSum`, `FinalRoundBoard`),
-so registering the font and updating the Tailwind config is all that's needed.
-Operator panel typography must remain unchanged.
+Architecture decision (ADR-004): localStorage stores the full edited bank;
+on load, if localStorage has data it takes precedence over pytania-bank.json.
 
-## Read
+## Read Before Starting
 
-- `src/index.css` — add `@font-face` declaration here
-- `tailwind.config.js` — update `font-display` family to prepend `Familiada`
-- `src/components/board/AnswerRow.tsx` — uses `font-display`, verify no override needed
-- `src/components/board/TeamScore.tsx` — uses `font-display`, verify no override needed
-- `src/components/board/RoundScore.tsx` — uses `font-display`, verify no override needed
-- `src/components/board/AnswerSum.tsx` — uses `font-display`, verify no override needed
-- `src/components/board/FinalRoundBoard.tsx` — uses `font-display`, verify no override needed
+- `src/components/screens/LobbyScreen.tsx`
+- `src/App.tsx`
+- `src/store/gameStore.ts`
+- `src/types/game.ts`
+- `docs/architecture.md` (ADR-004, lines ~290-305)
 
 ## Tasks
 
-### 1. Register `@font-face` in `src/index.css`
+### 1. Add `'editingQuestions'` to `GameStatus` in `src/types/game.ts`
 
-Add before `@tailwind base;` (or inside `@layer base`):
+### 2. Create `src/utils/questionBankStorage.ts`
+- `STORAGE_KEY = 'familiada-question-bank'`
+- `saveQuestionBank(questions: QuestionBankEntry[]): void` — JSON.stringify to localStorage
+- `loadQuestionBank(): QuestionBankEntry[] | null` — parse or return null on error/empty
+- Both functions handle localStorage exceptions silently (try/catch)
 
-```css
-@font-face {
-  font-family: 'Familiada';
-  src: url('/fonts/familiada.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-```
+### 3. Add `updateQuestionBank` action to `src/store/gameStore.ts`
+- Signature: `updateQuestionBank: (questions: QuestionBankEntry[]) => void`
+- Sets `questionBank` in store + calls `saveQuestionBank` from the new util
+- No status change (editing happens pre-game, outside the game flow)
 
-### 2. Copy font to `public/fonts/`
+### 4. Modify `loadBank` in `src/store/gameStore.ts`
+- After receiving `data` param, call `loadQuestionBank()` from util
+- If localStorage returns data (non-null), use it instead of `data.questions`
+- This makes localStorage edits survive page reloads
 
-The font must be served as a static asset. Copy `src/assets/fonts/familiada.ttf`
-to `public/fonts/familiada.ttf` so it is accessible at `/fonts/familiada.ttf`.
+### 5. Add store action `goToQuestionEditor` and `backToLobbyFromEditor`
+- `goToQuestionEditor`: sets `status: 'editingQuestions'`
+- `backToLobbyFromEditor`: sets `status: 'lobby'`
 
-> Note: Vite does not serve files from `src/assets/` at a public URL by default —
-> only files in `public/` are served as-is. So the font must live in `public/fonts/`.
+### 6. Create `src/components/screens/QuestionEditorForm.tsx`
+Props: `initialQuestion?: QuestionBankEntry`, `onSave: (q: QuestionBankEntry) => void`, `onCancel: () => void`
 
-### 3. Update `font-display` in `tailwind.config.js`
+- Local state: question text + array of up to 8 answers `{ text, points }`
+- "Add answer" button (up to 8 max)
+- "Remove" button per answer row (if more than 2)
+- Validation on submit:
+  - question text non-empty
+  - at least 2 answers
+  - each answer text non-empty
+  - each points value is a positive integer
+- Shows inline error messages under failing fields
+- "Zapisz" and "Anuluj" buttons
 
-Change the `display` font family from:
+### 7. Create `src/components/screens/QuestionEditorList.tsx`
+Props: `questions: QuestionBankEntry[]`, `onEdit: (index: number) => void`, `onDelete: (index: number) => void`, `onAddNew: () => void`
 
-```js
-'display': ['Impact', 'Haettenschweiler', 'Arial Narrow Bold', 'sans-serif'],
-```
+- Renders scrollable list of questions
+- Each row: question text + answer count badge + "Edytuj" + "Usuń" buttons
+- "Dodaj pytanie" button at the top
 
-to:
+### 8. Create `src/components/screens/QuestionEditorScreen.tsx`
+- Reads `questionBank` from store
+- Local state: `editingIndex: number | null` (null = list view, -1 = add new, >=0 = edit existing)
+- When `editingIndex === null`: renders `QuestionEditorList`
+- When `editingIndex >= 0`: renders `QuestionEditorForm` with `initialQuestion={questionBank[editingIndex]}`
+- When `editingIndex === -1`: renders `QuestionEditorForm` without initialQuestion
+- `onSave` handler: builds updated array, calls `updateQuestionBank`, returns to list view
+- `onDelete` handler: removes question at index, calls `updateQuestionBank`
+- Header: title "Edytor pytań" + "Powrót do Lobby" button calling `backToLobbyFromEditor`
 
-```js
-'display': ['Familiada', 'Impact', 'Haettenschweiler', 'Arial Narrow Bold', 'sans-serif'],
-```
+### 9. Update `src/components/screens/LobbyScreen.tsx`
+- Add "Zarządzaj pytaniami" button (secondary style, below the DALEJ button)
+- On click: calls `goToQuestionEditor()` from store
 
-### 4. Verify board components use `font-display`
-
-Read each board component listed above and confirm they use `font-display` (or `font-body`
-for operator-only elements). No code changes expected — this is a read-and-confirm step.
+### 10. Update `src/App.tsx`
+- Add route: `if (status === 'editingQuestions') return <QuestionEditorScreen />;`
+- Place it just before the `if (status === 'lobby')` check (editor is operator-only, skip for board)
 
 ## Constraints
 
-- No `any` types
-- Do not create tests — that is `/qa` scope
-- Operator panel components must NOT use `font-display` on any new elements
-- Font file goes in `public/fonts/` (not `src/assets/fonts/`) so Vite serves it correctly
-- No layout changes — font swap only
+- No new npm packages — use only existing stack
+- `QuestionEditorScreen.tsx` must stay under 300 lines — split into List + Form components
+- No `any` type, no `@ts-ignore`
+- All labels and button text in Polish (non-technical UX)
+- The board window (`?view=board`) must never show the editor — guard in App.tsx using `isBoard`
 
-## After implementation
+## After Implementation
 
-- Run linter: `npm run lint`
-- Run tests: `npm test`
-- Manual verification steps (in Polish):
-  1. Uruchom `npm run dev`, otwórz tablicę (`?view=board`) — sprawdź czy tekst odpowiedzi wyświetla się krojem Familiada (nie Impact)
-  2. Sprawdź wyniki drużyn, punkty rundy i sumę odpowiedzi — wszystkie powinny używać Familiada
-  3. Otwórz Panel Operatora (bez `?view=board`) — sprawdź czy typografia NIE zmieniła się (nadal Arial/Impact)
-  4. Sprawdź konsolę przeglądarki — brak błędów 404 dla pliku czcionki
-  5. Sprawdź w DevTools > Network że `familiada.ttf` ładuje się poprawnie (status 200)
+1. Run linter: `npm run lint`
+2. Run tests: `npm test`
+3. Manual verification steps (in Polish):
+   - Otwórz aplikację — na ekranie Lobby widoczny przycisk "Zarządzaj pytaniami"
+   - Kliknij "Zarządzaj pytaniami" — pojawia się ekran z listą pytań z pytania-bank.json
+   - Kliknij "Dodaj pytanie" — pojawia się formularz
+   - Spróbuj zapisać pusty formularz — pojawia się błąd walidacji
+   - Spróbuj zapisać z 1 odpowiedzią — pojawia się błąd walidacji
+   - Wpisz pytanie + 2 odpowiedzi z punktami — kliknij "Zapisz" — pytanie pojawia się na liście
+   - Kliknij "Edytuj" na istniejącym pytaniu — formularz wypełniony istniejącymi danymi
+   - Zmień treść i zapisz — lista zaktualizowana
+   - Kliknij "Usuń" na pytaniu — pytanie znika z listy
+   - Kliknij "Powrót do Lobby" — wracasz do Lobby
+   - Kliknij "DALEJ" — nowe pytanie widoczne w ekranie wyboru pytań
+   - Odśwież stronę (F5) — wróć do Lobby → "Zarządzaj pytaniami" — edytowane pytania nadal widoczne (localStorage)
