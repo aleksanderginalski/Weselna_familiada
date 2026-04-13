@@ -79,6 +79,36 @@ describe('TeamControl', () => {
     expect(useGameStore.getState().currentRound.mistakes).toBe(1);
   });
 
+  it('should show Błędna Próba buttons only in showdown phase and hide them after selectTeam', () => {
+    // TC-173
+    render(<TeamControl />);
+
+    // Visible during showdown
+    expect(screen.getByRole('button', { name: /Błędna Próba Drużyna A/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Błędna Próba Drużyna B/ })).toBeInTheDocument();
+  });
+
+  it('should disable clicked team button and re-enable other team button after markShowdownAttempt', async () => {
+    // TC-174
+    render(<TeamControl />);
+
+    await userEvent.click(screen.getByRole('button', { name: /Błędna Próba Drużyna A/ }));
+
+    expect(useGameStore.getState().currentRound.showdownWrongTeam).toBe('left');
+    expect(screen.getByRole('button', { name: /Błędna Próba Drużyna A/ })).toBeDisabled();
+    expect(screen.getByRole('button', { name: /Błędna Próba Drużyna B/ })).not.toBeDisabled();
+  });
+
+  it('should disable radio buttons in summary phase to prevent team switch after round ends', () => {
+    // TC-175
+    useGameStore.getState().selectTeam('left');
+    useGameStore.getState().endRound('left');
+    render(<TeamControl />);
+
+    screen.getAllByRole('radio').forEach((radio) => expect(radio).toBeDisabled());
+    expect(screen.queryByRole('button', { name: /Błędna Próba/ })).not.toBeInTheDocument();
+  });
+
   it('should render −5 and +5 buttons for each team', () => {
     // TC-168
     render(<TeamControl />);

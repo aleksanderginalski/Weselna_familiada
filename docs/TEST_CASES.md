@@ -5,7 +5,7 @@
 | File | Tests | Status |
 |------|-------|--------|
 | src/types/game.test.ts | 17 | ✅ |
-| src/store/gameStore.test.ts | 43 | ✅ |
+| src/store/gameStore.test.ts | 54 | ✅ |
 | src/hooks/useBroadcast.test.ts | 4 | ✅ |
 | src/hooks/useSound.test.ts | 6 | ✅ |
 | src/utils/broadcast.test.ts | 4 | ✅ |
@@ -15,11 +15,12 @@
 | src/components/board/RoundScore.test.tsx | 3 | ✅ |
 | src/components/board/AnswerSum.test.tsx | 2 | ✅ |
 | src/components/board/MistakeIndicator.test.tsx | 6 | ✅ |
+| src/components/board/DotMatrixBoard.test.tsx | 7 | ✅ |
 | src/components/board/GameBoard.test.tsx | 3 | ✅ |
 | src/components/board/FinalRoundBoard.test.tsx | 5 | ✅ |
 | src/components/operator/AnswerControl.test.tsx | 5 | ✅ |
 | src/components/operator/TeamPanel.test.tsx | 4 | ✅ |
-| src/components/operator/TeamControl.test.tsx | 7 | ✅ |
+| src/components/operator/TeamControl.test.tsx | 10 | ✅ |
 | src/components/operator/RoundControls.test.tsx | 6 | ✅ |
 | src/components/operator/OperatorPanel.test.tsx | 6 | ✅ |
 | src/components/operator/VolumeSlider.test.tsx | 2 | ✅ |
@@ -30,7 +31,7 @@
 | src/test/lintingConfig.test.ts | 11 | ✅ |
 | src/test/tailwindTheme.test.ts | 5 | ✅ |
 | src/test/projectStructure.test.ts | 21 | ✅ |
-| **TOTAL** | **234** | ✅ |
+| **TOTAL** | **241** | ✅ |
 
 ---
 
@@ -243,3 +244,32 @@
 |---|------|------|
 | TC-168 | should render −5 and +5 buttons for each team | happy path |
 | TC-169 | should increase team score when +5 is clicked and decrease when −5 is clicked, floored at 0 | interaction + boundary |
+
+---
+
+## src/store/gameStore.test.ts — markShowdownAttempt (US-038)
+
+| # | Test | Type |
+|---|------|------|
+| TC-170 | should set showdownWrongTeam to the specified side | happy path |
+| TC-171 | should replace showdownWrongTeam when called with the other side | transfer |
+| TC-172 | selectTeam should reset showdownWrongTeam to null | reset |
+
+---
+
+## src/components/operator/TeamControl.test.tsx — showdown wrong attempt (US-038)
+
+| # | Test | Type |
+|---|------|------|
+| TC-173 | should show Błędna Próba buttons only in showdown phase | happy path |
+| TC-174 | should disable clicked team button and re-enable other team button after markShowdownAttempt | interaction |
+| TC-175 | should disable radio buttons in summary phase to prevent team switch after round ends | bugfix |
+
+---
+
+## src/components/board/DotMatrixBoard.test.tsx — showdown X (US-038)
+
+| # | Test | Type |
+|---|------|------|
+| TC-176 | should render big mistake Figure Space chars during showdown when markShowdownAttempt is called | happy path |
+

@@ -99,4 +99,16 @@ describe('DotMatrixBoard — mistake X indicators (US-028)', () => {
     // EM Space (U+2003) is the center cell of the small mistake pattern
     expect(container.textContent).toContain(EM_SPACE);
   });
+
+  // TC-176
+  it('should render big mistake Figure Space chars during showdown when markShowdownAttempt is called', () => {
+    // Phase is already 'showdown' — no team selected yet
+    useGameStore.getState().markShowdownAttempt('left');
+    const { container } = render(<DotMatrixBoard />);
+
+    // Big mistake uses Figure Space (U+2007)
+    expect(container.textContent).toContain(FIGURE_SPACE);
+    // Small mistake chars should not appear (no guessing mistakes yet)
+    expect(container.textContent).not.toContain(EN_QUAD);
+  });
 });

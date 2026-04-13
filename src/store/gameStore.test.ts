@@ -53,6 +53,7 @@ beforeEach(() => {
       mistakes: 0,
       stealAttempted: false,
       stealFailed: false,
+      showdownWrongTeam: null,
       roundScore: 0,
     },
   });
@@ -761,6 +762,31 @@ describe('gameStore', () => {
       useGameStore.getState().adjustScore('left', -5);
 
       expect(useGameStore.getState().teams.left.totalScore).toBe(0);
+    });
+  });
+
+  describe('markShowdownAttempt', () => {
+    it('should set showdownWrongTeam to the specified side', () => {
+      // TC-170
+      useGameStore.getState().markShowdownAttempt('left');
+
+      expect(useGameStore.getState().currentRound.showdownWrongTeam).toBe('left');
+    });
+
+    it('should replace showdownWrongTeam when called with the other side', () => {
+      // TC-171
+      useGameStore.getState().markShowdownAttempt('left');
+      useGameStore.getState().markShowdownAttempt('right');
+
+      expect(useGameStore.getState().currentRound.showdownWrongTeam).toBe('right');
+    });
+
+    it('should reset showdownWrongTeam to null when selectTeam is called', () => {
+      // TC-172
+      useGameStore.getState().markShowdownAttempt('right');
+      useGameStore.getState().selectTeam('left');
+
+      expect(useGameStore.getState().currentRound.showdownWrongTeam).toBeNull();
     });
   });
 });
