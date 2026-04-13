@@ -56,6 +56,7 @@ describe('App', () => {
   it('should render operator panel when status is playing', () => {
     useGameStore.getState().loadGame(MOCK_CONFIG_DATA);
     useGameStore.getState().selectQuestions(MOCK_BANK_DATA.questions);
+    useGameStore.getState().selectFinalQuestions([]);
 
     render(<App />);
 
@@ -67,6 +68,7 @@ describe('App', () => {
   it('should not render lobby screen when status is playing', () => {
     useGameStore.getState().loadGame(MOCK_CONFIG_DATA);
     useGameStore.getState().selectQuestions(MOCK_BANK_DATA.questions);
+    useGameStore.getState().selectFinalQuestions([]);
 
     render(<App />);
 

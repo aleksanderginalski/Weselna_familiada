@@ -48,6 +48,8 @@ const INITIAL_STATE: GameState = {
   },
   questionBank: [],
   rounds: [],
+  availableForFinal: [],
+  finalRoundQuestions: [],
   status: 'lobby',
   currentRoundIndex: 0,
   teams: {
@@ -63,6 +65,8 @@ interface StoreActions {
   loadGame: (data: GameDataFile) => void;
   loadBank: (data: QuestionBankFile) => void;
   selectQuestions: (questions: QuestionBankEntry[]) => void;
+  selectFinalQuestions: (questions: QuestionBankEntry[]) => void;
+  backToMainSelection: () => void;
   updateQuestionBank: (questions: QuestionBankEntry[]) => void;
   backToLobby: () => void;
   goToQuestionEditor: () => void;
@@ -122,14 +126,25 @@ export const useGameStore = create<GameState & StoreActions & SoundPreferences>(
     });
   },
 
-  // Locks the operator's question selection and starts the game
+  // Locks main round selection and moves to final round question selection
   selectQuestions: (questions: QuestionBankEntry[]) =>
+    set((state) => {
+      const selectedTexts = new Set(questions.map((q) => q.question));
+      const availableForFinal = state.questionBank.filter((q) => !selectedTexts.has(q.question));
+      return { rounds: questions, availableForFinal, status: 'selectingFinalQuestions' };
+    }),
+
+  // Locks final round question selection and starts the game
+  selectFinalQuestions: (questions: QuestionBankEntry[]) =>
     set({
-      rounds: questions,
+      finalRoundQuestions: questions,
       status: 'playing',
       currentRoundIndex: 0,
       currentRound: INITIAL_ROUND_STATE,
     }),
+
+  // Returns to main question selection from final question selection
+  backToMainSelection: () => set({ status: 'selectingQuestions' }),
 
   // Persists an edited question bank to the store and localStorage
   updateQuestionBank: (questions: QuestionBankEntry[]) => {
@@ -267,6 +282,8 @@ export const useGameStore = create<GameState & StoreActions & SoundPreferences>(
       finalRound: undefined,
       questionBank: state.questionBank,
       rounds: [],
+      availableForFinal: [],
+      finalRoundQuestions: [],
     })),
 
   toggleMute: () => set((state) => ({ isMuted: !state.isMuted })),

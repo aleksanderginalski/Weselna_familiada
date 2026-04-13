@@ -2,6 +2,7 @@ import { FinalRoundGameBoard } from '@/components/board/FinalRoundGameBoard';
 import { GameBoard } from '@/components/board/GameBoard';
 import { FinalRoundOperator } from '@/components/operator/FinalRoundOperator';
 import { OperatorPanel } from '@/components/operator/OperatorPanel';
+import { FinalRoundSelectionScreen } from '@/components/screens/FinalRoundSelectionScreen';
 import { LobbyScreen } from '@/components/screens/LobbyScreen';
 import { QuestionEditorScreen } from '@/components/screens/QuestionEditorScreen';
 import { QuestionSelectionScreen } from '@/components/screens/QuestionSelectionScreen';
@@ -25,6 +26,7 @@ export function App() {
   if (status === 'lobby') return <LobbyScreen />;
   if (status === 'editingQuestions') return <QuestionEditorScreen />;
   if (status === 'selectingQuestions') return <QuestionSelectionScreen />;
+  if (status === 'selectingFinalQuestions') return <FinalRoundSelectionScreen />;
   if (status === 'finalRound') return <FinalRoundOperator />;
   if (showingWinner) return <WinnerScreen />;
 

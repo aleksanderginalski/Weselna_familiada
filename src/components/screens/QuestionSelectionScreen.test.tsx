@@ -5,10 +5,15 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { useGameStore } from '@/store/gameStore';
 import { QuestionSelectionScreen } from './QuestionSelectionScreen';
 
+// 7 questions → maxSelectable = 7 - 5 = 2
 const MOCK_BANK = [
   { question: 'Pytanie 1?', answers: [{ text: 'A1', points: 10 }] },
   { question: 'Pytanie 2?', answers: [{ text: 'A2', points: 20 }] },
   { question: 'Pytanie 3?', answers: [{ text: 'A3', points: 30 }] },
+  { question: 'Pytanie 4?', answers: [{ text: 'A4', points: 40 }] },
+  { question: 'Pytanie 5?', answers: [{ text: 'A5', points: 50 }] },
+  { question: 'Pytanie 6?', answers: [{ text: 'A6', points: 60 }] },
+  { question: 'Pytanie 7?', answers: [{ text: 'A7', points: 70 }] },
 ];
 
 const FIXED_CONFIG = {
@@ -45,11 +50,11 @@ describe('QuestionSelectionScreen', () => {
     setupScreen();
 
     expect(screen.getByRole('heading', { name: 'WYBÓR PYTAŃ' })).toBeInTheDocument();
-    expect(screen.getByText('Wybrano: 0 / 3 pytań')).toBeInTheDocument();
+    expect(screen.getByText('Wybrano: 0 / 2 pytań głównych')).toBeInTheDocument();
     expect(screen.getByText('Pytanie 1?')).toBeInTheDocument();
     expect(screen.getByText('Pytanie 2?')).toBeInTheDocument();
     expect(screen.getByText('Pytanie 3?')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'ROZPOCZNIJ GRĘ' })).toBeDisabled();
+    expect(screen.getByRole('button', { name: 'Wybór pytań do rundy finałowej →' })).toBeDisabled();
   });
 
   // TC-135
@@ -59,9 +64,9 @@ describe('QuestionSelectionScreen', () => {
     const checkboxes = screen.getAllByRole('checkbox');
     await userEvent.click(checkboxes[0]);
 
-    expect(screen.getByText('Wybrano: 1 / 3 pytań')).toBeInTheDocument();
+    expect(screen.getByText('Wybrano: 1 / 2 pytań głównych')).toBeInTheDocument();
     expect(screen.getByText('1.')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'ROZPOCZNIJ GRĘ' })).toBeEnabled();
+    expect(screen.getByRole('button', { name: 'Wybór pytań do rundy finałowej →' })).toBeEnabled();
   });
 
   // TC-136
@@ -72,9 +77,9 @@ describe('QuestionSelectionScreen', () => {
     await userEvent.click(checkboxes[0]);
     await userEvent.click(checkboxes[0]);
 
-    expect(screen.getByText('Wybrano: 0 / 3 pytań')).toBeInTheDocument();
+    expect(screen.getByText('Wybrano: 0 / 2 pytań głównych')).toBeInTheDocument();
     expect(screen.queryByText('1.')).not.toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'ROZPOCZNIJ GRĘ' })).toBeDisabled();
+    expect(screen.getByRole('button', { name: 'Wybór pytań do rundy finałowej →' })).toBeDisabled();
   });
 
   // TC-137
@@ -101,17 +106,17 @@ describe('QuestionSelectionScreen', () => {
   });
 
   // TC-138
-  it('should call selectQuestions with questions in order when ROZPOCZNIJ GRĘ is clicked', async () => {
+  it('should call selectQuestions with questions in order when confirm button is clicked', async () => {
     setupScreen();
 
     const checkboxes = screen.getAllByRole('checkbox');
     await userEvent.click(checkboxes[2]); // Q3 first
     await userEvent.click(checkboxes[0]); // Q1 second
 
-    await userEvent.click(screen.getByRole('button', { name: 'ROZPOCZNIJ GRĘ' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Wybór pytań do rundy finałowej →' }));
 
     const state = useGameStore.getState();
-    expect(state.status).toBe('playing');
+    expect(state.status).toBe('selectingFinalQuestions');
     expect(state.rounds).toHaveLength(2);
     expect(state.rounds[0].question).toBe('Pytanie 3?');
     expect(state.rounds[1].question).toBe('Pytanie 1?');
@@ -133,12 +138,12 @@ describe('QuestionSelectionScreen', () => {
     await userEvent.click(screen.getByRole('button', { name: 'LOSUJ' }));
 
     const state = useGameStore.getState();
-    // Fixed mode numberOfRounds = 2, so 2 questions should be drawn
+    // Fixed mode numberOfRounds = 2, maxSelectable = 2, so 2 questions should be drawn
     const checkedBoxes = screen.getAllByRole('checkbox').filter((cb) => (cb as HTMLInputElement).checked);
     expect(checkedBoxes).toHaveLength(2);
-    expect(screen.getByText('Wybrano: 2 / 3 pytań')).toBeInTheDocument();
+    expect(screen.getByText('Wybrano: 2 / 2 pytań głównych')).toBeInTheDocument();
     // store not updated yet (selection is local), but confirm should be enabled
-    expect(screen.getByRole('button', { name: 'ROZPOCZNIJ GRĘ' })).toBeEnabled();
+    expect(screen.getByRole('button', { name: 'Wybór pytań do rundy finałowej →' })).toBeEnabled();
     // dummy assertion to keep state var used
     expect(state).toBeDefined();
   });

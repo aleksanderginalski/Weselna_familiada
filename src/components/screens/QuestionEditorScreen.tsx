@@ -5,21 +5,16 @@ import { QuestionBankEntry, QuestionBankFile } from '@/types/game';
 import { loadQuestionBank } from '@/utils/questionBankStorage';
 
 import { QuestionEditorForm } from './QuestionEditorForm';
-import { QuestionEditorList, QuestionListItem } from './QuestionEditorList';
-
-type ActiveTab = 'main' | 'final';
+import { QuestionEditorList } from './QuestionEditorList';
 
 // null = list view, -1 = add new, >= 0 = edit existing at that globalIndex
 type EditingIndex = number | null;
-
-const FINAL_QUESTION_REQUIRED = 5;
 
 export function QuestionEditorScreen() {
   const questionBank = useGameStore((state) => state.questionBank);
   const updateQuestionBank = useGameStore((state) => state.updateQuestionBank);
   const backToLobbyFromEditor = useGameStore((state) => state.backToLobbyFromEditor);
 
-  const [activeTab, setActiveTab] = useState<ActiveTab>('main');
   const [editingIndex, setEditingIndex] = useState<EditingIndex>(null);
 
   // Load the bank if it wasn't populated yet (editor opened before clicking DALEJ)
@@ -35,17 +30,6 @@ export function QuestionEditorScreen() {
       .then((data) => updateQuestionBank(data.questions ?? []))
       .catch(() => {});
   }, [questionBank.length, updateQuestionBank]);
-
-  // Both tabs show the full pool — flags are informational badges, not filters
-  const allItems: QuestionListItem[] = questionBank.map((entry, globalIndex) => ({
-    entry,
-    globalIndex,
-  }));
-
-  // Counts used only in tab labels
-  const mainTaggedCount = questionBank.filter((q) => q.isMainQuestion !== false).length;
-  const finalTaggedCount = questionBank.filter((q) => q.isFinalQuestion === true).length;
-  const hasFinalWarning = activeTab === 'final' && questionBank.length < FINAL_QUESTION_REQUIRED;
 
   function handleSave(question: QuestionBankEntry) {
     if (editingIndex === -1) {
@@ -80,60 +64,16 @@ export function QuestionEditorScreen() {
           {isEditing ? (
             <QuestionEditorForm
               initialQuestion={editingIndex >= 0 ? questionBank[editingIndex] : undefined}
-              defaultIsMain={activeTab === 'main'}
-              defaultIsFinal={activeTab === 'final'}
               onSave={handleSave}
               onCancel={() => setEditingIndex(null)}
             />
           ) : (
-            <>
-              {/* Tabs */}
-              <div className="flex gap-2 mb-6">
-                <button
-                  onClick={() => setActiveTab('main')}
-                  className={`px-5 py-2 rounded-lg font-bold text-sm transition-colors ${
-                    activeTab === 'main'
-                      ? 'bg-familiada-gold text-familiada-bg-dark'
-                      : 'bg-familiada-bg-panel text-familiada-text-secondary border border-familiada-border hover:border-familiada-gold'
-                  }`}
-                >
-                  Pytania główne
-                  <span className="ml-2 opacity-70">({mainTaggedCount} otagowanych)</span>
-                </button>
-                <button
-                  onClick={() => setActiveTab('final')}
-                  className={`px-5 py-2 rounded-lg font-bold text-sm transition-colors ${
-                    activeTab === 'final'
-                      ? 'bg-familiada-gold text-familiada-bg-dark'
-                      : 'bg-familiada-bg-panel text-familiada-text-secondary border border-familiada-border hover:border-familiada-gold'
-                  }`}
-                >
-                  Pytania finałowe
-                  <span className={`ml-2 ${finalTaggedCount < FINAL_QUESTION_REQUIRED ? 'text-familiada-red font-bold' : 'opacity-70'}`}>
-                    ({finalTaggedCount} otagowanych)
-                  </span>
-                </button>
-              </div>
-
-              {/* Warning: not enough questions total for a final round */}
-              {hasFinalWarning && (
-                <div className="mb-4 bg-familiada-bg-panel border border-familiada-red rounded-lg px-4 py-3">
-                  <p className="text-familiada-red text-sm font-bold">
-                    ⚠ Runda finałowa wymaga co najmniej {FINAL_QUESTION_REQUIRED} pytań w banku — masz {questionBank.length}.
-                    Dodaj jeszcze {FINAL_QUESTION_REQUIRED - questionBank.length}.
-                  </p>
-                </div>
-              )}
-
-              <QuestionEditorList
-                items={allItems}
-                activeTab={activeTab}
-                emptyMessage="Kliknij &quot;Dodaj pytanie&quot; aby dodać pierwsze pytanie."
-                onEdit={(globalIndex) => setEditingIndex(globalIndex)}
-                onDelete={handleDelete}
-                onAddNew={() => setEditingIndex(-1)}
-              />
-            </>
+            <QuestionEditorList
+              questions={questionBank}
+              onEdit={(globalIndex) => setEditingIndex(globalIndex)}
+              onDelete={handleDelete}
+              onAddNew={() => setEditingIndex(-1)}
+            />
           )}
         </div>
       </main>

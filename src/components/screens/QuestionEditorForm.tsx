@@ -9,9 +9,6 @@ interface AnswerDraft {
 
 interface Props {
   initialQuestion?: QuestionBankEntry;
-  /** Default flags when creating a new question (ignored when initialQuestion is provided) */
-  defaultIsMain?: boolean;
-  defaultIsFinal?: boolean;
   onSave: (question: QuestionBankEntry) => void;
   onCancel: () => void;
 }
@@ -31,27 +28,16 @@ function buildInitialAnswers(question?: QuestionBankEntry): AnswerDraft[] {
 
 interface ValidationErrors {
   questionText?: string;
-  usageFlags?: string;
   answers: (string | undefined)[];
   points: (string | undefined)[];
 }
 
-function validate(
-  questionText: string,
-  answers: AnswerDraft[],
-  isMain: boolean,
-  isFinal: boolean,
-): ValidationErrors | null {
+function validate(questionText: string, answers: AnswerDraft[]): ValidationErrors | null {
   const errors: ValidationErrors = { answers: [], points: [] };
   let hasError = false;
 
   if (!questionText.trim()) {
     errors.questionText = 'Treść pytania jest wymagana';
-    hasError = true;
-  }
-
-  if (!isMain && !isFinal) {
-    errors.usageFlags = 'Pytanie musi należeć do co najmniej jednej puli';
     hasError = true;
   }
 
@@ -76,17 +62,9 @@ function validate(
   return hasError ? errors : null;
 }
 
-export function QuestionEditorForm({
-  initialQuestion,
-  defaultIsMain = true,
-  defaultIsFinal = false,
-  onSave,
-  onCancel,
-}: Props) {
+export function QuestionEditorForm({ initialQuestion, onSave, onCancel }: Props) {
   const [questionText, setQuestionText] = useState(initialQuestion?.question ?? '');
   const [answers, setAnswers] = useState<AnswerDraft[]>(buildInitialAnswers(initialQuestion));
-  const [isMain, setIsMain] = useState(initialQuestion?.isMainQuestion ?? defaultIsMain);
-  const [isFinal, setIsFinal] = useState(initialQuestion?.isFinalQuestion ?? defaultIsFinal);
   const [errors, setErrors] = useState<ValidationErrors | null>(null);
 
   function handleAnswerChange(index: number, field: keyof AnswerDraft, value: string) {
@@ -104,7 +82,7 @@ export function QuestionEditorForm({
   }
 
   function handleSave() {
-    const validationErrors = validate(questionText, answers, isMain, isFinal);
+    const validationErrors = validate(questionText, answers);
     if (validationErrors) {
       setErrors(validationErrors);
       return;
@@ -113,8 +91,6 @@ export function QuestionEditorForm({
       question: questionText.trim(),
       answers: answers.map((a) => ({ text: a.text.trim(), points: parseInt(a.points, 10) })),
       category: initialQuestion?.category,
-      isMainQuestion: isMain || undefined,
-      isFinalQuestion: isFinal || undefined,
     });
   }
 
@@ -133,35 +109,6 @@ export function QuestionEditorForm({
         />
         {errors?.questionText && (
           <p className="text-familiada-red text-sm mt-1">{errors.questionText}</p>
-        )}
-      </div>
-
-      <div>
-        <label className="block text-familiada-text-secondary text-sm font-bold uppercase mb-2">
-          Pula pytań
-        </label>
-        <div className="flex gap-4">
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={isMain}
-              onChange={(e) => setIsMain(e.target.checked)}
-              className="accent-familiada-gold w-4 h-4"
-            />
-            <span className="text-familiada-text-primary text-sm">Pytania główne</span>
-          </label>
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={isFinal}
-              onChange={(e) => setIsFinal(e.target.checked)}
-              className="accent-familiada-gold w-4 h-4"
-            />
-            <span className="text-familiada-text-primary text-sm">Pytania finałowe</span>
-          </label>
-        </div>
-        {errors?.usageFlags && (
-          <p className="text-familiada-red text-sm mt-1">{errors.usageFlags}</p>
         )}
       </div>
 

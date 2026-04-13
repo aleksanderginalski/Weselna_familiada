@@ -20,6 +20,7 @@ beforeEach(() => {
   useGameStore.getState().resetGame();
   useGameStore.getState().loadGame(MOCK_DATA);
   useGameStore.getState().selectQuestions(MOCK_DATA.rounds);
+  useGameStore.getState().selectFinalQuestions([]);
 });
 
 describe('RoundControls', () => {

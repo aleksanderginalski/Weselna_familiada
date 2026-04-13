@@ -126,7 +126,7 @@ describe('gameStore', () => {
       const state = useGameStore.getState();
 
       expect(state.rounds).toEqual(mockBankData.questions);
-      expect(state.status).toBe('playing');
+      expect(state.status).toBe('selectingFinalQuestions');
       expect(state.currentRoundIndex).toBe(0);
       expect(state.currentRound.phase).toBe('showdown');
     });
