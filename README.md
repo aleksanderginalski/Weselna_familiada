@@ -161,6 +161,13 @@ MIT License — zobacz [LICENSE](./LICENSE)
 
 ## Latest
 
+**v0.36.0** — Transfer last round points ("Przekaż punkty") (US-035)
+
+- `src/types/game.ts` — new `LastRoundPoints` interface (`{ amount: number; holder: TeamSide }`); `GameState` gains `lastRoundPoints: LastRoundPoints | null` field
+- `src/store/gameStore.ts` — `endRound()` now records `lastRoundPoints` (set to `null` when `roundScore` is 0); new `transferLastRoundPoints()` action: subtracts from holder, adds to recipient, flips `holder`; `resetGame()` clears `lastRoundPoints`
+- `src/components/operator/TeamControl.tsx` — gold "Przekaż punkty (X pkt)" button rendered below the holder team's panel; disappears on new round end; can be transferred back
+- 7 tests added: TC-185 through TC-191 (256 total)
+
 **v0.35.0** — Score milestone visual effects and 2000pt game end (US-037)
 
 - `src/components/shared/DigitDisplay.tsx` — new `glowLevel?: 0 | 1 | 2` prop and `padWithZeros?: boolean` prop; exports `SCORE_MILESTONE_1 = 1000`, `SCORE_MILESTONE_2 = 2000`
