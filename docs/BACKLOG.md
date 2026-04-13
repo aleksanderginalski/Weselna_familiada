@@ -1113,19 +1113,19 @@ EPIC-005: Weselna Familiada M5 - Desktop Distribution
 **I want to** add, edit and delete questions directly in the app
 **So that** I can manage the question bank without editing JSON files
 
-**Status:** 📋 Planned
+**Status:** ✅ COMPLETED
 **Story Points:** 8
 **Priority:** P1
 
 **Acceptance Criteria:**
 
-- [ ] Accessible from Lobby screen via "Manage Questions" button
-- [ ] Lists all questions in the bank with edit/delete actions
-- [ ] "Add question" form: question text + up to 8 answers with points each
-- [ ] Edits saved to `localStorage` (persists between sessions, independent of app updates)
-- [ ] Changes reflected immediately in question selection screen
-- [ ] Validation: question text required, at least 2 answers, points must be positive integers
-- [ ] Non-technical UX: clear labels, no JSON visible
+- [x] Accessible from Lobby screen via "Zarządzaj pytaniami" button
+- [x] Lists all questions in the bank with edit/delete actions
+- [x] "Add question" form: question text + up to 8 answers with points each
+- [x] Edits saved to `localStorage` (persists between sessions, independent of app updates)
+- [x] Changes reflected immediately in question selection screen
+- [x] Validation: question text required, at least 2 answers, points must be positive integers
+- [x] Non-technical UX: clear labels, no JSON visible
 
 ---
 

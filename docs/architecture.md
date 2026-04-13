@@ -93,12 +93,28 @@ LobbyScreen mount
   → Promise.all([fetch('/pytania.json'), fetch('/pytania-bank.json')])
   → stores configData + bankData in local state (no store action yet)
 
+LobbyScreen "Zarządzaj pytaniami" button click
+  → goToQuestionEditor()  — status → 'editingQuestions'
+  → QuestionEditorScreen: loads bank from localStorage (falls back to pytania-bank.json)
+  → updateQuestionBank(questions)  — saves to localStorage + updates store
+
+QuestionEditorScreen "← Powrót do Lobby" button click
+  → backToLobbyFromEditor()  — status → 'lobby'
+
 LobbyScreen "DALEJ" button click
   → loadGame(configData)   — sets config, teams
-  → loadBank(bankData)     — sets questionBank[], clears rounds[], status → 'selectingQuestions'
+  → loadBank(bankData)     — sets questionBank[] (localStorage takes precedence), status → 'selectingQuestions'
 
-QuestionSelectionScreen "ROZPOCZNIJ GRĘ" button click
-  → selectQuestions(orderedQuestions)  — sets rounds[], status → 'playing'
+QuestionSelectionScreen "Wybór pytań do rundy finałowej →" button click
+  → selectQuestions(orderedQuestions)
+      — sets rounds[], computes availableForFinal (bank minus selected), status → 'selectingFinalQuestions'
+
+FinalRoundSelectionScreen "ROZPOCZNIJ GRĘ" button click
+  → selectFinalQuestions(5 questions)
+      — sets finalRoundQuestions[], status → 'playing', resets round state
+
+FinalRoundSelectionScreen "← Wróć do pytań głównych" button click
+  → backToMainSelection()  — status → 'selectingQuestions'
 
 QuestionSelectionScreen "← Wróć" button click
   → backToLobby()  — status → 'lobby', questionBank preserved
@@ -113,13 +129,17 @@ interface GameState {
   questionBank: QuestionBankEntry[];
   /** Selected and ordered subset for this game session */
   rounds: RoundData[];
-  status: 'lobby' | 'selectingQuestions' | 'playing' | 'finished' | 'finalRound';
+  status: 'lobby' | 'editingQuestions' | 'selectingQuestions' | 'selectingFinalQuestions' | 'playing' | 'finished' | 'finalRound';
   currentRoundIndex: number;
   teams: {
     left: TeamState;
     right: TeamState;
   };
   currentRound: RoundState;
+  /** Bank questions not selected for the main round — candidates for final round selection */
+  availableForFinal: QuestionBankEntry[];
+  /** Exactly 5 questions selected by operator for the final round */
+  finalRoundQuestions: QuestionBankEntry[];
   // Set to true when operator clicks "OGŁOŚ ZWYCIĘSTWO" — triggers WinnerScreen on both windows
   showingWinner: boolean;
   // Present only when a final round has been started
