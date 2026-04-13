@@ -78,4 +78,30 @@ describe('TeamControl', () => {
 
     expect(useGameStore.getState().currentRound.mistakes).toBe(1);
   });
+
+  it('should render −5 and +5 buttons for each team', () => {
+    // TC-168
+    render(<TeamControl />);
+
+    expect(screen.getAllByRole('button', { name: '−5' })).toHaveLength(2);
+    expect(screen.getAllByRole('button', { name: '+5' })).toHaveLength(2);
+  });
+
+  it('should increase team score when +5 is clicked and decrease when −5 is clicked, floored at 0', async () => {
+    // TC-169
+    useGameStore.setState({
+      ...useGameStore.getState(),
+      teams: { left: { name: 'Drużyna A', totalScore: 3 }, right: { name: 'Drużyna B', totalScore: 10 } },
+    });
+    render(<TeamControl />);
+
+    const plusButtons = screen.getAllByRole('button', { name: '+5' });
+    const minusButtons = screen.getAllByRole('button', { name: '−5' });
+
+    await userEvent.click(plusButtons[1]); // +5 for right team
+    expect(useGameStore.getState().teams.right.totalScore).toBe(15);
+
+    await userEvent.click(minusButtons[0]); // −5 for left team with score 3 → floor at 0
+    expect(useGameStore.getState().teams.left.totalScore).toBe(0);
+  });
 });

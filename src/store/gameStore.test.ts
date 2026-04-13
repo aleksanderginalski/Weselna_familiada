@@ -726,4 +726,41 @@ describe('gameStore', () => {
       expect(state.status).toBe('lobby');
     });
   });
+
+  describe('adjustScore', () => {
+    it('should increase team score by delta and leave the other team unchanged', () => {
+      // TC-165
+      useGameStore.setState({
+        ...useGameStore.getState(),
+        teams: { left: { name: 'A', totalScore: 20 }, right: { name: 'B', totalScore: 10 } },
+      });
+      useGameStore.getState().adjustScore('left', 5);
+      const state = useGameStore.getState();
+
+      expect(state.teams.left.totalScore).toBe(25);
+      expect(state.teams.right.totalScore).toBe(10);
+    });
+
+    it('should decrease team score by delta when result is above 0', () => {
+      // TC-166
+      useGameStore.setState({
+        ...useGameStore.getState(),
+        teams: { left: { name: 'A', totalScore: 20 }, right: { name: 'B', totalScore: 10 } },
+      });
+      useGameStore.getState().adjustScore('right', -5);
+
+      expect(useGameStore.getState().teams.right.totalScore).toBe(5);
+    });
+
+    it('should floor score at 0 when delta would make it negative', () => {
+      // TC-167
+      useGameStore.setState({
+        ...useGameStore.getState(),
+        teams: { left: { name: 'A', totalScore: 3 }, right: { name: 'B', totalScore: 0 } },
+      });
+      useGameStore.getState().adjustScore('left', -5);
+
+      expect(useGameStore.getState().teams.left.totalScore).toBe(0);
+    });
+  });
 });
