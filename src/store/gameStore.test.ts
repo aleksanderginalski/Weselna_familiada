@@ -369,6 +369,39 @@ describe('gameStore', () => {
 
       expect(useGameStore.getState().currentRound.stealAttempted).toBe(true);
     });
+
+    it('should set status to finished when winner score reaches 2000 (TC-177)', () => {
+      useGameStore.setState({
+        ...useGameStore.getState(),
+        status: 'playing',
+        config: { mode: 'fixed', numberOfRounds: 5, multipliers: [1, 1, 1, 1, 1], teams: { left: { name: 'A' }, right: { name: 'B' } } },
+        rounds: [{ question: 'Q', answers: [{ text: 'A', points: 100 }] }],
+        teams: { left: { name: 'A', totalScore: 1900 }, right: { name: 'B', totalScore: 0 } },
+        currentRound: { ...useGameStore.getState().currentRound, roundScore: 100 },
+      });
+
+      useGameStore.getState().endRound('left');
+
+      // 1900 + 100×1 = 2000 → milestone end
+      expect(useGameStore.getState().status).toBe('finished');
+      expect(useGameStore.getState().teams.left.totalScore).toBe(2000);
+    });
+
+    it('should set status to finished when other team already has score >= 2000 (TC-178)', () => {
+      useGameStore.setState({
+        ...useGameStore.getState(),
+        status: 'playing',
+        config: { mode: 'fixed', numberOfRounds: 5, multipliers: [1, 1, 1, 1, 1], teams: { left: { name: 'A' }, right: { name: 'B' } } },
+        rounds: [{ question: 'Q', answers: [{ text: 'A', points: 10 }] }],
+        teams: { left: { name: 'A', totalScore: 0 }, right: { name: 'B', totalScore: 2000 } },
+        currentRound: { ...useGameStore.getState().currentRound, roundScore: 10 },
+      });
+
+      useGameStore.getState().endRound('left');
+
+      // Right team already at 2000 → milestone end regardless of winner
+      expect(useGameStore.getState().status).toBe('finished');
+    });
   });
 
   describe('nextRound', () => {

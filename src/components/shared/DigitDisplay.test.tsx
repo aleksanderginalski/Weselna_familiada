@@ -21,6 +21,27 @@ describe('DigitDisplay', () => {
     expect(digits).toEqual(['9', '9', '9']);
   });
 
+  it('should apply glow-pulse-gold class when glowLevel is 1 (TC-179)', () => {
+    const { container } = render(<DigitDisplay value={42} glowLevel={1} />);
+    const borderWrapper = container.querySelector('.border-familiada-gold');
+    expect(borderWrapper).toHaveClass('glow-pulse-gold');
+    expect(borderWrapper).not.toHaveClass('glow-pulse-milestone');
+  });
+
+  it('should apply glow-pulse-milestone class when glowLevel is 2 (TC-180)', () => {
+    const { container } = render(<DigitDisplay value={42} glowLevel={2} />);
+    const borderWrapper = container.querySelector('.border-familiada-gold');
+    expect(borderWrapper).toHaveClass('glow-pulse-milestone');
+    expect(borderWrapper).not.toHaveClass('glow-pulse-gold');
+  });
+
+  it('should pad with zeros when padWithZeros is true (TC-181)', () => {
+    const { container } = render(<DigitDisplay value={5} padWithZeros />);
+    const cells = container.querySelectorAll('[data-digit]');
+    const digits = Array.from(cells).map((el) => el.getAttribute('data-digit'));
+    expect(digits).toEqual(['0', '0', '5']);
+  });
+
   it('should render 0 as sr-only when value is 0', () => {
     render(<DigitDisplay value={0} />);
     expect(screen.getByText('0')).toBeInTheDocument();

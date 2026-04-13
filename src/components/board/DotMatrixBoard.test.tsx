@@ -100,6 +100,21 @@ describe('DotMatrixBoard — mistake X indicators (US-028)', () => {
     expect(container.textContent).toContain(EM_SPACE);
   });
 
+  // TC-184
+  it('should render hundreds digit in SUMA row when roundScore reaches 100', () => {
+    // Set roundScore directly to simulate revealing answers totalling 100+
+    useGameStore.setState({
+      ...useGameStore.getState(),
+      currentRound: { ...useGameStore.getState().currentRound, roundScore: 100 },
+    });
+    const { container } = render(<DotMatrixBoard />);
+
+    // COL_POINTS_HUNDREDS (col 23, 0-indexed) must have data-digit='1'
+    const digitCells = Array.from(container.querySelectorAll('[data-digit]'));
+    const digitValues = digitCells.map((el) => el.getAttribute('data-digit'));
+    expect(digitValues).toContain('1'); // hundreds digit
+  });
+
   // TC-176
   it('should render big mistake Figure Space chars during showdown when markShowdownAttempt is called', () => {
     // Phase is already 'showdown' — no team selected yet

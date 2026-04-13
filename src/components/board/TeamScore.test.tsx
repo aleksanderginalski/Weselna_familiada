@@ -48,4 +48,31 @@ describe('TeamScore', () => {
     // 30 points × multiplier 2 = 60
     expect(screen.getByText('60')).toBeInTheDocument();
   });
+
+  it('should display score mod 1000 and apply glow when totalScore >= 1000 (TC-182)', () => {
+    useGameStore.getState().loadGame(MOCK_CONFIG);
+    useGameStore.setState({
+      ...useGameStore.getState(),
+      teams: { left: { name: 'Drużyna Pana Młodego', totalScore: 1086 }, right: { name: 'B', totalScore: 0 } },
+    });
+    const { container } = render(<TeamScore side="left" />);
+
+    // sr-only exposes the wrapped display value (86), not raw 1086
+    expect(screen.getByText('86')).toBeInTheDocument();
+    // glow-pulse-gold must be present on the border wrapper
+    expect(container.querySelector('.glow-pulse-gold')).toBeInTheDocument();
+  });
+
+  it('should display score mod 1000 with milestone glow when totalScore >= 2000 (TC-183)', () => {
+    useGameStore.getState().loadGame(MOCK_CONFIG);
+    useGameStore.setState({
+      ...useGameStore.getState(),
+      teams: { left: { name: 'Drużyna Pana Młodego', totalScore: 2015 }, right: { name: 'B', totalScore: 0 } },
+    });
+    const { container } = render(<TeamScore side="left" />);
+
+    // sr-only exposes 15 (2015 % 1000)
+    expect(screen.getByText('15')).toBeInTheDocument();
+    expect(container.querySelector('.glow-pulse-milestone')).toBeInTheDocument();
+  });
 });
