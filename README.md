@@ -161,6 +161,14 @@ MIT License — zobacz [LICENSE](./LICENSE)
 
 ## Latest
 
+**v0.34.0** — Showdown wrong attempt indicators (US-038)
+
+- `src/types/game.ts` — `RoundState` extended with `showdownWrongTeam: TeamSide | null`
+- `src/store/gameStore.ts` — new `markShowdownAttempt(side)` action; `selectTeam()` and `nextRound()` reset `showdownWrongTeam` to `null`
+- `src/components/board/DotMatrixBoard.tsx` — `buildGrid()` renders big X (same dot-matrix pattern as `stealFailed`) on `showdownWrongTeam` side when `phase === 'showdown'`
+- `src/components/operator/TeamControl.tsx` — "Błędna Próba" bar with two buttons visible only during showdown; disabled after click, transfers on second team click; radio buttons locked in `summary` phase (bugfix: prevented double score via team switch)
+- 7 tests added: TC-170 through TC-176 (241 total)
+
 **v0.33.0** — Manual score adjustment +/−5 pts (US-036)
 
 - `src/store/gameStore.ts` — new `adjustScore(side: TeamSide, delta: number)` action; score floored at 0 via `Math.max(0, current + delta)`
