@@ -1,5 +1,5 @@
 import { useGameStore } from '@/store/gameStore';
-import { AnswerData, TeamSide } from '@/types/game';
+import { AnswerData, RoundPhase, TeamSide } from '@/types/game';
 import React from 'react';
 
 const ROWS = 10;
@@ -80,6 +80,8 @@ function buildGrid(
   controllingTeam: TeamSide | null,
   mistakes: number,
   stealFailed: boolean,
+  phase: RoundPhase,
+  showdownWrongTeam: TeamSide | null,
 ): GridCell[] {
   const cells: GridCell[] = Array(ROWS * COLS).fill(EMPTY_CELL);
 
@@ -154,6 +156,14 @@ function buildGrid(
     });
   }
 
+  // ─── Big mistake X (showdown wrong attempt — shown on the team's side) ────
+  if (phase === 'showdown' && showdownWrongTeam !== null) {
+    const anchorCol = MISTAKE_COL[showdownWrongTeam];
+    BIG_MISTAKE_PATTERN.forEach(([dr, dc, char]) => {
+      set(dr, anchorCol + dc, text(char));
+    });
+  }
+
   return cells;
 }
 
@@ -172,6 +182,8 @@ export function DotMatrixBoard() {
   const controllingTeam = useGameStore((state) => state.currentRound.controllingTeam);
   const mistakes = useGameStore((state) => state.currentRound.mistakes);
   const stealFailed = useGameStore((state) => state.currentRound.stealFailed);
+  const phase = useGameStore((state) => state.currentRound.phase);
+  const showdownWrongTeam = useGameStore((state) => state.currentRound.showdownWrongTeam);
 
   const answers: AnswerData[] = rounds[currentRoundIndex]?.answers ?? [];
   const cells = buildGrid(
@@ -181,6 +193,8 @@ export function DotMatrixBoard() {
     controllingTeam,
     mistakes,
     stealFailed,
+    phase,
+    showdownWrongTeam,
   );
 
   // Base style for every cell: 5:7 ratio (640×896 em-square), line-height:1 removes

@@ -2,7 +2,7 @@
 
 **Project:** Weselna Familiada  
 **Version:** 2.0  
-**Last Updated:** 2026-04-11 (Discovery: US-038 added — showdown wrong attempt indicators)  
+**Last Updated:** 2026-04-13 (US-038 done — showdown wrong attempt indicators)  
 **Product Owner:** Aleksander Ginalski  
 **Repository:** https://github.com/AleksanderGinalworking/Weselna_familiada
 
@@ -584,32 +584,32 @@ EPIC-005: Weselna Familiada M5 - Desktop Distribution
 **I want to** mark wrong attempts by each team during the showdown phase (before a controlling team is selected)
 **So that** guests can see which team made a mistake during the showdown competition
 
-**Status:** 📋 Planned
+**Status:** ✅ Done
 **Story Points:** 3
 **Priority:** P1
 
 **Acceptance Criteria:**
 
-- [ ] During `phase === 'showdown'` a horizontal bar with two "Błędna Próba" buttons is visible in the operator panel above the team panels (one button per team)
-- [ ] Both buttons are enabled at round start
-- [ ] Clicking "Błędna Próba [Team X]": marks team X with a big X on the game board, disables team X's button, re-enables team Y's button
-- [ ] Only one team can have an active wrong attempt at a time — clicking the second team's button transfers the X to them and clears it from the first team
-- [ ] No undo button — natural transfer via the opposing team's button is sufficient
-- [ ] When operator selects a controlling team (showdown ends): both buttons disappear, the X on the board clears
-- [ ] Board display: big X on the side of the team with the active wrong attempt — same dot-matrix style as the steal X (`stealFailed`)
-- [ ] New store field: `showdownWrongTeam: 'left' | 'right' | null` in `RoundState`
-- [ ] New store action: `markShowdownAttempt(side: TeamSide)`
-- [ ] Existing `selectTeam()` action resets `showdownWrongTeam` to `null`
-- [ ] `nextRound()` resets `showdownWrongTeam` to `null`
+- [x] During `phase === 'showdown'` a horizontal bar with two "Błędna Próba" buttons is visible in the operator panel above the team panels (one button per team)
+- [x] Both buttons are enabled at round start
+- [x] Clicking "Błędna Próba [Team X]": marks team X with a big X on the game board, disables team X's button, re-enables team Y's button
+- [x] Only one team can have an active wrong attempt at a time — clicking the second team's button transfers the X to them and clears it from the first team
+- [x] No undo button — natural transfer via the opposing team's button is sufficient
+- [x] When operator selects a controlling team (showdown ends): both buttons disappear, the X on the board clears
+- [x] Board display: big X on the side of the team with the active wrong attempt — same dot-matrix style as the steal X (`stealFailed`)
+- [x] New store field: `showdownWrongTeam: 'left' | 'right' | null` in `RoundState`
+- [x] New store action: `markShowdownAttempt(side: TeamSide)`
+- [x] Existing `selectTeam()` action resets `showdownWrongTeam` to `null`
+- [x] `nextRound()` resets `showdownWrongTeam` to `null`
 
 **Tasks:**
 
-- [ ] **TASK-038.1:** Add `showdownWrongTeam: 'left' | 'right' | null` to `RoundState` in `src/types/game.ts` - 5min
-- [ ] **TASK-038.2:** Add `markShowdownAttempt(side)` action to `gameStore.ts`; update `selectTeam()` and `nextRound()` to reset the field - 20min
-- [ ] **TASK-038.3:** Update `DotMatrixBoard.tsx` — `buildGrid()` renders big X on `showdownWrongTeam` side when `phase === 'showdown'` - 20min
-- [ ] **TASK-038.4:** Update `TeamControl.tsx` — add horizontal "Błędna Próba" bar visible only during showdown phase - 20min
-- [ ] **TASK-038.5:** Write tests (/qa) - 25min
-- [ ] **TASK-038.6:** Manual verification: showdown X appears and transfers correctly - 10min
+- [x] **TASK-038.1:** Add `showdownWrongTeam: 'left' | 'right' | null` to `RoundState` in `src/types/game.ts` - 5min
+- [x] **TASK-038.2:** Add `markShowdownAttempt(side)` action to `gameStore.ts`; update `selectTeam()` and `nextRound()` to reset the field - 20min
+- [x] **TASK-038.3:** Update `DotMatrixBoard.tsx` — `buildGrid()` renders big X on `showdownWrongTeam` side when `phase === 'showdown'` - 20min
+- [x] **TASK-038.4:** Update `TeamControl.tsx` — add horizontal "Błędna Próba" bar visible only during showdown phase - 20min
+- [x] **TASK-038.5:** Write tests (/qa) - 25min
+- [x] **TASK-038.6:** Manual verification: showdown X appears and transfers correctly - 10min
 
 ---
 

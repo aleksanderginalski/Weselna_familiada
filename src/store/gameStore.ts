@@ -34,6 +34,7 @@ const INITIAL_ROUND_STATE: RoundState = {
   mistakes: 0,
   stealAttempted: false,
   stealFailed: false,
+  showdownWrongTeam: null,
   roundScore: 0,
 };
 
@@ -73,6 +74,7 @@ interface StoreActions {
   backToLobbyFromEditor: () => void;
   startGame: () => void;
   selectTeam: (side: TeamSide) => void;
+  markShowdownAttempt: (side: TeamSide) => void;
   revealAnswer: (index: number) => void;
   markMistake: () => void;
   endRound: (winner: TeamSide) => void;
@@ -173,6 +175,15 @@ export const useGameStore = create<GameState & StoreActions & SoundPreferences>(
         ...state.currentRound,
         controllingTeam: side,
         phase: 'guessing',
+        showdownWrongTeam: null,
+      },
+    })),
+
+  markShowdownAttempt: (side: TeamSide) =>
+    set((state) => ({
+      currentRound: {
+        ...state.currentRound,
+        showdownWrongTeam: side,
       },
     })),
 
