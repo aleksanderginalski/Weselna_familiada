@@ -161,6 +161,15 @@ MIT License — zobacz [LICENSE](./LICENSE)
 
 ## Latest
 
+**v0.39.0** — Auto-open board window from operator panel (US-034)
+
+- `electron/preload.ts` — new; `contextBridge` exposes `window.electronAPI.openBoardWindow()` to the renderer
+- `src/types/electron.d.ts` — new; global `Window.electronAPI` TypeScript type declaration
+- `electron/main.ts` — `ipcMain.handle('open-board-window')` handler; board windows tracked by `Set<number>` of window IDs; `preload.js` wired into Operator window
+- `LobbyScreen.tsx` — "Otwórz tablicę" button; visible only in Electron (guards on `window.electronAPI`)
+
+---
+
 **v0.38.0** — Production build and Windows installer (US-033)
 
 - `package.json` — added `electron-builder` devDependency; `"build"` config section: appId `com.weselna.familiada`, productName `Weselna Familiada`, NSIS target with `oneClick: false` and `allowToChangeInstallationDirectory: true`; output to `dist-installer/`; `electron:build` script now calls `electron-builder` with `CSC_IDENTITY_AUTO_DISCOVERY=false` (skips code signing — not needed for private use)

@@ -25,7 +25,7 @@
 | src/components/operator/OperatorPanel.test.tsx | 6 | ✅ |
 | src/components/operator/VolumeSlider.test.tsx | 2 | ✅ |
 | src/components/operator/FinalRoundOperator.test.tsx | 1 | ✅ |
-| src/components/screens/LobbyScreen.test.tsx | 7 | ✅ |
+| src/components/screens/LobbyScreen.test.tsx | 9 | ✅ |
 | src/components/screens/WinnerScreen.test.tsx | 6 | ✅ |
 | src/components/screens/EndGameChoice.test.tsx | 3 | ✅ |
 | src/components/screens/QuestionEditorScreen.test.tsx | 4 | ✅ |
@@ -33,7 +33,7 @@
 | src/test/lintingConfig.test.ts | 16 | ✅ |
 | src/test/tailwindTheme.test.ts | 5 | ✅ |
 | src/test/projectStructure.test.ts | 24 | ✅ |
-| **TOTAL** | **271** | ✅ |
+| **TOTAL** | **273** | ✅ |
 
 ---
 
@@ -76,6 +76,8 @@
 | 4 | should disable Start Game button when a team name is empty | boundary |
 | 5 | should call loadGame and startGame with edited config when Start Game is clicked | interaction |
 | 6 | should pass winningScore config when score mode selected before starting | interaction |
+| 7 | should show Otwórz tablicę button and call openBoardWindow when electronAPI is available | interaction |
+| 8 | should not show Otwórz tablicę button when electronAPI is undefined | conditional render |
 
 ---
 

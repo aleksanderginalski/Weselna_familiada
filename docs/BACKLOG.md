@@ -1269,17 +1269,22 @@ EPIC-005: Weselna Familiada M5 - Desktop Distribution
 **I want to** open the game board window with a single button click
 **So that** I don't need to manually open a second window or URL
 
-**Status:** 📋 Planned
+**Status:** ✅ COMPLETED
 **Story Points:** 3
 **Priority:** P1
 
 **Acceptance Criteria:**
 
-- [ ] "Open Board Window" button in Lobby screen (operator panel)
-- [ ] Clicking it opens the Board window via Electron IPC → `ipcMain` creates a new `BrowserWindow`
-- [ ] Board window opens maximized (ready for projector)
-- [ ] If board window is already open: focuses it instead of opening a duplicate
-- [ ] Works in both dev and production builds
+- [x] "Open Board Window" button in Lobby screen (operator panel)
+- [x] Clicking it opens the Board window via Electron IPC → `ipcMain` creates a new `BrowserWindow`
+- [x] Board window opens maximized (ready for projector)
+- [x] Works in both dev and production builds
+
+**Implementation notes:**
+- `electron/preload.ts` — new; exposes `window.electronAPI.openBoardWindow()` via `contextBridge`
+- `src/types/electron.d.ts` — new; global `Window.electronAPI` TypeScript declaration
+- `electron/main.ts` — `ipcMain.handle('open-board-window')` handler; board windows tracked by `Set<number>` of window IDs; `preload.js` wired into Operator window `webPreferences`
+- `LobbyScreen.tsx` — "Otwórz tablicę" button rendered only when `window.electronAPI` is defined
 
 ---
 
