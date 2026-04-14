@@ -3,16 +3,22 @@ import { useEffect } from 'react';
 
 import { useGameStore } from '@/store/gameStore';
 
+// Resolve sound paths relative to the current document so they work under
+// both http:// (dev) and file:// (Electron production) protocols.
+function soundUrl(filename: string): string {
+  return new URL(`./sounds/${filename}`, document.baseURI).href;
+}
+
 // Howl instances created once at module level — not recreated on each render
-const correctSound = new Howl({ src: ['/sounds/dobra-odpowiedz-familiada.mp3'] });
-const wrongSound = new Howl({ src: ['/sounds/bledna-familiada.mp3'] });
-const nextRoundSound = new Howl({ src: ['/sounds/przed-i-po-rundzie-familiada.mp3'] });
-const introSound = new Howl({ src: ['/sounds/intro-familiada.mp3'] });
+const correctSound = new Howl({ src: [soundUrl('dobra-odpowiedz-familiada.mp3')] });
+const wrongSound = new Howl({ src: [soundUrl('bledna-familiada.mp3')] });
+const nextRoundSound = new Howl({ src: [soundUrl('przed-i-po-rundzie-familiada.mp3')] });
+const introSound = new Howl({ src: [soundUrl('intro-familiada.mp3')] });
 // Placeholder — wygrana-familiada.mp3 not yet available
-const winSound = new Howl({ src: ['/sounds/przed-finalem-familiada.mp3'] });
-const finalRoundSound = new Howl({ src: ['/sounds/przed-finalem-familiada.mp3'] });
-const bellSound = new Howl({ src: ['/sounds/dzwonki-familiada.mp3'] });
-const timerEndSound = new Howl({ src: ['/sounds/czas-final-familiada.mp3'] });
+const winSound = new Howl({ src: [soundUrl('przed-finalem-familiada.mp3')] });
+const finalRoundSound = new Howl({ src: [soundUrl('przed-finalem-familiada.mp3')] });
+const bellSound = new Howl({ src: [soundUrl('dzwonki-familiada.mp3')] });
+const timerEndSound = new Howl({ src: [soundUrl('czas-final-familiada.mp3')] });
 
 interface UseSoundReturn {
   playCorrect: () => void;
