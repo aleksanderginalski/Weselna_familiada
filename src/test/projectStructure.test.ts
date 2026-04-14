@@ -38,6 +38,8 @@ describe('Project Structure', () => {
     // TC-192: US-032 Electron entry files must exist
     'electron/main.ts',
     'tsconfig.electron.json',
+    // TC-198: US-033 installer icon must exist for electron-builder
+    'build/icon.ico',
   ];
 
   it.each(requiredFiles)('should have required file: %s', (file) => {
