@@ -25,7 +25,7 @@ export function QuestionEditorScreen() {
       updateQuestionBank(stored);
       return;
     }
-    fetch('/pytania-bank.json')
+    fetch('./pytania-bank.json')
       .then((res) => res.json() as Promise<QuestionBankFile>)
       .then((data) => updateQuestionBank(data.questions ?? []))
       .catch(() => {});

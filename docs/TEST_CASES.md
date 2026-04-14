@@ -27,11 +27,13 @@
 | src/components/operator/FinalRoundOperator.test.tsx | 1 | ✅ |
 | src/components/screens/LobbyScreen.test.tsx | 7 | ✅ |
 | src/components/screens/WinnerScreen.test.tsx | 6 | ✅ |
+| src/components/screens/EndGameChoice.test.tsx | 3 | ✅ |
+| src/components/screens/QuestionEditorScreen.test.tsx | 4 | ✅ |
 | src/App.test.tsx | 5 | ✅ |
 | src/test/lintingConfig.test.ts | 16 | ✅ |
 | src/test/tailwindTheme.test.ts | 5 | ✅ |
-| src/test/projectStructure.test.ts | 23 | ✅ |
-| **TOTAL** | **263** | ✅ |
+| src/test/projectStructure.test.ts | 24 | ✅ |
+| **TOTAL** | **271** | ✅ |
 
 ---
 
@@ -350,4 +352,37 @@
 | TC-195 | tsconfig.electron.json should compile to ESNext module targeting dist-electron | happy path |
 | TC-196 | vite.config.ts should not auto-open browser | happy path |
 | TC-197 | .gitignore should exclude Electron build output | happy path |
+
+---
+
+## src/test/projectStructure.test.ts — US-033
+
+| # | Test | Type |
+|---|------|------|
+| TC-198 | should have required file: build/icon.ico | structure |
+
+---
+
+## src/components/screens/EndGameChoice.test.tsx (US-033)
+
+**Component:** `EndGameChoice`
+
+| # | Test | Type |
+|---|------|------|
+| TC-264 | should render team scores and both action buttons | happy path |
+| TC-265 | should call declareWinner when OGŁOŚ ZWYCIĘSTWO is clicked | interaction |
+| TC-266 | should fetch ./pytania-final.json and start final round when RUNDA FINAŁOWA is clicked | interaction |
+
+---
+
+## src/components/screens/QuestionEditorScreen.test.tsx (US-033)
+
+**Component:** `QuestionEditorScreen`
+
+| # | Test | Type |
+|---|------|------|
+| TC-267 | should render list view with back button and add-question button | happy path |
+| TC-268 | should fetch ./pytania-bank.json when questionBank is empty and localStorage is empty | boundary |
+| TC-269 | should not fetch when questionBank is already populated | boundary |
+| TC-270 | should switch to form view when Dodaj pytanie is clicked | interaction |
 

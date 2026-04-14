@@ -11,7 +11,10 @@ export function OperatorPanel() {
   const { isMuted, toggleMute, playIntro, volume, setVolume } = useSound();
 
   function handleOpenBoard() {
-    window.open('/?view=board', '_blank');
+    // Build board URL relative to the current page so it works with both
+    // the Vite dev server (http://) and Electron file:// protocol in production.
+    const base = window.location.href.split('?')[0];
+    window.open(`${base}?view=board`, '_blank');
     playIntro();
   }
 

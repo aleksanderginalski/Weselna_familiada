@@ -1,88 +1,81 @@
-# Current Task — US-032
+# Current Task — US-033
 
 ## Context
-
-Adding Electron as a desktop shell for Weselna Familiada. The app currently runs in a browser (Vite dev server). We need to wrap it in Electron so it launches as a native Windows desktop app with two BrowserWindows (Operator panel + Game Board). Communication between windows uses BroadcastChannel API — must verify it works between Electron renderer processes. If not, implement IPC relay fallback via `ipcMain`.
-
-Key risk: BroadcastChannel may not propagate between separate BrowserWindow processes. Verify first; if broken, add an IPC relay in `electron/main.ts`.
+US-032 added Electron setup with `electron/main.ts` and basic scripts.
+The current `electron:build` script only compiles TypeScript and runs Vite build —
+it does NOT produce a distributable installer. This US wires up `electron-builder`
+to produce a Windows NSIS `.exe` installer that works on a clean machine.
 
 ## Read
-
 - `package.json` — current scripts and dependencies
-- `vite.config.ts` — current Vite config (port 3000, aliases)
-- `tsconfig.json` — TypeScript config (must add separate tsconfig for electron main process)
-- `src/App.tsx` — window detection via `?view=board` URL param (board detection must still work)
-- `src/hooks/useBroadcast.ts` — BroadcastChannel logic (must work unchanged in Electron)
-- `src/components/operator/OperatorPanel.tsx` — has "Otwórz Tablicę w Nowym Oknie" button using `window.open()` (keep working in Electron via shell.openExternal or BrowserWindow)
+- `electron/main.ts` — Electron main process (already implemented)
+- `tsconfig.electron.json` — Electron TS config
 
 ## Tasks
 
-1. **Install Electron dependencies**
-   - Add `electron` as devDependency (latest stable, e.g. `^32`)
-   - Add `concurrently` as devDependency (to run Vite + Electron together)
-   - Add `cross-env` as devDependency (for env variables on Windows)
+1. **Install electron-builder**
+   Add `electron-builder` to devDependencies in `package.json`.
 
-2. **Create `electron/main.ts`** — minimal Electron main process
-   - On app `ready`: create Operator BrowserWindow (width: 1280, height: 900)
-   - In dev mode (`process.env.NODE_ENV === 'development'`): load `http://localhost:3000`
-   - In production: load `dist/index.html` via `file://` protocol
-   - Handle `window-all-closed` → `app.quit()` (Windows behavior)
-   - Verify BroadcastChannel works: open a second BrowserWindow with `?view=board` param and test sync. Add a comment documenting the result.
-   - If BroadcastChannel DOES NOT work between windows: implement IPC relay
-     - `ipcMain.on('bc-relay', (event, message) => { BrowserWindow.getAllWindows().forEach(win => { if (win.webContents !== event.sender) win.webContents.send('bc-relay', message) }) })`
-     - In renderer: expose via `contextBridge` in a preload script `electron/preload.ts`
+2. **Create app icon**
+   Add `build/icon.ico` — a simple placeholder icon (256×256, `.ico` format).
+   Use any publicly available tool or embed a minimal valid `.ico` binary.
+   The file must exist at `build/icon.ico` for electron-builder to pick it up.
 
-3. **Create `electron/preload.ts`** (only if IPC fallback is needed)
-   - Use `contextBridge.exposeInMainWorld('electronBridge', { sendRelay, onRelay })`
-   - Keep it minimal — only expose what's needed for BroadcastChannel relay
-
-4. **Create `tsconfig.electron.json`** — separate TS config for main process
+3. **Configure electron-builder**
+   Add `"build"` section to `package.json` (or create `electron-builder.yml`):
    ```json
-   {
-     "compilerOptions": {
-       "target": "ES2020",
-       "module": "CommonJS",
-       "moduleResolution": "node",
-       "outDir": "dist-electron",
-       "strict": true,
-       "skipLibCheck": true,
-       "esModuleInterop": true
+   "build": {
+     "appId": "com.weselna.familiada",
+     "productName": "Weselna Familiada",
+     "directories": {
+       "output": "dist-installer"
      },
-     "include": ["electron"]
+     "files": [
+       "dist/**/*",
+       "dist-electron/**/*",
+       "public/**/*"
+     ],
+     "win": {
+       "target": "nsis",
+       "icon": "build/icon.ico"
+     },
+     "nsis": {
+       "oneClick": true,
+       "perMachine": false,
+       "createDesktopShortcut": true,
+       "createStartMenuShortcut": true
+     }
    }
    ```
 
-5. **Update `package.json` scripts**
-   - Add `"electron:dev": "concurrently \"vite\" \"cross-env NODE_ENV=development electron .\""`
-   - Add `"electron:build": "tsc -p tsconfig.electron.json && vite build"`
-   - Add `"main": "dist-electron/main.js"` field at top level of package.json
+4. **Update `electron:build` script in `package.json`**
+   Current: `"electron:build": "tsc -p tsconfig.electron.json && vite build"`
+   New:
+   ```
+   "electron:build": "tsc -p tsconfig.electron.json && vite build && electron-builder"
+   ```
 
-6. **Update `vite.config.ts`** — set `server.open` to `false`
-   - Electron opens its own window; we don't want the browser to auto-open
-
-7. **Update `.gitignore`** — add `dist-electron/` if not already present
-
-8. **If IPC fallback is needed: update `src/hooks/useBroadcast.ts`**
-   - Check `window.electronBridge` and use IPC relay instead of BroadcastChannel
-   - Keep BroadcastChannel as primary path (for browser dev mode), IPC as Electron fallback
+5. **Update `.gitignore`**
+   Add `dist-installer/` to `.gitignore` so the output folder is not committed.
 
 ## Constraints
-
-- Do NOT modify any `src/` files unless IPC fallback requires changes to `useBroadcast.ts`
-- `electron/main.ts` must be compiled to CommonJS (`"module": "CommonJS"` in tsconfig.electron.json) — Electron main process does not support ESM natively
-- Do NOT use `electron-vite` framework — keep the setup simple with plain `electron` + `concurrently`
-- `npm run dev` must still work for browser-based development
-- All existing tests must pass (`npm test`) — Electron setup must not break Vitest
-- No `any` types in TypeScript
+- Do NOT modify any React components or game logic
+- Do NOT change `electron/main.ts`
+- `electron-builder` must be devDependency only
+- Output directory must be `dist-installer/` (not `dist-electron/`) to avoid
+  name collision with the compiled Electron main process
+- `package.json` already has `"type": "module"` — electron-builder handles this correctly
+- No `any` types, no TypeScript changes beyond what is needed
 
 ## After implementation
-
 - Run linter: `npm run lint`
 - Run tests: `npm test`
-- Manual verification steps (in Polish):
-  1. Uruchom `npm run electron:dev` — sprawdź czy otwiera się natywne okno Electron z Panelem Operatora
-  2. W Panelu Operatora kliknij "Otwórz Tablicę w Nowym Oknie" — sprawdź czy otwiera się drugie okno z Tablicą
-  3. Przejdź przez Lobby → wybór pytań → gra
-  4. Odkryj odpowiedź w Panelu Operatora — sprawdź czy Tablica aktualizuje się w czasie rzeczywistym
-  5. Sprawdź czy dźwięki działają
-  6. Uruchom `npm run dev` — sprawdź czy aplikacja nadal działa w przeglądarce (brak regresji)
+
+### Manual verification steps (Polish)
+1. Uruchom `npm run electron:build` — komenda powinna zakończyć się bez błędów
+2. Sprawdź że folder `dist-installer/` został utworzony
+3. Sprawdź że w `dist-installer/` znajduje się plik `.exe` z nazwą "Weselna Familiada"
+4. Uruchom instalator — powinien zainstalować aplikację bez pytania o Node.js
+5. Sprawdź menu Start — powinna pojawić się "Weselna Familiada" z ikoną
+6. Uruchom zainstalowaną aplikację — Panel Operatora powinien się otworzyć normalnie
+7. Odłącz internet i uruchom ponownie — aplikacja działa offline

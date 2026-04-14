@@ -4,6 +4,9 @@ import path from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  // Relative base path so assets resolve correctly when loaded via file://
+  // protocol in Electron production builds (absolute '/' would point to disk root)
+  base: './',
   plugins: [react()],
   resolve: {
     alias: {

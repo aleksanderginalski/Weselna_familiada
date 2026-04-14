@@ -7,7 +7,7 @@ node_modules/
 dist/
 dist-ssr/
 dist-electron/
-build/
+dist-installer/
 *.local
 
 # IDE / Editor

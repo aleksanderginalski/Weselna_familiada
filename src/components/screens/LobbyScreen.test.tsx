@@ -18,7 +18,7 @@ const MOCK_BANK_DATA = {
 
 function mockFetch(configData = MOCK_GAME_DATA, bankData = MOCK_BANK_DATA) {
   global.fetch = vi.fn().mockImplementation((url: string) => {
-    const data = url === '/pytania-bank.json' ? bankData : configData;
+    const data = url === './pytania-bank.json' ? bankData : configData;
     return Promise.resolve({ json: () => Promise.resolve(data) } as Response);
   });
 }
