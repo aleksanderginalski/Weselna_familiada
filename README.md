@@ -161,6 +161,17 @@ MIT License — zobacz [LICENSE](./LICENSE)
 
 ## Latest
 
+**v0.40.0** — Board layout proportion slider (US-039)
+
+- `src/components/operator/BoardLayoutControl.tsx` — new; slider "Panele drużyn" (range 15–60, default 15) placed in operator header; always visible
+- `src/store/gameStore.ts` — `boardLayout: { teamPanelRatio: number }` added to state; `setBoardLayout()` clamps to 15–60 and persists to `localStorage`; `loadBoardLayout()` restores value on init
+- `src/hooks/useBroadcast.ts` — `boardLayout` included in `extractGameState()`; synced to board window via existing `SYNC_STATE` (no new message type)
+- `src/components/board/TeamScore.tsx` — `computeSizing(ratio)` derives digit font size (`2–8rem`) and panel width (`= 3 × digitCell + 1rem overhead`) from ratio; panel width equals exactly DigitDisplay width, keeping outer gaps (PALT/PTLB) visually constant as slider moves
+- `src/components/board/GameBoard.tsx` — reads `teamPanelRatio` from store; passes to both `TeamScore` panels; `DotMatrixBoard` wrapped in extra `<div className="w-full">` to fix Chromium `container-type` + flex item `width: 100%` resolution bug
+- `src/index.css` — `dot-matrix-container` changed from `container-type: size` to `container-type: inline-size` (only `cqi` units used; height no longer explicit)
+
+---
+
 **v0.39.0** — Auto-open board window from operator panel (US-034)
 
 - `electron/preload.ts` — new; `contextBridge` exposes `window.electronAPI.openBoardWindow()` to the renderer

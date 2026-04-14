@@ -19,6 +19,7 @@ function extractGameState(store: ReturnType<typeof useGameStore.getState>): Game
     showingWinner: store.showingWinner,
     finalRound: store.finalRound,
     lastRoundPoints: store.lastRoundPoints,
+    boardLayout: store.boardLayout,
   };
 }
 

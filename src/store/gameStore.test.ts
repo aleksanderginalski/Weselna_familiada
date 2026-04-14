@@ -898,4 +898,30 @@ describe('gameStore', () => {
       expect(useGameStore.getState().lastRoundPoints).toBeNull();
     });
   });
+
+  describe('setBoardLayout', () => {
+    it('should default to teamPanelRatio 15 (TC-165)', () => {
+      expect(useGameStore.getState().boardLayout.teamPanelRatio).toBe(15);
+    });
+
+    it('should update ratio and persist to localStorage (TC-166)', () => {
+      useGameStore.getState().setBoardLayout(25);
+
+      expect(useGameStore.getState().boardLayout.teamPanelRatio).toBe(25);
+      const stored = JSON.parse(localStorage.getItem('familiada-board-layout') ?? '{}');
+      expect(stored.teamPanelRatio).toBe(25);
+    });
+
+    it('should clamp ratio below minimum to 15 (TC-167)', () => {
+      useGameStore.getState().setBoardLayout(5);
+
+      expect(useGameStore.getState().boardLayout.teamPanelRatio).toBe(15);
+    });
+
+    it('should clamp ratio above maximum to 60 (TC-168)', () => {
+      useGameStore.getState().setBoardLayout(99);
+
+      expect(useGameStore.getState().boardLayout.teamPanelRatio).toBe(60);
+    });
+  });
 });
