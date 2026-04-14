@@ -1302,7 +1302,7 @@ EPIC-005: Weselna Familiada M5 - Desktop Distribution
 
 **Priority:** P2 (Medium)
 **Total Points:** 3
-**Status:** 📋 Planned
+**Status:** ✅ Completed
 
 ### US-039: Board layout proportion slider
 
@@ -1310,37 +1310,38 @@ EPIC-005: Weselna Familiada M5 - Desktop Distribution
 **I want to** adjust the proportional width of team score panels on the game board using a slider
 **So that** the display fits different projector aspect ratios
 
-**Status:** 📋 Planned
+**Status:** ✅ COMPLETED
 **Story Points:** 3
 **Priority:** P2
 
 **Acceptance Criteria:**
 
-- [ ] Slider "Wielkość paneli drużyn" visible in operator panel at all times (lobby, game, everywhere)
-- [ ] Slider works symmetrically — both team panels (left and right) grow/shrink simultaneously; answer board takes remaining space
-- [ ] Default slider position = current layout state (minimum team panel width)
-- [ ] Range: from default (minimum panels) up to maximum where each team panel occupies ~30% of screen width
-- [ ] Text in team panels (team name + score digits) scales proportionally with panel width
-- [ ] Changes reflected on the game board immediately via BroadcastChannel (live preview)
-- [ ] Setting persisted in `localStorage` and loaded on app startup
-- [ ] Setting is global — does not reset between rounds or sessions
+- [x] Slider "Wielkość paneli drużyn" visible in operator panel at all times (lobby, game, everywhere)
+- [x] Slider works symmetrically — both team panels (left and right) grow/shrink simultaneously; answer board takes remaining space
+- [x] Default slider position = current layout state (minimum team panel width)
+- [x] Range: 15–60 (extended from original 15–30 at operator request)
+- [x] Text in team panels (team name + score digits) scales proportionally with panel width
+- [x] Changes reflected on the game board immediately via BroadcastChannel (live preview)
+- [x] Setting persisted in `localStorage` and loaded on app startup
+- [x] Setting is global — does not reset between rounds or sessions
 
 **Technical Notes:**
 
-- New field in store or separate `settingsStore`: `boardLayout: { teamPanelRatio: number }` (% width per panel, range e.g. 15–30)
-- Read/write from `localStorage` on init
-- Propagated via BroadcastChannel to the board window on every change
-- Font scaling via CSS proportional to panel width (`clamp` or `cqi`-based)
-- Slider placed in `OperatorPanel.tsx`; new component `BoardLayoutControl.tsx`
+- `boardLayout: { teamPanelRatio: number }` added to `GameState` and `gameStore`; range 15–60, default 15
+- `loadBoardLayout()` reads from `localStorage` on store init; `setBoardLayout()` clamps and persists
+- `boardLayout` rides in existing `SYNC_STATE` — no new BroadcastChannel action type needed
+- Panel width computed in `TeamScore.tsx` via `computeSizing(ratio)`: `digitFontSizeRem = 2.0 + (ratio-15)*(2/15)`; `panelWidth = digitFontSizeRem × 3 × (5/7) + 1rem` — panel width equals exactly DigitDisplay width, keeping PALT/PTLB gaps visually constant
+- `dot-matrix-container` changed from `container-type: size` to `container-type: inline-size` (height no longer explicit, only cqi units used)
+- New component: `src/components/operator/BoardLayoutControl.tsx`
 
 **Tasks:**
 
-- [ ] **TASK-039.1:** Add `boardLayout: { teamPanelRatio: number }` to store (or new `settingsStore`); wire `localStorage` persistence - 30min
-- [ ] **TASK-039.2:** Extend BroadcastChannel message types with `SET_BOARD_LAYOUT` action - 15min
-- [ ] **TASK-039.3:** Create `src/components/operator/BoardLayoutControl.tsx` — slider UI - 20min
-- [ ] **TASK-039.4:** Update `GameBoard.tsx` — apply `teamPanelRatio` as dynamic CSS width; font scales with panel - 30min
-- [ ] **TASK-039.5:** Write tests (/qa) - 25min
-- [ ] **TASK-039.6:** Manual verification: slider adjusts board layout live on projector - 10min
+- [x] **TASK-039.1:** Add `boardLayout: { teamPanelRatio: number }` to store; wire `localStorage` persistence
+- [x] **TASK-039.2:** No new BroadcastChannel action — boardLayout included in SYNC_STATE payload
+- [x] **TASK-039.3:** Create `src/components/operator/BoardLayoutControl.tsx` — slider UI
+- [x] **TASK-039.4:** Update `GameBoard.tsx` and `TeamScore.tsx` — panel width and font scale from ratio
+- [x] **TASK-039.5:** Write tests (/qa) — TC-165 to TC-172
+- [x] **TASK-039.6:** Manual verification: slider adjusts board layout live on projector
 
 ---
 

@@ -144,6 +144,8 @@ interface GameState {
   showingWinner: boolean;
   // Present only when a final round has been started
   finalRound?: FinalRoundState;
+  /** Board layout: team panel width ratio (15–60), persisted in localStorage */
+  boardLayout: { teamPanelRatio: number };
 }
 
 interface FinalRoundState {
@@ -358,12 +360,13 @@ Operator Panel                    Game Board
 - `localStorage` is the established persistence mechanism in this project (see ADR-004)
 - BroadcastChannel is the established sync mechanism — no new infrastructure needed
 
-**Impact:**
-- New store field (or separate `settingsStore`): `boardLayout: { teamPanelRatio: number }` — percentage width of each team panel (range: current default ~15% up to ~30%)
-- New BroadcastChannel message type: `SET_BOARD_LAYOUT`
-- `GameBoard.tsx` applies `teamPanelRatio` as dynamic CSS width; team panel font scales proportionally
-- New operator component: `BoardLayoutControl.tsx` — always visible slider in `OperatorPanel`
-- Setting loaded from `localStorage` on app init; saved on every slider change
+**Impact (implemented in US-039):**
+- `boardLayout: { teamPanelRatio: number }` added to `GameState` in `gameStore`; range 15–60, default 15
+- No new BroadcastChannel message type — `boardLayout` rides in existing `SYNC_STATE` payload via `extractGameState()`
+- `TeamScore.tsx`: `computeSizing(ratio)` derives digit font (`2–8rem`) and panel width as `3 × digitCell × (5/7) + 1rem`; panel width equals exactly DigitDisplay content width so outer gaps (PALT/PTLB) stay constant when slider moves
+- `dot-matrix-container`: changed to `container-type: inline-size` (height no longer explicit; only `cqi` units used)
+- New operator component: `BoardLayoutControl.tsx` — always visible slider (range 15–60) in `OperatorPanel` header
+- Setting loaded from `localStorage` on app init via `loadBoardLayout()`; saved on every slider change
 
 ---
 
