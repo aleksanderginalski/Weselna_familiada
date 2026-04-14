@@ -45,6 +45,7 @@ function getGameState(): GameState {
     currentRoundIndex: s.currentRoundIndex,
     teams: s.teams,
     currentRound: s.currentRound,
+    boardLayout: s.boardLayout,
   };
 }
 
@@ -108,6 +109,24 @@ describe('useBroadcast', () => {
 
       expect(mockInstances[0].postMessage).toHaveBeenCalledWith(
         expect.objectContaining({ type: 'SYNC_STATE' }),
+      );
+    });
+
+    it('should include boardLayout in SYNC_STATE payload when setBoardLayout is called (TC-172)', () => {
+      renderHook(() => useBroadcast());
+
+      act(() => {
+        useGameStore.getState().setBoardLayout(40);
+      });
+
+      const posted = mockInstances[0].postMessage.mock.calls.map(([msg]) => msg);
+      expect(posted).toContainEqual(
+        expect.objectContaining({
+          type: 'SYNC_STATE',
+          payload: expect.objectContaining({
+            boardLayout: { teamPanelRatio: 40 },
+          }),
+        }),
       );
     });
   });

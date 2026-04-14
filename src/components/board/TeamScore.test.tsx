@@ -24,7 +24,7 @@ describe('TeamScore', () => {
   it('should display team name and zero score on game start', () => {
     useGameStore.getState().loadGame(MOCK_CONFIG);
     useGameStore.getState().selectQuestions(MOCK_BANK.questions);
-    render(<TeamScore side="left" />);
+    render(<TeamScore side="left" panelWidthPercent={15} />);
 
     expect(screen.getByText('Drużyna Pana Młodego')).toBeInTheDocument();
     expect(screen.getByText('0')).toBeInTheDocument();
@@ -33,7 +33,7 @@ describe('TeamScore', () => {
   it('should display right team name and score', () => {
     useGameStore.getState().loadGame(MOCK_CONFIG);
     useGameStore.getState().selectQuestions(MOCK_BANK.questions);
-    render(<TeamScore side="right" />);
+    render(<TeamScore side="right" panelWidthPercent={15} />);
 
     expect(screen.getByText('Drużyna Panny Młodej')).toBeInTheDocument();
   });
@@ -43,7 +43,7 @@ describe('TeamScore', () => {
     useGameStore.getState().selectQuestions(MOCK_BANK.questions);
     useGameStore.getState().revealAnswer(0);
     useGameStore.getState().endRound('left');
-    render(<TeamScore side="left" />);
+    render(<TeamScore side="left" panelWidthPercent={15} />);
 
     // 30 points × multiplier 2 = 60
     expect(screen.getByText('60')).toBeInTheDocument();
@@ -55,7 +55,7 @@ describe('TeamScore', () => {
       ...useGameStore.getState(),
       teams: { left: { name: 'Drużyna Pana Młodego', totalScore: 1086 }, right: { name: 'B', totalScore: 0 } },
     });
-    const { container } = render(<TeamScore side="left" />);
+    const { container } = render(<TeamScore side="left" panelWidthPercent={15} />);
 
     // sr-only exposes the wrapped display value (86), not raw 1086
     expect(screen.getByText('86')).toBeInTheDocument();
@@ -69,10 +69,21 @@ describe('TeamScore', () => {
       ...useGameStore.getState(),
       teams: { left: { name: 'Drużyna Pana Młodego', totalScore: 2015 }, right: { name: 'B', totalScore: 0 } },
     });
-    const { container } = render(<TeamScore side="left" />);
+    const { container } = render(<TeamScore side="left" panelWidthPercent={15} />);
 
     // sr-only exposes 15 (2015 % 1000)
     expect(screen.getByText('15')).toBeInTheDocument();
     expect(container.querySelector('.glow-pulse-milestone')).toBeInTheDocument();
+  });
+
+  it('should apply larger panel width when panelWidthPercent increases (TC-171)', () => {
+    useGameStore.getState().loadGame(MOCK_CONFIG);
+    const { container: small } = render(<TeamScore side="left" panelWidthPercent={15} />);
+    const { container: large } = render(<TeamScore side="left" panelWidthPercent={30} />);
+
+    const parseWidth = (c: HTMLElement) =>
+      parseFloat((c.firstElementChild as HTMLElement).style.width);
+
+    expect(parseWidth(large)).toBeGreaterThan(parseWidth(small));
   });
 });

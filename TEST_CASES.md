@@ -2259,6 +2259,132 @@ beforeEach(() => {
 
 ---
 
+#### TC-165: setBoardLayout — defaults to teamPanelRatio 15
+
+**Related US:** US-039
+**Type:** Unit (store)
+**Priority:** High
+**File:** `src/store/gameStore.test.ts`
+
+**Test Steps:**
+1. Read `boardLayout.teamPanelRatio` from fresh store
+2. Assert value equals 15
+
+**Status:** ✅ Done
+
+---
+
+#### TC-166: setBoardLayout — updates ratio and persists to localStorage
+
+**Related US:** US-039
+**Type:** Unit (store)
+**Priority:** High
+**File:** `src/store/gameStore.test.ts`
+
+**Test Steps:**
+1. Call `setBoardLayout(25)`
+2. Assert `boardLayout.teamPanelRatio === 25`
+3. Assert `localStorage.getItem('familiada-board-layout')` contains `{ teamPanelRatio: 25 }`
+
+**Status:** ✅ Done
+
+---
+
+#### TC-167: setBoardLayout — clamps ratio below minimum to 15
+
+**Related US:** US-039
+**Type:** Unit (store)
+**Priority:** Medium
+**File:** `src/store/gameStore.test.ts`
+
+**Test Steps:**
+1. Call `setBoardLayout(5)`
+2. Assert `boardLayout.teamPanelRatio === 15`
+
+**Status:** ✅ Done
+
+---
+
+#### TC-168: setBoardLayout — clamps ratio above maximum to 60
+
+**Related US:** US-039
+**Type:** Unit (store)
+**Priority:** Medium
+**File:** `src/store/gameStore.test.ts`
+
+**Test Steps:**
+1. Call `setBoardLayout(99)`
+2. Assert `boardLayout.teamPanelRatio === 60`
+
+**Status:** ✅ Done
+
+---
+
+#### TC-169: BoardLayoutControl — renders slider with current ratio and percentage label
+
+**Related US:** US-039
+**Type:** Component
+**Priority:** High
+**File:** `src/components/operator/BoardLayoutControl.test.tsx`
+
+**Test Steps:**
+1. Set store `boardLayout.teamPanelRatio = 20`
+2. Render `<BoardLayoutControl />`
+3. Assert slider value equals `"20"`
+4. Assert label text `"20%"` is visible
+
+**Status:** ✅ Done
+
+---
+
+#### TC-170: BoardLayoutControl — calls store update when slider changes
+
+**Related US:** US-039
+**Type:** Component
+**Priority:** High
+**File:** `src/components/operator/BoardLayoutControl.test.tsx`
+
+**Test Steps:**
+1. Render `<BoardLayoutControl />`
+2. Press ArrowRight on the slider
+3. Assert `boardLayout.teamPanelRatio > 15`
+
+**Status:** ✅ Done
+
+---
+
+#### TC-171: TeamScore — applies larger panel width when panelWidthPercent increases
+
+**Related US:** US-039
+**Type:** Component
+**Priority:** High
+**File:** `src/components/board/TeamScore.test.tsx`
+
+**Test Steps:**
+1. Render `<TeamScore panelWidthPercent={15} />` and `<TeamScore panelWidthPercent={30} />`
+2. Parse `style.width` of root element in each
+3. Assert larger ratio produces wider panel
+
+**Status:** ✅ Done
+
+---
+
+#### TC-172: useBroadcast — boardLayout included in SYNC_STATE payload
+
+**Related US:** US-039
+**Type:** Integration (hook)
+**Priority:** High
+**File:** `src/hooks/useBroadcast.test.ts`
+
+**Test Steps:**
+1. Mount `useBroadcast` hook (operator window)
+2. Call `setBoardLayout(40)`
+3. Assert `postMessage` called with `{ type: 'SYNC_STATE', payload: { boardLayout: { teamPanelRatio: 40 } } }`
+
+**Status:** ✅ Done
+
+---
+
 ## 4. Test Data
 
 ### 4.1 Mock Game Data
