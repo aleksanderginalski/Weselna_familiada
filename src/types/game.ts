@@ -112,6 +112,9 @@ export interface GameState {
   // Set to true when operator explicitly clicks "OGŁOŚ ZWYCIĘSTWO"
   showingWinner: boolean;
 
+  // Global display setting: width of each team panel as % of board width (15–30)
+  boardLayout: { teamPanelRatio: number };
+
   // Present only when a final round has been started
   finalRound?: FinalRoundState;
 

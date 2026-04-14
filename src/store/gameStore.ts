@@ -13,6 +13,21 @@ import {
 import { loadQuestionBank, saveQuestionBank } from '@/utils/questionBankStorage';
 
 const MAX_MISTAKES = 3;
+const BOARD_LAYOUT_STORAGE_KEY = 'familiada-board-layout';
+const DEFAULT_TEAM_PANEL_RATIO = 15;
+
+function loadBoardLayout(): { teamPanelRatio: number } {
+  try {
+    const raw = localStorage.getItem(BOARD_LAYOUT_STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw) as { teamPanelRatio: number };
+      if (typeof parsed.teamPanelRatio === 'number') return parsed;
+    }
+  } catch {
+    // ignore malformed storage entry
+  }
+  return { teamPanelRatio: DEFAULT_TEAM_PANEL_RATIO };
+}
 const FINAL_ROUND_QUESTIONS = 5;
 const PLAYER_A_TIMER_SECS = 15;
 const PLAYER_B_TIMER_SECS = 20;
@@ -61,6 +76,7 @@ const INITIAL_STATE: GameState = {
   showingWinner: false,
   finalRound: undefined,
   lastRoundPoints: null,
+  boardLayout: loadBoardLayout(),
 };
 
 interface StoreActions {
@@ -97,6 +113,7 @@ interface StoreActions {
   finishFinalRound: () => void;
   adjustScore: (side: TeamSide, delta: number) => void;
   transferLastRoundPoints: () => void;
+  setBoardLayout: (ratio: number) => void;
 }
 
 interface SoundPreferences {
@@ -457,4 +474,12 @@ export const useGameStore = create<GameState & StoreActions & SoundPreferences>(
         lastRoundPoints: { amount, holder: recipient },
       };
     }),
+
+  // Persists the team panel width ratio (15–60%) to the store and localStorage
+  setBoardLayout: (ratio: number) => {
+    const clamped = Math.min(60, Math.max(15, ratio));
+    const layout = { teamPanelRatio: clamped };
+    localStorage.setItem(BOARD_LAYOUT_STORAGE_KEY, JSON.stringify(layout));
+    set({ boardLayout: layout });
+  },
 }));

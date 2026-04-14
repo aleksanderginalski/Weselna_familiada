@@ -1,77 +1,82 @@
-# Current Task — US-034
+# Current Task — US-039
 
 ## Context
-US-032 set up Electron with a single Operator window. The Board window was
-previously opened via `window.open()` from the renderer. This US adds an
-"Open Board Window" button to LobbyScreen that opens the Board window through
-Electron IPC — giving the main process full control (maximized, no duplicates,
-focus-if-already-open). `contextIsolation: true` is active, so a preload script
-with `contextBridge` is required to expose IPC to the renderer safely.
+Add a board layout proportion slider to the operator panel that controls
+the width of team score panels on the game board. The setting persists in
+localStorage and syncs to the board window via the existing BroadcastChannel
+SYNC_STATE mechanism (no new message types needed — boardLayout becomes part
+of GameState and is broadcast automatically on every store change).
+
+Range: 15–30% per team panel. Default: 15 (minimum — current layout).
 
 ## Read
-- `electron/main.ts` — Electron main process (create operator window, app lifecycle)
-- `src/components/screens/LobbyScreen.tsx` — where the button must be added
-- `package.json` — scripts and electron-builder config
-- `tsconfig.electron.json` — Electron TS config (check include paths)
+- src/types/game.ts              — add boardLayout to GameState
+- src/store/gameStore.ts         — add boardLayout to INITIAL_STATE + setBoardLayout action
+- src/hooks/useBroadcast.ts      — add boardLayout to extractGameState()
+- src/components/board/GameBoard.tsx     — apply dynamic teamPanelRatio width
+- src/components/board/TeamScore.tsx     — font scaling with panel width
+- src/components/operator/OperatorPanel.tsx   — place new BoardLayoutControl
+- src/components/operator/VolumeSlider.tsx    — reference pattern for slider UI
 
 ## Tasks
 
-1. **Create `electron/preload.ts`**
-   Expose a single API via `contextBridge`:
-   ```typescript
-   contextBridge.exposeInMainWorld('electronAPI', {
-     openBoardWindow: () => ipcRenderer.invoke('open-board-window'),
-   });
-   ```
+1. **types/game.ts** — add `boardLayout: { teamPanelRatio: number }` field to
+   `GameState` interface.
 
-2. **Create `src/types/electron.d.ts`**
-   Declare the global `window.electronAPI` type so TypeScript is happy in renderer:
-   ```typescript
-   interface ElectronAPI {
-     openBoardWindow: () => Promise<void>;
-   }
-   declare global {
-     interface Window {
-       electronAPI?: ElectronAPI;
-     }
-   }
-   export {};
-   ```
+2. **store/gameStore.ts**
+   - Add localStorage key constant: `BOARD_LAYOUT_STORAGE_KEY = 'familiada-board-layout'`
+   - Add helper to load from localStorage (falls back to `{ teamPanelRatio: 15 }`)
+   - Add `boardLayout` to `INITIAL_STATE` (loaded from localStorage on init)
+   - Add `setBoardLayout(ratio: number): void` action — updates state and
+     writes to localStorage
 
-3. **Update `electron/main.ts`**
-   - Import `ipcMain` from electron
-   - Register `ipcMain.handle('open-board-window', ...)` handler that:
-     - Keeps a reference to the board window (`let boardWindow: BrowserWindow | null = null`)
-     - If `boardWindow` exists and is not destroyed → call `boardWindow.focus()`
-     - Otherwise → create a new `BrowserWindow`, load `/?view=board`, open maximized
-     - Clear the reference when the board window is closed (`boardWindow.on('closed', ...)`)
-   - Pass `preload: path.join(__dirname, 'preload.js')` in `webPreferences` of the Operator window
+3. **hooks/useBroadcast.ts** — add `boardLayout: store.boardLayout` to
+   `extractGameState()` so it is included in every SYNC_STATE broadcast.
 
-4. **Update `tsconfig.electron.json`**
-   Ensure `electron/preload.ts` is included in compilation (add to `include` if needed).
+4. **components/operator/BoardLayoutControl.tsx** — new component.
+   - Slider input, range 15–30, step 1, label "Panele drużyn"
+   - Reads current value from store; calls `setBoardLayout` on change
+   - Style consistent with VolumeSlider (accent-familiada-gold, dark text,
+     numeric readout next to the slider)
 
-5. **Update `LobbyScreen.tsx`**
-   - Add an "Otwórz tablicę" button below the existing buttons
-   - Button is only rendered when `window.electronAPI` is defined (not in browser mode)
-   - On click: call `window.electronAPI.openBoardWindow()`
-   - Style: use existing `operator-btn` class
+5. **components/operator/OperatorPanel.tsx** — import and render
+   `<BoardLayoutControl />` in the header `<div>`, between VolumeSlider and
+   the "Otwórz Tablicę" button.
+
+6. **components/board/GameBoard.tsx** — read `boardLayout.teamPanelRatio`
+   from store. Replace `shrink-0` on both team panel wrappers with an inline
+   `style={{ width: \`\${teamPanelRatio}%\` }}` so they grow/shrink
+   symmetrically; the center DotMatrixBoard wrapper stays `flex-1 min-w-0`.
+
+7. **components/board/TeamScore.tsx** — make team name and score font scale
+   with the panel. Pass a `panelWidthPercent` prop (number) and derive
+   `fontSize` via a small inline calculation:
+   `clamp(0.75rem, {ratio}vw, 1.5rem)` for the name span, and scale
+   `digitFontSize` on DigitDisplay proportionally
+   (e.g. `\`\${Math.max(1.2, ratio * 0.12)}rem\``).
+   GameBoard passes the value from the store.
 
 ## Constraints
-- Never use `any` type
-- Do not modify game logic or Zustand store
-- The button must not appear in browser/Vite dev mode (guard with `window.electronAPI`)
-- Board window URL: dev → `http://localhost:3000/?view=board`, prod → load `index.html` with `?view=board` query
-- `contextIsolation: true` must remain — do NOT set `nodeIntegration: true`
-- Keep existing `createOperatorWindow` function structure intact
+- Do NOT add a new GameAction type — existing SYNC_STATE propagation is sufficient
+- Do NOT reset boardLayout on startGame, nextRound, or resetGame — it is a
+  global setting independent of game flow
+- No `any` types; use explicit TypeScript
+- localStorage read/write only in the store (not in components)
+- Max component length: 300 lines; max function length: 50 lines
+- BoardLayoutControl must be visible at all times (lobby, playing, winner screen)
+  because it lives in the persistent OperatorPanel header
 
 ## After implementation
 - Run linter: `npm run lint`
 - Run tests: `npm test`
-
-### Manual verification steps (Polish)
-1. Uruchom `npm run electron:dev`
-2. W ekranie Lobby sprawdź że przycisk "Otwórz tablicę" jest widoczny
-3. Kliknij przycisk — powinno otworzyć się drugie okno zmaksymalizowane z widokiem tablicy
-4. Kliknij przycisk ponownie — drugie okno powinno dostać focus, a nie otworzyć się ponowne
-5. Zamknij okno tablicy, kliknij przycisk ponownie — powinno otworzyć się nowe okno
-6. Otwórz aplikację w przeglądarce (`npm run dev`) — przycisk "Otwórz tablicę" NIE powinien być widoczny
+- Manual verification steps (in Polish):
+  1. Otwórz panel operatora — sprawdź, że suwak "Panele drużyn" jest widoczny
+     w nagłówku na każdym ekranie (lobby, gra, zwycięzca).
+  2. Otwórz tablicę ("Otwórz Tablicę") na drugim ekranie.
+  3. Przesuń suwak w prawo — sprawdź, że oba panele drużyn na tablicy
+     rozszerzają się symetrycznie w czasie rzeczywistym.
+  4. Sprawdź, że tekst nazwy drużyny i cyfry wyników skalują się z panelem.
+  5. Wróć do minimum — sprawdź, że tablica odpowiedzi zajmuje maksimum.
+  6. Odśwież aplikację — suwak powinien być na ostatnio ustawionym miejscu.
+  7. Uruchom rundę i przejdź do następnej — sprawdź, że ustawienie nie
+     zresetowało się.

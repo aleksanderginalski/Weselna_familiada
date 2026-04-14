@@ -101,11 +101,11 @@
   }
 }
 
-/* Container for the dot-matrix board — enables container query units (cqb/cqi) */
+/* Container for the dot-matrix board — enables container query inline units (cqi).
+   Uses inline-size containment: height is content-driven, width drives cqi scaling. */
 .dot-matrix-container {
-  container-type: size;
+  container-type: inline-size;
   width: 100%;
-  height: 100%;
 }
 
 /* Digit cell: value shown via CSS pseudo-element so DOM text stays empty.

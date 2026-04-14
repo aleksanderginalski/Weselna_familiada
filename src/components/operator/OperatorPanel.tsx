@@ -1,6 +1,7 @@
 import { useGameStore } from '@/store/gameStore';
 import { useSound } from '@/hooks/useSound';
 import { AnswerControl } from './AnswerControl';
+import { BoardLayoutControl } from './BoardLayoutControl';
 import { RoundControls } from './RoundControls';
 import { TeamControl } from './TeamControl';
 import { VolumeSlider } from './VolumeSlider';
@@ -35,6 +36,7 @@ export function OperatorPanel() {
             {isMuted ? 'Włącz dźwięk' : 'Wycisz'}
           </button>
           <VolumeSlider volume={volume} onChange={setVolume} />
+          <BoardLayoutControl />
           <button
             onClick={handleOpenBoard}
             className="operator-btn bg-familiada-gold text-familiada-bg-dark hover:bg-yellow-400 font-bold"
