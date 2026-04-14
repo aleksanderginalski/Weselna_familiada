@@ -31,6 +31,8 @@ beforeEach(() => {
 
 afterEach(() => {
   vi.restoreAllMocks();
+  // Clean up electronAPI mock between tests
+  delete (window as { electronAPI?: unknown }).electronAPI;
 });
 
 describe('LobbyScreen', () => {
@@ -105,6 +107,27 @@ describe('LobbyScreen', () => {
     expect(state.questionBank).toHaveLength(1);
     expect(state.questionBank[0].question).toBe('Bank Q?');
     expect(state.rounds).toHaveLength(0);
+  });
+
+  it('should show Otwórz tablicę button and call openBoardWindow when electronAPI is available', async () => {
+    const openBoardWindow = vi.fn();
+    (window as { electronAPI?: unknown }).electronAPI = { openBoardWindow };
+
+    render(<LobbyScreen />);
+    await waitFor(() => screen.getByRole('heading', { name: 'WESELNA FAMILIADA' }));
+
+    const boardBtn = screen.getByRole('button', { name: 'Otwórz tablicę' });
+    expect(boardBtn).toBeInTheDocument();
+
+    await userEvent.click(boardBtn);
+    expect(openBoardWindow).toHaveBeenCalledOnce();
+  });
+
+  it('should not show Otwórz tablicę button when electronAPI is undefined', async () => {
+    render(<LobbyScreen />);
+    await waitFor(() => screen.getByRole('heading', { name: 'WESELNA FAMILIADA' }));
+
+    expect(screen.queryByRole('button', { name: 'Otwórz tablicę' })).not.toBeInTheDocument();
   });
 
   it('should pass winningScore config when score mode selected before clicking DALEJ', async () => {
