@@ -11,7 +11,9 @@
       "Bash(python -c \"import json; data=json.load\\(open\\('public/pytania-final.json'\\)\\); print\\(json.dumps\\(data['questions'][0], indent=2, ensure_ascii=False\\)\\)\")",
       "Bash(npx tsc:*)",
       "Bash(npm ls:*)",
-      "Bash(sort -t- -k2 -n)"
+      "Bash(sort -t- -k2 -n)",
+      "Bash(python -c \"from PIL import Image; print\\('PIL available'\\)\")",
+      "Bash(python -c ':*)"
     ]
   }
 }

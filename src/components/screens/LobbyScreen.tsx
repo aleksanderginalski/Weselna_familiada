@@ -32,8 +32,8 @@ export function LobbyScreen() {
 
   useEffect(() => {
     Promise.all([
-      fetch('/pytania.json').then((res) => res.json() as Promise<GameDataFile>),
-      fetch('/pytania-bank.json').then((res) => res.json() as Promise<QuestionBankFile>),
+      fetch('./pytania.json').then((res) => res.json() as Promise<GameDataFile>),
+      fetch('./pytania-bank.json').then((res) => res.json() as Promise<QuestionBankFile>),
     ])
       .then(([configData, fetchedBankData]) => {
         setGameData(configData);

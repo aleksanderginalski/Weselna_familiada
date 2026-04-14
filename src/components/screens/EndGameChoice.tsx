@@ -13,7 +13,7 @@ export function EndGameChoice() {
   const { playFinalRound } = useSound();
 
   async function handleFinalRound() {
-    const response = await fetch('/pytania-final.json');
+    const response = await fetch('./pytania-final.json');
     const data: FinalRoundDataFile = await response.json();
     playFinalRound();
     startFinalRound(data);

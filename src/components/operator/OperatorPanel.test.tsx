@@ -59,7 +59,7 @@ describe('OperatorPanel', () => {
 
     await userEvent.click(screen.getByRole('button', { name: 'Otwórz Tablicę' }));
 
-    expect(window.open).toHaveBeenCalledWith('/?view=board', '_blank');
+    expect(window.open).toHaveBeenCalledWith(expect.stringContaining('?view=board'), '_blank');
   });
 
   it('should render mute button with "Wycisz" label when not muted', () => {
