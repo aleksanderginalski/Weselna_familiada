@@ -1,81 +1,77 @@
-# Current Task — US-033
+# Current Task — US-034
 
 ## Context
-US-032 added Electron setup with `electron/main.ts` and basic scripts.
-The current `electron:build` script only compiles TypeScript and runs Vite build —
-it does NOT produce a distributable installer. This US wires up `electron-builder`
-to produce a Windows NSIS `.exe` installer that works on a clean machine.
+US-032 set up Electron with a single Operator window. The Board window was
+previously opened via `window.open()` from the renderer. This US adds an
+"Open Board Window" button to LobbyScreen that opens the Board window through
+Electron IPC — giving the main process full control (maximized, no duplicates,
+focus-if-already-open). `contextIsolation: true` is active, so a preload script
+with `contextBridge` is required to expose IPC to the renderer safely.
 
 ## Read
-- `package.json` — current scripts and dependencies
-- `electron/main.ts` — Electron main process (already implemented)
-- `tsconfig.electron.json` — Electron TS config
+- `electron/main.ts` — Electron main process (create operator window, app lifecycle)
+- `src/components/screens/LobbyScreen.tsx` — where the button must be added
+- `package.json` — scripts and electron-builder config
+- `tsconfig.electron.json` — Electron TS config (check include paths)
 
 ## Tasks
 
-1. **Install electron-builder**
-   Add `electron-builder` to devDependencies in `package.json`.
+1. **Create `electron/preload.ts`**
+   Expose a single API via `contextBridge`:
+   ```typescript
+   contextBridge.exposeInMainWorld('electronAPI', {
+     openBoardWindow: () => ipcRenderer.invoke('open-board-window'),
+   });
+   ```
 
-2. **Create app icon**
-   Add `build/icon.ico` — a simple placeholder icon (256×256, `.ico` format).
-   Use any publicly available tool or embed a minimal valid `.ico` binary.
-   The file must exist at `build/icon.ico` for electron-builder to pick it up.
-
-3. **Configure electron-builder**
-   Add `"build"` section to `package.json` (or create `electron-builder.yml`):
-   ```json
-   "build": {
-     "appId": "com.weselna.familiada",
-     "productName": "Weselna Familiada",
-     "directories": {
-       "output": "dist-installer"
-     },
-     "files": [
-       "dist/**/*",
-       "dist-electron/**/*",
-       "public/**/*"
-     ],
-     "win": {
-       "target": "nsis",
-       "icon": "build/icon.ico"
-     },
-     "nsis": {
-       "oneClick": true,
-       "perMachine": false,
-       "createDesktopShortcut": true,
-       "createStartMenuShortcut": true
+2. **Create `src/types/electron.d.ts`**
+   Declare the global `window.electronAPI` type so TypeScript is happy in renderer:
+   ```typescript
+   interface ElectronAPI {
+     openBoardWindow: () => Promise<void>;
+   }
+   declare global {
+     interface Window {
+       electronAPI?: ElectronAPI;
      }
    }
+   export {};
    ```
 
-4. **Update `electron:build` script in `package.json`**
-   Current: `"electron:build": "tsc -p tsconfig.electron.json && vite build"`
-   New:
-   ```
-   "electron:build": "tsc -p tsconfig.electron.json && vite build && electron-builder"
-   ```
+3. **Update `electron/main.ts`**
+   - Import `ipcMain` from electron
+   - Register `ipcMain.handle('open-board-window', ...)` handler that:
+     - Keeps a reference to the board window (`let boardWindow: BrowserWindow | null = null`)
+     - If `boardWindow` exists and is not destroyed → call `boardWindow.focus()`
+     - Otherwise → create a new `BrowserWindow`, load `/?view=board`, open maximized
+     - Clear the reference when the board window is closed (`boardWindow.on('closed', ...)`)
+   - Pass `preload: path.join(__dirname, 'preload.js')` in `webPreferences` of the Operator window
 
-5. **Update `.gitignore`**
-   Add `dist-installer/` to `.gitignore` so the output folder is not committed.
+4. **Update `tsconfig.electron.json`**
+   Ensure `electron/preload.ts` is included in compilation (add to `include` if needed).
+
+5. **Update `LobbyScreen.tsx`**
+   - Add an "Otwórz tablicę" button below the existing buttons
+   - Button is only rendered when `window.electronAPI` is defined (not in browser mode)
+   - On click: call `window.electronAPI.openBoardWindow()`
+   - Style: use existing `operator-btn` class
 
 ## Constraints
-- Do NOT modify any React components or game logic
-- Do NOT change `electron/main.ts`
-- `electron-builder` must be devDependency only
-- Output directory must be `dist-installer/` (not `dist-electron/`) to avoid
-  name collision with the compiled Electron main process
-- `package.json` already has `"type": "module"` — electron-builder handles this correctly
-- No `any` types, no TypeScript changes beyond what is needed
+- Never use `any` type
+- Do not modify game logic or Zustand store
+- The button must not appear in browser/Vite dev mode (guard with `window.electronAPI`)
+- Board window URL: dev → `http://localhost:3000/?view=board`, prod → load `index.html` with `?view=board` query
+- `contextIsolation: true` must remain — do NOT set `nodeIntegration: true`
+- Keep existing `createOperatorWindow` function structure intact
 
 ## After implementation
 - Run linter: `npm run lint`
 - Run tests: `npm test`
 
 ### Manual verification steps (Polish)
-1. Uruchom `npm run electron:build` — komenda powinna zakończyć się bez błędów
-2. Sprawdź że folder `dist-installer/` został utworzony
-3. Sprawdź że w `dist-installer/` znajduje się plik `.exe` z nazwą "Weselna Familiada"
-4. Uruchom instalator — powinien zainstalować aplikację bez pytania o Node.js
-5. Sprawdź menu Start — powinna pojawić się "Weselna Familiada" z ikoną
-6. Uruchom zainstalowaną aplikację — Panel Operatora powinien się otworzyć normalnie
-7. Odłącz internet i uruchom ponownie — aplikacja działa offline
+1. Uruchom `npm run electron:dev`
+2. W ekranie Lobby sprawdź że przycisk "Otwórz tablicę" jest widoczny
+3. Kliknij przycisk — powinno otworzyć się drugie okno zmaksymalizowane z widokiem tablicy
+4. Kliknij przycisk ponownie — drugie okno powinno dostać focus, a nie otworzyć się ponowne
+5. Zamknij okno tablicy, kliknij przycisk ponownie — powinno otworzyć się nowe okno
+6. Otwórz aplikację w przeglądarce (`npm run dev`) — przycisk "Otwórz tablicę" NIE powinien być widoczny
