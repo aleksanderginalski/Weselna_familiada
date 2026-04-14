@@ -345,4 +345,23 @@ Operator Panel                    Game Board
 
 ---
 
+### ADR-006: Board Layout Settings via localStorage
+
+**Decision:** Store game board layout proportions (team panel width ratio) in `localStorage` as a global setting, synced to the board window via BroadcastChannel.
+
+**Rationale:**
+- Different projectors and venues require different layout proportions
+- Operator needs live adjustment without restarting the app
+- `localStorage` is the established persistence mechanism in this project (see ADR-004)
+- BroadcastChannel is the established sync mechanism — no new infrastructure needed
+
+**Impact:**
+- New store field (or separate `settingsStore`): `boardLayout: { teamPanelRatio: number }` — percentage width of each team panel (range: current default ~15% up to ~30%)
+- New BroadcastChannel message type: `SET_BOARD_LAYOUT`
+- `GameBoard.tsx` applies `teamPanelRatio` as dynamic CSS width; team panel font scales proportionally
+- New operator component: `BoardLayoutControl.tsx` — always visible slider in `OperatorPanel`
+- Setting loaded from `localStorage` on app init; saved on every slider change
+
+---
+
 *This document is updated during /discover sessions when architectural changes are made.*
