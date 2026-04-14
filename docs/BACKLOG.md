@@ -1248,18 +1248,18 @@ EPIC-005: Weselna Familiada M5 - Desktop Distribution
 **I want to** install the app on a Windows laptop with a single installer
 **So that** I can run the wedding game without any developer tools
 
-**Status:** 📋 Planned
+**Status:** ✅ COMPLETED
 **Story Points:** 5
 **Priority:** P0
 
 **Acceptance Criteria:**
 
-- [ ] `electron-builder` configured to produce `.exe` NSIS installer for Windows
-- [ ] `npm run electron:build` produces distributable in `dist-electron/`
-- [ ] Installer works on a clean Windows machine (no Node.js, no VSCode)
-- [ ] App icon set (`.ico` format)
-- [ ] App name shown as "Weselna Familiada" in Windows start menu and taskbar
-- [ ] Offline — no internet required at runtime
+- [x] `electron-builder` configured to produce `.exe` NSIS installer for Windows
+- [x] `npm run electron:build` produces distributable in `dist-installer/`
+- [x] Installer works on a clean Windows machine (no Node.js, no VSCode)
+- [x] App icon set (`.ico` format)
+- [x] App name shown as "Weselna Familiada" in Windows start menu and taskbar
+- [x] Offline — no internet required at runtime
 
 ---
 

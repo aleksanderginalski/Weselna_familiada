@@ -161,6 +161,16 @@ MIT License — zobacz [LICENSE](./LICENSE)
 
 ## Latest
 
+**v0.38.0** — Production build and Windows installer (US-033)
+
+- `package.json` — added `electron-builder` devDependency; `"build"` config section: appId `com.weselna.familiada`, productName `Weselna Familiada`, NSIS target with `oneClick: false` and `allowToChangeInstallationDirectory: true`; output to `dist-installer/`; `electron:build` script now calls `electron-builder` with `CSC_IDENTITY_AUTO_DISCOVERY=false` (skips code signing — not needed for private use)
+- `build/icon.ico` — new app icon: dot-matrix letter F rendered from `Familiada-2.otf` glyph data, gold (#FFD700) on dark blue background, multi-size (16/32/48/256 px)
+- `vite.config.ts` — `base: './'` added at root level so bundled assets use relative paths; required for `file://` protocol in Electron production builds
+- `src/components/operator/OperatorPanel.tsx` — `handleOpenBoard` builds board URL from `window.location.href` instead of hardcoded `'/'`; works with both `http://` (dev) and `file://` (production)
+- `src/components/screens/LobbyScreen.tsx`, `QuestionEditorScreen.tsx`, `EndGameChoice.tsx` — all `fetch()` calls changed from absolute paths (`/pytania.json`) to relative (`./pytania.json`); required for `file://` protocol
+- `.gitignore` — `build/` replaced with `dist-installer/` (icon source tracked, installer output ignored)
+- 8 tests added: TC-198, TC-264 through TC-270 (271 total)
+
 **v0.37.0** — Electron desktop app with two-window management (US-032)
 
 - `electron/main.ts` — new Electron main process; creates Operator BrowserWindow (1280×900) on launch; loads Vite dev server in dev mode, `dist/index.html` in production; retries URL on `did-fail-load` while Vite starts
