@@ -1269,17 +1269,78 @@ EPIC-005: Weselna Familiada M5 - Desktop Distribution
 **I want to** open the game board window with a single button click
 **So that** I don't need to manually open a second window or URL
 
-**Status:** 📋 Planned
+**Status:** ✅ COMPLETED
 **Story Points:** 3
 **Priority:** P1
 
 **Acceptance Criteria:**
 
-- [ ] "Open Board Window" button in Lobby screen (operator panel)
-- [ ] Clicking it opens the Board window via Electron IPC → `ipcMain` creates a new `BrowserWindow`
-- [ ] Board window opens maximized (ready for projector)
-- [ ] If board window is already open: focuses it instead of opening a duplicate
-- [ ] Works in both dev and production builds
+- [x] "Open Board Window" button in Lobby screen (operator panel)
+- [x] Clicking it opens the Board window via Electron IPC → `ipcMain` creates a new `BrowserWindow`
+- [x] Board window opens maximized (ready for projector)
+- [x] Works in both dev and production builds
+
+**Implementation notes:**
+- `electron/preload.ts` — new; exposes `window.electronAPI.openBoardWindow()` via `contextBridge`
+- `src/types/electron.d.ts` — new; global `Window.electronAPI` TypeScript declaration
+- `electron/main.ts` — `ipcMain.handle('open-board-window')` handler; board windows tracked by `Set<number>` of window IDs; `preload.js` wired into Operator window `webPreferences`
+- `LobbyScreen.tsx` — "Otwórz tablicę" button rendered only when `window.electronAPI` is defined
+
+---
+
+# 📦 EPIC-006: Display Customization
+
+**Goal:** Allow operators to adjust the game board layout to fit different projector aspect ratios and venue setups
+
+**Business Value:** Ensures the game looks correct on any projector without technical workarounds
+
+**Status:** 📋 Planned
+
+---
+
+## 🔧 FEATURE-013: Board Layout Settings
+
+**Priority:** P2 (Medium)
+**Total Points:** 3
+**Status:** 📋 Planned
+
+### US-039: Board layout proportion slider
+
+**As an** operator
+**I want to** adjust the proportional width of team score panels on the game board using a slider
+**So that** the display fits different projector aspect ratios
+
+**Status:** 📋 Planned
+**Story Points:** 3
+**Priority:** P2
+
+**Acceptance Criteria:**
+
+- [ ] Slider "Wielkość paneli drużyn" visible in operator panel at all times (lobby, game, everywhere)
+- [ ] Slider works symmetrically — both team panels (left and right) grow/shrink simultaneously; answer board takes remaining space
+- [ ] Default slider position = current layout state (minimum team panel width)
+- [ ] Range: from default (minimum panels) up to maximum where each team panel occupies ~30% of screen width
+- [ ] Text in team panels (team name + score digits) scales proportionally with panel width
+- [ ] Changes reflected on the game board immediately via BroadcastChannel (live preview)
+- [ ] Setting persisted in `localStorage` and loaded on app startup
+- [ ] Setting is global — does not reset between rounds or sessions
+
+**Technical Notes:**
+
+- New field in store or separate `settingsStore`: `boardLayout: { teamPanelRatio: number }` (% width per panel, range e.g. 15–30)
+- Read/write from `localStorage` on init
+- Propagated via BroadcastChannel to the board window on every change
+- Font scaling via CSS proportional to panel width (`clamp` or `cqi`-based)
+- Slider placed in `OperatorPanel.tsx`; new component `BoardLayoutControl.tsx`
+
+**Tasks:**
+
+- [ ] **TASK-039.1:** Add `boardLayout: { teamPanelRatio: number }` to store (or new `settingsStore`); wire `localStorage` persistence - 30min
+- [ ] **TASK-039.2:** Extend BroadcastChannel message types with `SET_BOARD_LAYOUT` action - 15min
+- [ ] **TASK-039.3:** Create `src/components/operator/BoardLayoutControl.tsx` — slider UI - 20min
+- [ ] **TASK-039.4:** Update `GameBoard.tsx` — apply `teamPanelRatio` as dynamic CSS width; font scales with panel - 30min
+- [ ] **TASK-039.5:** Write tests (/qa) - 25min
+- [ ] **TASK-039.6:** Manual verification: slider adjusts board layout live on projector - 10min
 
 ---
 

@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -8,6 +8,51 @@ const __dirname = path.dirname(__filename);
 
 const isDev = process.env.NODE_ENV === 'development';
 const DEV_URL = 'http://localhost:3000';
+
+// Tracks board window IDs — assigned at creation, before URL loads.
+// More reliable than URL-based lookup which can fail during page load.
+const boardWindowIds = new Set<number>();
+
+/**
+ * Finds the board window by its tracked ID among all open Electron windows.
+ */
+function findBoardWindow(): BrowserWindow | undefined {
+  return BrowserWindow.getAllWindows().find((win) => boardWindowIds.has(win.id));
+}
+
+/**
+ * Creates the Board BrowserWindow (projector view) or focuses it if already open.
+ * Called via IPC from the renderer when the operator clicks "Otwórz tablicę".
+ */
+function openBoardWindow(): void {
+  const existing = findBoardWindow();
+  if (existing) {
+    if (existing.isMinimized()) existing.restore();
+    existing.focus();
+    return;
+  }
+
+  const win = new BrowserWindow({
+    title: 'Weselna Familiada — Tablica',
+    webPreferences: {
+      nodeIntegration: false,
+      contextIsolation: true,
+    },
+  });
+
+  boardWindowIds.add(win.id);
+  win.on('closed', () => boardWindowIds.delete(win.id));
+
+  win.maximize();
+
+  if (isDev) {
+    win.loadURL(`${DEV_URL}/?view=board`);
+  } else {
+    win.loadFile(path.join(__dirname, '..', 'dist', 'index.html'), {
+      query: { view: 'board' },
+    });
+  }
+}
 
 /**
  * Creates the Operator Panel BrowserWindow.
@@ -27,6 +72,7 @@ function createOperatorWindow(): BrowserWindow {
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
+      preload: path.join(__dirname, 'preload.js'),
     },
   });
 
@@ -48,6 +94,10 @@ function createOperatorWindow(): BrowserWindow {
 }
 
 app.whenReady().then(() => {
+  ipcMain.handle('open-board-window', () => {
+    openBoardWindow();
+  });
+
   createOperatorWindow();
 });
 

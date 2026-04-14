@@ -340,8 +340,30 @@ Operator Panel                    Game Board
 **Impact:**
 - New `electron/main.ts` — main process; creates Operator BrowserWindow on launch; uses ESM (matches `"type": "module"` in package.json)
 - New `tsconfig.electron.json` — separate TS config for main process (`"module": "ESNext"`, `outDir: dist-electron`)
-- Board window opened via `window.open('/?view=board', '_blank')` from renderer (unchanged from browser mode)
 - `npm run electron:dev` and `npm run electron:build` scripts added
+- **US-034 additions:** Board window now opened via Electron IPC instead of `window.open()`
+  - New `electron/preload.ts` — `contextBridge` exposes `window.electronAPI.openBoardWindow()` to renderer
+  - `ipcMain.handle('open-board-window')` in `main.ts` — creates Board `BrowserWindow` (maximized); tracks open board windows by `Set<number>` of window IDs to prevent duplicates
+  - New `src/types/electron.d.ts` — global `Window.electronAPI` TypeScript type declaration
+
+---
+
+### ADR-006: Board Layout Settings via localStorage
+
+**Decision:** Store game board layout proportions (team panel width ratio) in `localStorage` as a global setting, synced to the board window via BroadcastChannel.
+
+**Rationale:**
+- Different projectors and venues require different layout proportions
+- Operator needs live adjustment without restarting the app
+- `localStorage` is the established persistence mechanism in this project (see ADR-004)
+- BroadcastChannel is the established sync mechanism — no new infrastructure needed
+
+**Impact:**
+- New store field (or separate `settingsStore`): `boardLayout: { teamPanelRatio: number }` — percentage width of each team panel (range: current default ~15% up to ~30%)
+- New BroadcastChannel message type: `SET_BOARD_LAYOUT`
+- `GameBoard.tsx` applies `teamPanelRatio` as dynamic CSS width; team panel font scales proportionally
+- New operator component: `BoardLayoutControl.tsx` — always visible slider in `OperatorPanel`
+- Setting loaded from `localStorage` on app init; saved on every slider change
 
 ---
 

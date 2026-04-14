@@ -187,6 +187,15 @@ export function LobbyScreen() {
         >
           Zarządzaj pytaniami
         </button>
+
+        {window.electronAPI && (
+          <button
+            onClick={() => window.electronAPI?.openBoardWindow()}
+            className="operator-btn w-full mt-3"
+          >
+            Otwórz tablicę
+          </button>
+        )}
       </div>
     </div>
   );
