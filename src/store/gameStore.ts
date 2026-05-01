@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 
 import {
+  BoardColors,
   FinalRoundAnswer,
   FinalRoundDataFile,
   GameDataFile,
@@ -15,6 +16,8 @@ import { loadQuestionBank, saveQuestionBank } from '@/utils/questionBankStorage'
 const MAX_MISTAKES = 3;
 const BOARD_LAYOUT_STORAGE_KEY = 'familiada-board-layout';
 const DEFAULT_TEAM_PANEL_RATIO = 15;
+const BOARD_COLORS_STORAGE_KEY = 'familiada-board-colors';
+const DEFAULT_BOARD_COLORS: BoardColors = { left: '#cc1100', right: '#0044cc' };
 
 function loadBoardLayout(): { teamPanelRatio: number } {
   try {
@@ -27,6 +30,28 @@ function loadBoardLayout(): { teamPanelRatio: number } {
     // ignore malformed storage entry
   }
   return { teamPanelRatio: DEFAULT_TEAM_PANEL_RATIO };
+}
+
+function loadBoardColors(): BoardColors {
+  try {
+    const raw = localStorage.getItem(BOARD_COLORS_STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw) as unknown;
+      if (
+        parsed !== null &&
+        typeof parsed === 'object' &&
+        'left' in parsed &&
+        'right' in parsed &&
+        typeof (parsed as BoardColors).left === 'string' &&
+        typeof (parsed as BoardColors).right === 'string'
+      ) {
+        return parsed as BoardColors;
+      }
+    }
+  } catch {
+    // ignore malformed storage entry
+  }
+  return { ...DEFAULT_BOARD_COLORS };
 }
 const FINAL_ROUND_QUESTIONS = 5;
 const PLAYER_A_TIMER_SECS = 15;
@@ -77,6 +102,7 @@ const INITIAL_STATE: GameState = {
   finalRound: undefined,
   lastRoundPoints: null,
   boardLayout: loadBoardLayout(),
+  boardColors: loadBoardColors(),
 };
 
 interface StoreActions {
@@ -114,6 +140,8 @@ interface StoreActions {
   adjustScore: (side: TeamSide, delta: number) => void;
   transferLastRoundPoints: () => void;
   setBoardLayout: (ratio: number) => void;
+  setBoardColor: (side: TeamSide, color: string) => void;
+  resetBoardColors: () => void;
 }
 
 interface SoundPreferences {
@@ -481,5 +509,19 @@ export const useGameStore = create<GameState & StoreActions & SoundPreferences>(
     const layout = { teamPanelRatio: clamped };
     localStorage.setItem(BOARD_LAYOUT_STORAGE_KEY, JSON.stringify(layout));
     set({ boardLayout: layout });
+  },
+
+  // Updates a single team's gradient color and persists both colors to localStorage
+  setBoardColor: (side: TeamSide, color: string) =>
+    set((state) => {
+      const updated: BoardColors = { ...state.boardColors, [side]: color };
+      localStorage.setItem(BOARD_COLORS_STORAGE_KEY, JSON.stringify(updated));
+      return { boardColors: updated };
+    }),
+
+  // Restores both team colors to defaults and clears localStorage
+  resetBoardColors: () => {
+    localStorage.removeItem(BOARD_COLORS_STORAGE_KEY);
+    set({ boardColors: { ...DEFAULT_BOARD_COLORS } });
   },
 }));

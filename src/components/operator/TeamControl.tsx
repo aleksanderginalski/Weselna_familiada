@@ -1,6 +1,7 @@
 import { useGameStore } from '@/store/gameStore';
 import { useSound } from '@/hooks/useSound';
 import { TeamSide } from '@/types/game';
+import { TeamColorPicker } from './TeamColorPicker';
 import { TeamPanel, TeamStatus } from './TeamPanel';
 
 const MAX_MISTAKES = 3;
@@ -32,6 +33,9 @@ export function TeamControl() {
   const markShowdownAttempt = useGameStore((state) => state.markShowdownAttempt);
   const adjustScore = useGameStore((state) => state.adjustScore);
   const transferLastRoundPoints = useGameStore((state) => state.transferLastRoundPoints);
+  const boardColors = useGameStore((state) => state.boardColors);
+  const setBoardColor = useGameStore((state) => state.setBoardColor);
+  const resetBoardColors = useGameStore((state) => state.resetBoardColors);
   const { playWrong, playCorrect } = useSound();
 
   const isStealPhase = phase === 'steal';
@@ -138,8 +142,21 @@ export function TeamControl() {
                 Przekaż punkty ({lastRoundPoints.amount} pkt)
               </button>
             )}
+            <TeamColorPicker
+              color={boardColors[side]}
+              label="Kolor tła"
+              onChange={(color) => setBoardColor(side, color)}
+            />
           </div>
         ))}
+      </div>
+      <div className="flex justify-end">
+        <button
+          onClick={resetBoardColors}
+          className="text-xs text-familiada-text-secondary underline hover:text-white transition-colors"
+        >
+          Resetuj kolory
+        </button>
       </div>
 
       {/* Mistake button section */}
