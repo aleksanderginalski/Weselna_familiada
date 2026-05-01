@@ -2,7 +2,7 @@
 
 **Project:** Weselna Familiada  
 **Version:** 2.0  
-**Last Updated:** 2026-05-01 (US-040 discovery — team background color customization)  
+**Last Updated:** 2026-05-01 (US-040 completed — team background color customization)  
 **Product Owner:** Aleksander Ginalski  
 **Repository:** https://github.com/AleksanderGinalworking/Weselna_familiada
 
@@ -1351,20 +1351,20 @@ EPIC-005: Weselna Familiada M5 - Desktop Distribution
 **I want to** change the background gradient colors of the game board for each team
 **So that** the display matches the wedding's color scheme
 
-**Status:** 📋 Planned
+**Status:** ✅ COMPLETED
 **Story Points:** 3
 **Priority:** P2
 
 **Acceptance Criteria:**
 
-- [ ] A color swatch is displayed next to each team section in the operator panel, visible during gameplay
-- [ ] Clicking a swatch opens a `react-colorful` color wheel popover
-- [ ] Operator selects one color per team; the dark gradient transition stop is auto-derived (HSL lightness at ~50% of original)
-- [ ] Gradient structure remains unchanged: `[light] 0% → [dark] 20% → #060818 35% → #060818 65% → [dark] 80% → [light] 100%`
-- [ ] Default colors: left `#cc1100`, right `#0044cc` (current hardcoded values)
-- [ ] A "Reset" button restores both colors to defaults
-- [ ] Changes are reflected on the game board immediately via BroadcastChannel (rides in existing `SYNC_STATE`)
-- [ ] Colors are persisted in `localStorage` and restored on app startup
+- [x] A color swatch is displayed next to each team section in the operator panel, visible during gameplay
+- [x] Clicking a swatch opens a `react-colorful` color wheel popover
+- [x] Operator selects one color per team; the dark gradient transition stop is auto-derived (HSL lightness at ~50% of original)
+- [x] Gradient structure remains unchanged: `[light] 0% → [dark] 20% → #060818 35% → #060818 65% → [dark] 80% → [light] 100%`
+- [x] Default colors: left `#cc1100`, right `#0044cc` (current hardcoded values)
+- [x] A "Reset" button restores both colors to defaults
+- [x] Changes are reflected on the game board immediately via BroadcastChannel (rides in existing `SYNC_STATE`)
+- [x] Colors are persisted in `localStorage` and restored on app startup
 
 **Technical Notes:**
 
@@ -1379,14 +1379,14 @@ EPIC-005: Weselna Familiada M5 - Desktop Distribution
 
 **Tasks:**
 
-- [ ] **TASK-040.1:** Install `react-colorful`; add `BoardColors` interface to `src/types/game.ts`
-- [ ] **TASK-040.2:** Add `boardColors`, `setBoardColor()`, `resetBoardColors()` to `src/store/gameStore.ts`; wire `localStorage` persistence
-- [ ] **TASK-040.3:** Create `src/utils/colorUtils.ts` — `deriveGradientDark(hex)` and `computeBoardGradient(colors)` helpers
-- [ ] **TASK-040.4:** Update `src/components/board/GameBoard.tsx` — replace `BOARD_BACKGROUND` constant with dynamic gradient from store
-- [ ] **TASK-040.5:** Create `src/components/operator/TeamColorPicker.tsx` — swatch button + `react-colorful` popover + Reset button
-- [ ] **TASK-040.6:** Integrate `TeamColorPicker` into operator panel (visible during game)
-- [ ] **TASK-040.7:** Write tests (/qa)
-- [ ] **TASK-040.8:** Manual verification: color changes appear live on board; persisted after reload; Reset restores defaults
+- [x] **TASK-040.1:** Install `react-colorful`; add `BoardColors` interface to `src/types/game.ts`
+- [x] **TASK-040.2:** Add `boardColors`, `setBoardColor()`, `resetBoardColors()` to `src/store/gameStore.ts`; wire `localStorage` persistence
+- [x] **TASK-040.3:** Create `src/utils/colorUtils.ts` — `deriveGradientDark(hex)` and `computeBoardGradient(colors)` helpers
+- [x] **TASK-040.4:** Update `src/components/board/GameBoard.tsx` — replace `BOARD_BACKGROUND` constant with dynamic gradient from store
+- [x] **TASK-040.5:** Create `src/components/operator/TeamColorPicker.tsx` — swatch button + `react-colorful` popover + Reset button
+- [x] **TASK-040.6:** Integrate `TeamColorPicker` into operator panel (visible during game)
+- [x] **TASK-040.7:** Write tests (/qa)
+- [x] **TASK-040.8:** Manual verification: color changes appear live on board; persisted after reload; Reset restores defaults
 
 ---
 

@@ -161,6 +161,20 @@ MIT License — zobacz [LICENSE](./LICENSE)
 
 ## Latest
 
+**v0.41.0** — Team background color customization (US-040)
+
+- `src/utils/colorUtils.ts` — new utility: `deriveGradientDark(hex)` converts hex to HSL and reduces lightness to 55% for dark gradient stop; `computeBoardGradient(colors)` builds 6-stop linear gradient from two team colors
+- `src/types/game.ts` — new `BoardColors` interface (`{ left: string; right: string }`); `GameState` gains `boardColors: BoardColors`
+- `src/store/gameStore.ts` — `boardColors` added to initial state with `loadBoardColors()` (mirrors `loadBoardLayout` pattern, key `familiada-board-colors`); new `setBoardColor(side, color)` action persists to localStorage; new `resetBoardColors()` action clears localStorage and restores defaults (`left: '#cc1100'`, `right: '#0044cc'`)
+- `src/hooks/useBroadcast.ts` — `boardColors` added to `extractGameState()`; synced to board window via existing `SYNC_STATE` (no new message type)
+- `src/components/board/GameBoard.tsx` — hardcoded `BOARD_BACKGROUND` constant replaced with `computeBoardGradient(boardColors)` read from store; gradient updates live
+- `src/components/operator/TeamColorPicker.tsx` — new component: color swatch button opens `react-colorful` `HexColorPicker` popover; popover closes on outside click via `mousedown` listener
+- `src/components/operator/TeamControl.tsx` — `TeamColorPicker` added for each team panel; "Resetuj kolory" button restores defaults
+- New dependency: `react-colorful` (~3 KB gzipped, zero peer dependencies)
+- 11 tests added: TC-282–TC-292 (292 total)
+
+---
+
 **v0.40.0** — Board layout proportion slider (US-039)
 
 - `src/components/operator/BoardLayoutControl.tsx` — new; slider "Panele drużyn" (range 15–60, default 15) placed in operator header; always visible
