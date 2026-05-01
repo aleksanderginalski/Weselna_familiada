@@ -2,7 +2,7 @@
 
 **Project:** Weselna Familiada  
 **Version:** 2.0  
-**Last Updated:** 2026-04-13 (US-038 done — showdown wrong attempt indicators)  
+**Last Updated:** 2026-05-01 (US-040 completed — team background color customization)  
 **Product Owner:** Aleksander Ginalski  
 **Repository:** https://github.com/AleksanderGinalworking/Weselna_familiada
 
@@ -1290,19 +1290,19 @@ EPIC-005: Weselna Familiada M5 - Desktop Distribution
 
 # 📦 EPIC-006: Display Customization
 
-**Goal:** Allow operators to adjust the game board layout to fit different projector aspect ratios and venue setups
+**Goal:** Allow operators to adjust the game board layout and appearance to fit different projector setups and wedding color themes
 
-**Business Value:** Ensures the game looks correct on any projector without technical workarounds
+**Business Value:** Ensures the game looks correct on any projector and visually matches the wedding's color scheme
 
-**Status:** 📋 Planned
+**Status:** 🔄 In Progress
 
 ---
 
-## 🔧 FEATURE-013: Board Layout Settings
+## 🔧 FEATURE-013: Board Display Settings
 
 **Priority:** P2 (Medium)
-**Total Points:** 3
-**Status:** ✅ Completed
+**Total Points:** 6
+**Status:** 🔄 In Progress
 
 ### US-039: Board layout proportion slider
 
@@ -1342,6 +1342,51 @@ EPIC-005: Weselna Familiada M5 - Desktop Distribution
 - [x] **TASK-039.4:** Update `GameBoard.tsx` and `TeamScore.tsx` — panel width and font scale from ratio
 - [x] **TASK-039.5:** Write tests (/qa) — TC-165 to TC-172
 - [x] **TASK-039.6:** Manual verification: slider adjusts board layout live on projector
+
+---
+
+### US-040: Team background color customization
+
+**As an** operator
+**I want to** change the background gradient colors of the game board for each team
+**So that** the display matches the wedding's color scheme
+
+**Status:** ✅ COMPLETED
+**Story Points:** 3
+**Priority:** P2
+
+**Acceptance Criteria:**
+
+- [x] A color swatch is displayed next to each team section in the operator panel, visible during gameplay
+- [x] Clicking a swatch opens a `react-colorful` color wheel popover
+- [x] Operator selects one color per team; the dark gradient transition stop is auto-derived (HSL lightness at ~50% of original)
+- [x] Gradient structure remains unchanged: `[light] 0% → [dark] 20% → #060818 35% → #060818 65% → [dark] 80% → [light] 100%`
+- [x] Default colors: left `#cc1100`, right `#0044cc` (current hardcoded values)
+- [x] A "Reset" button restores both colors to defaults
+- [x] Changes are reflected on the game board immediately via BroadcastChannel (rides in existing `SYNC_STATE`)
+- [x] Colors are persisted in `localStorage` and restored on app startup
+
+**Technical Notes:**
+
+- New `BoardColors` interface: `{ left: string; right: string }` (hex strings)
+- `GameState` gains `boardColors: BoardColors`; defaults and localStorage persistence mirror `boardLayout` pattern
+- New store actions: `setBoardColor(side: TeamSide, color: string)`, `resetBoardColors()`
+- `GameBoard.tsx`: replaces hardcoded `BOARD_BACKGROUND` constant with a `computeGradient(colors)` utility function
+- Dark stop derived via HSL: parse hex → reduce lightness by ~50% → convert back to hex
+- New component: `src/components/operator/TeamColorPicker.tsx` — renders swatch + popover with `react-colorful`
+- `useBroadcast.ts`: no changes needed — `boardColors` included automatically in `extractGameState()`
+- New dependency: `react-colorful` (~3 KB gzipped, zero peer dependencies)
+
+**Tasks:**
+
+- [x] **TASK-040.1:** Install `react-colorful`; add `BoardColors` interface to `src/types/game.ts`
+- [x] **TASK-040.2:** Add `boardColors`, `setBoardColor()`, `resetBoardColors()` to `src/store/gameStore.ts`; wire `localStorage` persistence
+- [x] **TASK-040.3:** Create `src/utils/colorUtils.ts` — `deriveGradientDark(hex)` and `computeBoardGradient(colors)` helpers
+- [x] **TASK-040.4:** Update `src/components/board/GameBoard.tsx` — replace `BOARD_BACKGROUND` constant with dynamic gradient from store
+- [x] **TASK-040.5:** Create `src/components/operator/TeamColorPicker.tsx` — swatch button + `react-colorful` popover + Reset button
+- [x] **TASK-040.6:** Integrate `TeamColorPicker` into operator panel (visible during game)
+- [x] **TASK-040.7:** Write tests (/qa)
+- [x] **TASK-040.8:** Manual verification: color changes appear live on board; persisted after reload; Reset restores defaults
 
 ---
 

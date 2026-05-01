@@ -112,6 +112,24 @@ describe('useBroadcast', () => {
       );
     });
 
+    it('should include boardColors in SYNC_STATE payload when setBoardColor is called (TC-292)', () => {
+      renderHook(() => useBroadcast());
+
+      act(() => {
+        useGameStore.getState().setBoardColor('left', '#ff0000');
+      });
+
+      const posted = mockInstances[0].postMessage.mock.calls.map(([msg]) => msg);
+      expect(posted).toContainEqual(
+        expect.objectContaining({
+          type: 'SYNC_STATE',
+          payload: expect.objectContaining({
+            boardColors: expect.objectContaining({ left: '#ff0000' }),
+          }),
+        }),
+      );
+    });
+
     it('should include boardLayout in SYNC_STATE payload when setBoardLayout is called (TC-172)', () => {
       renderHook(() => useBroadcast());
 

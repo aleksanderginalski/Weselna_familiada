@@ -899,6 +899,44 @@ describe('gameStore', () => {
     });
   });
 
+  describe('boardColors', () => {
+    it('should default to left #cc1100 and right #0044cc (TC-285)', () => {
+      const { boardColors } = useGameStore.getState();
+
+      expect(boardColors.left).toBe('#cc1100');
+      expect(boardColors.right).toBe('#0044cc');
+    });
+
+    it('should update left color and persist both colors to localStorage (TC-286)', () => {
+      useGameStore.getState().setBoardColor('left', '#ff0000');
+      const state = useGameStore.getState();
+
+      expect(state.boardColors.left).toBe('#ff0000');
+      expect(state.boardColors.right).toBe('#0044cc');
+      const stored = JSON.parse(localStorage.getItem('familiada-board-colors') ?? '{}');
+      expect(stored.left).toBe('#ff0000');
+    });
+
+    it('should update right color independently, leaving left unchanged (TC-287)', () => {
+      useGameStore.getState().resetBoardColors();
+      useGameStore.getState().setBoardColor('right', '#00ff00');
+      const state = useGameStore.getState();
+
+      expect(state.boardColors.right).toBe('#00ff00');
+      expect(state.boardColors.left).toBe('#cc1100');
+    });
+
+    it('should restore defaults and remove localStorage key on resetBoardColors (TC-288)', () => {
+      useGameStore.getState().setBoardColor('left', '#aabbcc');
+      useGameStore.getState().resetBoardColors();
+      const state = useGameStore.getState();
+
+      expect(state.boardColors.left).toBe('#cc1100');
+      expect(state.boardColors.right).toBe('#0044cc');
+      expect(localStorage.getItem('familiada-board-colors')).toBeNull();
+    });
+  });
+
   describe('setBoardLayout', () => {
     it('should default to teamPanelRatio 15 (TC-165)', () => {
       expect(useGameStore.getState().boardLayout.teamPanelRatio).toBe(15);

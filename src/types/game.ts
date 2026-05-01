@@ -79,6 +79,12 @@ export interface RoundState {
   roundScore: number;
 }
 
+/** Gradient accent colors for the left and right team sides of the game board */
+export interface BoardColors {
+  left: string;  // hex, default '#cc1100'
+  right: string; // hex, default '#0044cc'
+}
+
 /** Points awarded at the end of the last completed round, enabling cross-team transfer */
 export interface LastRoundPoints {
   amount: number;
@@ -114,6 +120,9 @@ export interface GameState {
 
   // Global display setting: width of each team panel as % of board width (15–30)
   boardLayout: { teamPanelRatio: number };
+
+  // Global display setting: gradient colors for each team side, persisted in localStorage
+  boardColors: BoardColors;
 
   // Present only when a final round has been started
   finalRound?: FinalRoundState;
