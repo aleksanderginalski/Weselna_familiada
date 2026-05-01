@@ -146,6 +146,13 @@ interface GameState {
   finalRound?: FinalRoundState;
   /** Board layout: team panel width ratio (15–60), persisted in localStorage */
   boardLayout: { teamPanelRatio: number };
+  /** Board gradient colors per team side, persisted in localStorage */
+  boardColors: BoardColors;
+}
+
+interface BoardColors {
+  left: string;   // hex, default #cc1100
+  right: string;  // hex, default #0044cc
 }
 
 interface FinalRoundState {
@@ -191,6 +198,7 @@ interface RoundState {
 | Styling | Tailwind CSS | 3.4 | Rapid prototyping |
 | State | Zustand | 4.5 | Simple, middleware support |
 | Audio | Howler.js | 2.2 | Cross-browser audio |
+| Color Picker | react-colorful | latest | Lightweight (~3 KB), zero deps, consistent cross-browser color wheel |
 | Testing | Vitest | 1.6 | Vite-native |
 
 ---
