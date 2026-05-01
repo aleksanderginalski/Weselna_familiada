@@ -25,15 +25,17 @@
 | src/components/operator/OperatorPanel.test.tsx | 6 | ✅ |
 | src/components/operator/VolumeSlider.test.tsx | 2 | ✅ |
 | src/components/operator/FinalRoundOperator.test.tsx | 1 | ✅ |
+| src/components/operator/TeamColorPicker.test.tsx | 3 | ✅ |
 | src/components/screens/LobbyScreen.test.tsx | 9 | ✅ |
 | src/components/screens/WinnerScreen.test.tsx | 6 | ✅ |
 | src/components/screens/EndGameChoice.test.tsx | 3 | ✅ |
 | src/components/screens/QuestionEditorScreen.test.tsx | 4 | ✅ |
+| src/utils/colorUtils.test.ts | 3 | ✅ |
 | src/App.test.tsx | 5 | ✅ |
 | src/test/lintingConfig.test.ts | 16 | ✅ |
 | src/test/tailwindTheme.test.ts | 5 | ✅ |
 | src/test/projectStructure.test.ts | 24 | ✅ |
-| **TOTAL** | **273** | ✅ |
+| **TOTAL** | **292** | ✅ |
 
 ---
 
@@ -387,4 +389,45 @@
 | TC-268 | should fetch ./pytania-bank.json when questionBank is empty and localStorage is empty | boundary |
 | TC-269 | should not fetch when questionBank is already populated | boundary |
 | TC-270 | should switch to form view when Dodaj pytanie is clicked | interaction |
+
+---
+
+## src/utils/colorUtils.test.ts (US-040)
+
+| # | Test | Type |
+|---|------|------|
+| TC-282 | deriveGradientDark — returns a valid darker hex for a bright red color | happy path |
+| TC-283 | deriveGradientDark — returns '#000000' for invalid hex strings | boundary |
+| TC-284 | computeBoardGradient — returns gradient string with correct structure and both team colors | happy path |
+
+---
+
+## src/store/gameStore.test.ts — boardColors (US-040)
+
+| # | Test | Type |
+|---|------|------|
+| TC-285 | boardColors — defaults to left #cc1100 and right #0044cc | happy path |
+| TC-286 | setBoardColor — updates left color and persists both to localStorage | happy path |
+| TC-287 | setBoardColor — updates right color independently, leaving left unchanged | boundary |
+| TC-288 | resetBoardColors — restores defaults and removes localStorage key | happy path |
+
+---
+
+## src/components/operator/TeamColorPicker.test.tsx (US-040)
+
+**Component:** `TeamColorPicker`
+
+| # | Test | Type |
+|---|------|------|
+| TC-289 | should render swatch with correct background color and label | happy path |
+| TC-290 | should open color picker popover on swatch click and close on second click | interaction |
+| TC-291 | should call onChange when color picker value changes | interaction |
+
+---
+
+## src/hooks/useBroadcast.test.ts — boardColors (US-040)
+
+| # | Test | Type |
+|---|------|------|
+| TC-292 | should include boardColors in SYNC_STATE payload when setBoardColor is called | integration |
 
