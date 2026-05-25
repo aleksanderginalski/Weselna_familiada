@@ -111,7 +111,7 @@ Alternatywnie, edytuj plik JSON (**uwaga:** zmiany w pliku są widoczne tylko gd
   "questions": [
     {
       "question": "Twoje pytanie?",
-      "category": "general",
+      "tags": ["ogólne", "wesele"],
       "answers": [
         { "text": "Odpowiedź 1", "points": 30 },
         { "text": "Odpowiedź 2", "points": 25 }
@@ -121,7 +121,7 @@ Alternatywnie, edytuj plik JSON (**uwaga:** zmiany w pliku są widoczne tylko gd
 }
 ```
 
-Pole `category` jest opcjonalne — możesz je pominąć. Bank może zawierać dowolną liczbę pytań.
+Pole `tags` jest opcjonalne — możesz podać pustą tablicę `[]` lub pominąć (zostanie automatycznie uzupełnione). Tagi umożliwiają filtrowanie pytań w edytorze i ekranie wyboru. Stary format z `"category": "..."` jest automatycznie migrowany. Bank może zawierać dowolną liczbę pytań.
 
 ## 🚀 Build produkcyjny
 
@@ -160,6 +160,21 @@ MIT License — zobacz [LICENSE](./LICENSE)
 ---
 
 ## Latest
+
+**v0.42.0** — Multi-tag support with faceted filtering (US-041)
+
+- `src/types/game.ts` — `QuestionBankEntry.category?: string` replaced by `tags: string[]`
+- `src/utils/tagUtils.ts` — new: `extractAllTags(bank)` returns sorted unique tags; `computeAvailableTags(bank, selectedTags)` implements faceted AND-filter navigation (after selecting tag A, only tags co-existing with A are shown)
+- `src/components/shared/TagFilterPanel.tsx` — new shared component: selected tags as gold chips with `×`, available tags as clickable buttons; returns null when bank has no tags
+- `src/components/screens/QuestionEditorForm.tsx` — tag input with autocomplete dropdown (case-insensitive match against existing bank tags); "Dodaj '[tag]'" option when no exact match; Enter/click adds chip; `×` removes; saved with question
+- `src/components/screens/QuestionEditorList.tsx` — `TagFilterPanel` above question list; filter state owned by parent (`QuestionEditorScreen`); original bank indices preserved for correct edit/delete callbacks
+- `src/components/screens/QuestionSelectionScreen.tsx` — `TagFilterPanel` above question list; `handleDraw` (LOSUJ) draws only from filtered question indices
+- `src/utils/questionBankStorage.ts` — `migrateEntry()` helper: `category → tags[0]` for old localStorage data; applied on every `loadQuestionBank()` call
+- `src/store/gameStore.ts` — `loadBank()` applies same migration for JSON file data
+- `public/pytania-bank.json` — migrated: all questions now have `tags: []` or `tags: ["general"]`; obsolete `isMainQuestion`/`isFinalQuestion` fields removed
+- 10 tests added: TC-173 through TC-182 (302 total)
+
+---
 
 **v0.41.0** — Team background color customization (US-040)
 

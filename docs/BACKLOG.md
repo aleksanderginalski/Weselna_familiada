@@ -1139,43 +1139,43 @@ EPIC-005: Weselna Familiada M5 - Desktop Distribution
 **I want to** assign multiple tags to questions and filter by them in the editor and selection screen
 **So that** I can quickly find and curate questions matching a specific theme or audience
 
-**Status:** 📋 Planned
+**Status:** ✅ COMPLETED
 **Story Points:** 5
 **Priority:** P1
 
 **Acceptance Criteria:**
 
 **Data model:**
-- [ ] `category?: string` replaced by `tags: string[]` in `QuestionBankEntry`
-- [ ] Backward compat: `loadBank` converts old `category` → `tags: [category]` on load
-- [ ] `pytania-bank.json` migrated — existing questions: `category` → first tag
-- [ ] New util `extractAllTags(bank): string[]` — sorted unique tags from entire bank
+- [x] `category?: string` replaced by `tags: string[]` in `QuestionBankEntry`
+- [x] Backward compat: `loadBank` converts old `category` → `tags: [category]` on load
+- [x] `pytania-bank.json` migrated — existing questions: `category` → first tag
+- [x] New util `extractAllTags(bank): string[]` — sorted unique tags from entire bank
 
 **Tag editing in question editor form (`QuestionEditorForm`):**
-- [ ] Tag input below answer rows: user types, system suggests existing tags from bank (case-insensitive match)
-- [ ] If no exact match: option "Dodaj '[tag]'" appears
-- [ ] `Enter` or clicking suggestion adds the tag; duplicate tags ignored
-- [ ] Tags displayed as chips with `×` to remove
-- [ ] Tags saved when question is saved
+- [x] Tag input below answer rows: user types, system suggests existing tags from bank (case-insensitive match)
+- [x] If no exact match: option "Dodaj '[tag]'" appears
+- [x] `Enter` or clicking suggestion adds the tag; duplicate tags ignored
+- [x] Tags displayed as chips with `×` to remove
+- [x] Tags saved when question is saved
 
 **Tag filtering in question editor list (`QuestionEditorList`):**
-- [ ] Tag filter panel above question list
-- [ ] Shows all tags from bank; clicking a tag adds it as active filter
-- [ ] Questions filtered live (AND logic) — question must have **all** selected tags
-- [ ] Questions without tags are hidden when any filter is active
-- [ ] Available tags update dynamically (faceted navigation): after selecting tag A, only tags co-existing with A on remaining questions are shown
-- [ ] Selected tags shown as active chips with `×` to deselect; deselecting a tag re-expands available tags
-- [ ] When no filter active — all questions visible, all tags shown
+- [x] Tag filter panel above question list
+- [x] Shows all tags from bank; clicking a tag adds it as active filter
+- [x] Questions filtered live (AND logic) — question must have **all** selected tags
+- [x] Questions without tags are hidden when any filter is active
+- [x] Available tags update dynamically (faceted navigation): after selecting tag A, only tags co-existing with A on remaining questions are shown
+- [x] Selected tags shown as active chips with `×` to deselect; deselecting a tag re-expands available tags
+- [x] When no filter active — all questions visible, all tags shown
 
 **Tag filtering in question selection screen (`QuestionSelectionScreen`):**
-- [ ] Same tag filter panel (shared `TagFilterPanel` component) above question list
-- [ ] Same live AND filtering and faceted navigation logic
-- [ ] Filter resets when entering the screen
-- [ ] Questions without tags hidden when filter is active
+- [x] Same tag filter panel (shared `TagFilterPanel` component) above question list
+- [x] Same live AND filtering and faceted navigation logic
+- [x] Filter resets when entering the screen
+- [x] Questions without tags hidden when filter is active
 
 **Technical:**
-- [ ] New shared component: `src/components/shared/TagFilterPanel.tsx`
-- [ ] New util: `src/utils/tagUtils.ts` — `extractAllTags()`, `computeAvailableTags(bank, selectedTags)`
+- [x] New shared component: `src/components/shared/TagFilterPanel.tsx`
+- [x] New util: `src/utils/tagUtils.ts` — `extractAllTags()`, `computeAvailableTags(bank, selectedTags)`
 
 ---
 
