@@ -105,10 +105,17 @@ export function FinalRoundSelectionScreen() {
                   className="accent-familiada-gold w-5 h-5 cursor-pointer flex-shrink-0 disabled:cursor-not-allowed"
                 />
                 <span className="text-familiada-text-primary flex-1 truncate">{entry.question}</span>
-                {entry.category && (
-                  <span className="text-xs px-2 py-0.5 rounded bg-familiada-bg-dark text-familiada-text-secondary border border-familiada-border flex-shrink-0">
-                    {entry.category}
-                  </span>
+                {entry.tags.length > 0 && (
+                  <div className="flex gap-1 flex-shrink-0">
+                    {entry.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="text-xs px-2 py-0.5 rounded bg-familiada-bg-dark text-familiada-text-secondary border border-familiada-border"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
                 )}
               </li>
             );
