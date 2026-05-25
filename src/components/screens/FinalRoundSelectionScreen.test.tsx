@@ -9,6 +9,7 @@ const makeQuestions = (count: number) =>
   Array.from({ length: count }, (_, i) => ({
     question: `Pytanie ${i + 1}?`,
     answers: [{ text: `A${i + 1}`, points: 10 }],
+    tags: [],
   }));
 
 function setup(availableCount: number) {

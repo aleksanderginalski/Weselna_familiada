@@ -2,8 +2,7 @@
   "questions": [
     {
       "question": "Najlepsze świąteczne dania",
-      "category": "general",
-      "isMainQuestion": true,
+      "tags": ["general"],
       "answers": [
         { "text": "Sałatka Jarzynowa", "points": 30 },
         { "text": "Żórek", "points": 25 },
@@ -14,8 +13,7 @@
     },
     {
       "question": "Top Papieżów",
-      "category": "general",
-      "isMainQuestion": true,
+      "tags": ["general"],
       "answers": [
         { "text": "Jan Paweł II", "points": 28 },
         { "text": "Franciszek", "points": 24 },
@@ -26,8 +24,7 @@
     },
     {
       "question": "Gothic – co jest najbardziej charakterystyczne?",
-      "category": "general",
-      "isMainQuestion": true,
+      "tags": ["general"],
       "answers": [
         { "text": "Bezimienny", "points": 30 },
         { "text": "Gomez", "points": 25 },
@@ -38,8 +35,7 @@
     },
     {
       "question": "Co kojarzy się z Bartoszem Walaszkiem?",
-      "category": "general",
-      "isMainQuestion": true,
+      "tags": ["general"],
       "answers": [
         { "text": "Kapitan Bomba", "points": 35 },
         { "text": "Blok Ekipa", "points": 25 },
@@ -50,8 +46,7 @@
     },
     {
       "question": "Co najbardziej denerwuje w pracy z LLM?",
-      "category": "general",
-      "isMainQuestion": true,
+      "tags": ["general"],
       "answers": [
         { "text": "Halucynacje", "points": 30 },
         { "text": "Błędy w kodzie", "points": 25 },
@@ -62,8 +57,7 @@
     },
     {
       "question": "Co robi programista zamiast pracować?",
-      "category": "general",
-      "isMainQuestion": true,
+      "tags": ["general"],
       "answers": [
         { "text": "Scrolluje internet", "points": 30 },
         { "text": "Ogląda YouTube", "points": 25 },
@@ -74,8 +68,7 @@
     },
     {
       "question": "Co mówi dev po deployu?",
-      "category": "general",
-      "isMainQuestion": true,
+      "tags": ["general"],
       "answers": [
         { "text": "Działa u mnie", "points": 35 },
         { "text": "Nie ruszaj", "points": 25 },
@@ -84,11 +77,9 @@
         { "text": "Rollback?", "points": 10 }
       ]
     },
-
     {
       "question": "Jakie polskie drużyny siatkówki są najbardziej znane lub uważane za najlepsze?",
-      "category": "general",
-      "isMainQuestion": true,
+      "tags": ["general"],
       "answers": [
         { "text": "ZAKSA Kędzierzyn-Koźle", "points": 28 },
         { "text": "Skra Bełchatów", "points": 24 },
@@ -99,8 +90,7 @@
     },
     {
       "question": "Jakie postacie z bajki Psi Patrol najbardziej kojarzą się dzieciom?",
-      "category": "general",
-      "isMainQuestion": true,
+      "tags": ["general"],
       "answers": [
         { "text": "Chase", "points": 30 },
         { "text": "Marshall", "points": 25 },
@@ -111,8 +101,7 @@
     },
     {
       "question": "Jakie postacie z bajki Bluey są najbardziej rozpoznawalne?",
-      "category": "general",
-      "isMainQuestion": true,
+      "tags": ["general"],
       "answers": [
         { "text": "Bluey", "points": 35 },
         { "text": "Bingo", "points": 25 },
@@ -123,8 +112,7 @@
     },
     {
       "question": "Jakie znane kołysanki śpiewa się dzieciom przed snem?",
-      "category": "general",
-      "isMainQuestion": true,
+      "tags": ["general"],
       "answers": [
         { "text": "Aaa kotki dwa", "points": 30 },
         { "text": "Ach śpij kochanie", "points": 25 },
@@ -135,8 +123,7 @@
     },
     {
       "question": "Jakie ciasta Polacy uważają za najlepsze?",
-      "category": "general",
-      "isMainQuestion": true,
+      "tags": ["general"],
       "answers": [
         { "text": "Sernik", "points": 28 },
         { "text": "Szarlotka", "points": 24 },
@@ -147,8 +134,7 @@
     },
     {
       "question": "Jakie warzywa są uważane za najzdrowsze?",
-      "category": "general",
-      "isMainQuestion": true,
+      "tags": ["general"],
       "answers": [
         { "text": "Brokuł", "points": 25 },
         { "text": "Marchew", "points": 22 },
@@ -160,8 +146,7 @@
     },
     {
       "question": "Jakie owoce dzieci lubią najbardziej?",
-      "category": "general",
-      "isMainQuestion": true,
+      "tags": ["general"],
       "answers": [
         { "text": "Truskawki", "points": 30 },
         { "text": "Banany", "points": 25 },
@@ -172,8 +157,7 @@
     },
     {
       "question": "Jakie bajki są najpopularniejsze wśród dzieci?",
-      "category": "general",
-      "isMainQuestion": true,
+      "tags": ["general"],
       "answers": [
         { "text": "Psi Patrol", "points": 28 },
         { "text": "Bluey", "points": 24 },
@@ -184,8 +168,7 @@
     },
     {
       "question": "Co dzieci zabierają do szkoły?",
-      "category": "general",
-      "isMainQuestion": true,
+      "tags": ["general"],
       "answers": [
         { "text": "Plecak", "points": 30 },
         { "text": "Zeszyty", "points": 22 },
@@ -196,8 +179,7 @@
     },
     {
       "question": "Co robi dziecko przed snem?",
-      "category": "general",
-      "isMainQuestion": true,
+      "tags": ["general"],
       "answers": [
         { "text": "Myje zęby", "points": 28 },
         { "text": "Słucha bajki", "points": 25 },
@@ -208,8 +190,7 @@
     },
     {
       "question": "Co znajduje się na placu zabaw?",
-      "category": "general",
-      "isMainQuestion": true,
+      "tags": ["general"],
       "answers": [
         { "text": "Huśtawka", "points": 30 },
         { "text": "Zjeżdżalnia", "points": 25 },
@@ -218,10 +199,9 @@
         { "text": "Karuzela", "points": 12 }
       ]
     },
-
     {
       "question": "Co najbardziej denerwuje graczy w Epic Games?",
-      "isFinalQuestion": true,
+      "tags": [],
       "answers": [
         { "text": "Exclusivy", "points": 32 },
         { "text": "Launcher", "points": 24 },
@@ -232,7 +212,7 @@
     },
     {
       "question": "Co najczęściej pojawia się w memach o branży gier?",
-      "isFinalQuestion": true,
+      "tags": [],
       "answers": [
         { "text": "Buggy premiery", "points": 30 },
         { "text": "Pay to win", "points": 25 },
@@ -243,7 +223,7 @@
     },
     {
       "question": "Z czym kojarzy się Ricardo Milos w memach?",
-      "isFinalQuestion": true,
+      "tags": [],
       "answers": [
         { "text": "Taniec", "points": 35 },
         { "text": "Muzyka", "points": 25 },
@@ -253,7 +233,7 @@
     },
     {
       "question": "Z czym kojarzony jest Jan Paweł II w Polsce?",
-      "isFinalQuestion": true,
+      "tags": [],
       "answers": [
         { "text": "Watykan", "points": 40 },
         { "text": "Wadowice", "points": 25 },

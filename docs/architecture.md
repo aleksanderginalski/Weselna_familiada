@@ -73,11 +73,11 @@ interface QuestionBankFile {
   questions: QuestionBankEntry[];
 }
 
-// Extends RoundData with optional category tag
+// Extends RoundData with multi-tag support (US-041)
 interface QuestionBankEntry {
   question: string;
   answers: AnswerData[];
-  category?: string;   // e.g. "general", "wedding", "movies"
+  tags: string[];   // e.g. ["general", "wedding"]; empty array means untagged
 }
 
 interface AnswerData {
@@ -322,7 +322,7 @@ Operator Panel                    Game Board
 **Decision:** Separate question bank (`pytania-bank.json`) from game config; user edits stored in `localStorage`
 
 **Rationale:**
-- `pytania-bank.json` ships with the app as the default bank (100+ questions, optional `category` field)
+- `pytania-bank.json` ships with the app as the default bank; each question has a `tags: string[]` field (US-041); old `category` field auto-migrated on load
 - Operator edits (add/edit/delete) stored in `localStorage` — persists between sessions, survives app updates
 - At runtime: merge base bank with localStorage overrides
 - No backend or file-system writes needed; works in both browser and Electron renderer

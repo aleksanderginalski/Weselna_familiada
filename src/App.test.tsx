@@ -12,7 +12,7 @@ const MOCK_CONFIG_DATA = {
 };
 
 const MOCK_BANK_DATA = {
-  questions: [{ question: 'Pytanie testowe?', answers: [{ text: 'Odpowiedź', points: 10 }] }],
+  questions: [{ question: 'Pytanie testowe?', answers: [{ text: 'Odpowiedź', points: 10 }], tags: [] }],
 };
 
 beforeEach(() => {

@@ -32,9 +32,9 @@ export interface AnswerData {
   points: number;
 }
 
-/** A question entry in the bank — same as RoundData with an optional category tag */
+/** A question entry in the bank — same as RoundData with zero or more tags */
 export interface QuestionBankEntry extends RoundData {
-  category?: string;
+  tags: string[];
 }
 
 /** The pytania-bank.json file format */

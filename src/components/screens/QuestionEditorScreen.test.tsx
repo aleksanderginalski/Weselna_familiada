@@ -6,7 +6,7 @@ import { useGameStore } from '@/store/gameStore';
 import { QuestionEditorScreen } from './QuestionEditorScreen';
 
 const MOCK_BANK = {
-  questions: [{ question: 'Pytanie z pliku?', answers: [{ text: 'A', points: 10 }] }],
+  questions: [{ question: 'Pytanie z pliku?', answers: [{ text: 'A', points: 10 }], tags: [] }],
 };
 
 beforeEach(() => {
@@ -24,7 +24,7 @@ afterEach(() => {
 
 describe('QuestionEditorScreen', () => {
   it('should render list view with back button and add-question button', () => {
-    useGameStore.setState({ questionBank: [{ question: 'Q?', answers: [{ text: 'A', points: 5 }] }] });
+    useGameStore.setState({ questionBank: [{ question: 'Q?', answers: [{ text: 'A', points: 5 }], tags: [] }] });
     render(<QuestionEditorScreen />);
 
     expect(screen.getByRole('heading', { name: 'Edytor pytań' })).toBeInTheDocument();
@@ -42,7 +42,7 @@ describe('QuestionEditorScreen', () => {
   });
 
   it('should not fetch when questionBank is already populated', async () => {
-    useGameStore.setState({ questionBank: [{ question: 'Istniejące?', answers: [{ text: 'A', points: 5 }] }] });
+    useGameStore.setState({ questionBank: [{ question: 'Istniejące?', answers: [{ text: 'A', points: 5 }], tags: [] }] });
     render(<QuestionEditorScreen />);
 
     await waitFor(() => {}, { timeout: 100 });
@@ -51,7 +51,7 @@ describe('QuestionEditorScreen', () => {
   });
 
   it('should switch to form view when Dodaj pytanie is clicked', async () => {
-    useGameStore.setState({ questionBank: [{ question: 'Q?', answers: [{ text: 'A', points: 5 }] }] });
+    useGameStore.setState({ questionBank: [{ question: 'Q?', answers: [{ text: 'A', points: 5 }], tags: [] }] });
     render(<QuestionEditorScreen />);
 
     await userEvent.click(screen.getByRole('button', { name: /Dodaj pytanie/ }));

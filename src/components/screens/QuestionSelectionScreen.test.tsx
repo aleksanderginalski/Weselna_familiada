@@ -7,13 +7,13 @@ import { QuestionSelectionScreen } from './QuestionSelectionScreen';
 
 // 7 questions → maxSelectable = 7 - 5 = 2
 const MOCK_BANK = [
-  { question: 'Pytanie 1?', answers: [{ text: 'A1', points: 10 }] },
-  { question: 'Pytanie 2?', answers: [{ text: 'A2', points: 20 }] },
-  { question: 'Pytanie 3?', answers: [{ text: 'A3', points: 30 }] },
-  { question: 'Pytanie 4?', answers: [{ text: 'A4', points: 40 }] },
-  { question: 'Pytanie 5?', answers: [{ text: 'A5', points: 50 }] },
-  { question: 'Pytanie 6?', answers: [{ text: 'A6', points: 60 }] },
-  { question: 'Pytanie 7?', answers: [{ text: 'A7', points: 70 }] },
+  { question: 'Pytanie 1?', answers: [{ text: 'A1', points: 10 }], tags: [] },
+  { question: 'Pytanie 2?', answers: [{ text: 'A2', points: 20 }], tags: [] },
+  { question: 'Pytanie 3?', answers: [{ text: 'A3', points: 30 }], tags: [] },
+  { question: 'Pytanie 4?', answers: [{ text: 'A4', points: 40 }], tags: [] },
+  { question: 'Pytanie 5?', answers: [{ text: 'A5', points: 50 }], tags: [] },
+  { question: 'Pytanie 6?', answers: [{ text: 'A6', points: 60 }], tags: [] },
+  { question: 'Pytanie 7?', answers: [{ text: 'A7', points: 70 }], tags: [] },
 ];
 
 const FIXED_CONFIG = {

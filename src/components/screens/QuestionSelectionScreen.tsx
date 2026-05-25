@@ -1,5 +1,6 @@
 import { useState } from 'react';
 
+import { TagFilterPanel } from '@/components/shared/TagFilterPanel';
 import { useGameStore } from '@/store/gameStore';
 import { QuestionBankEntry } from '@/types/game';
 import { shuffled } from '@/utils/shuffle';
@@ -20,10 +21,18 @@ export function QuestionSelectionScreen() {
 
   const [selected, setSelected] = useState<boolean[]>(() => buildInitialSelected(questionBank.length));
   const [order, setOrder] = useState<number[]>([]);
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+
+  const filteredBankItems = questionBank
+    .map((entry, bankIndex) => ({ entry, bankIndex }))
+    .filter(({ entry }) => {
+      if (selectedTags.length === 0) return true;
+      if (entry.tags.length === 0) return false;
+      return selectedTags.every((tag) => entry.tags.includes(tag));
+    });
 
   function toggleQuestion(bankIndex: number) {
     const isSelected = selected[bankIndex];
-    // Prevent selecting more than maxSelectable
     if (!isSelected && order.length >= maxSelectable) return;
 
     const newSelected = [...selected];
@@ -48,13 +57,14 @@ export function QuestionSelectionScreen() {
   }
 
   function handleDraw() {
+    const filteredIndices = filteredBankItems.map(({ bankIndex }) => bankIndex);
+    const maxDrawable = Math.min(filteredIndices.length, maxSelectable);
     const drawCount =
       config.mode === 'fixed'
-        ? Math.min(config.numberOfRounds ?? 4, maxSelectable)
-        : Math.min(10, maxSelectable);
-    const indices = questionBank.map((_, i) => i);
-    const drawn = shuffled(indices).slice(0, drawCount);
+        ? Math.min(config.numberOfRounds ?? 4, maxDrawable)
+        : Math.min(10, maxDrawable);
 
+    const drawn = shuffled(filteredIndices).slice(0, drawCount);
     const newSelected = buildInitialSelected(questionBank.length);
     drawn.forEach((i) => (newSelected[i] = true));
     setSelected(newSelected);
@@ -118,8 +128,15 @@ export function QuestionSelectionScreen() {
           </div>
         )}
 
+        <TagFilterPanel
+          bank={questionBank}
+          selectedTags={selectedTags}
+          onSelect={(tag) => setSelectedTags((prev) => [...prev, tag])}
+          onDeselect={(tag) => setSelectedTags((prev) => prev.filter((t) => t !== tag))}
+        />
+
         <ul className="space-y-2 mb-8">
-          {questionBank.map((entry, bankIndex) => {
+          {filteredBankItems.map(({ entry, bankIndex }) => {
             const isSelected = selected[bankIndex];
             const isDisabled = !isSelected && isAtMax;
             return (
@@ -200,10 +217,17 @@ function QuestionRow({
 
       <span className="text-familiada-text-primary flex-1 truncate">{entry.question}</span>
 
-      {entry.category && (
-        <span className="text-xs px-2 py-0.5 rounded bg-familiada-bg-dark text-familiada-text-secondary border border-familiada-border flex-shrink-0">
-          {entry.category}
-        </span>
+      {entry.tags.length > 0 && (
+        <div className="flex gap-1 flex-shrink-0">
+          {entry.tags.map((tag) => (
+            <span
+              key={tag}
+              className="text-xs px-2 py-0.5 rounded bg-familiada-bg-dark text-familiada-text-secondary border border-familiada-border"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
       )}
 
       {isSelected && (

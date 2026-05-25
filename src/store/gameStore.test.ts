@@ -23,10 +23,12 @@ const mockBankData: QuestionBankFile = {
         { text: 'Answer 1', points: 30 },
         { text: 'Answer 2', points: 20 },
       ],
+      tags: [],
     },
     {
       question: 'Question 2?',
       answers: [{ text: 'Answer A', points: 50 }],
+      tags: [],
     },
   ],
 };
@@ -95,7 +97,7 @@ describe('gameStore', () => {
 
     it('should replace questionBank when called a second time', () => {
       const secondBank: QuestionBankFile = {
-        questions: [{ question: 'New Q?', answers: [{ text: 'New A', points: 99 }] }],
+        questions: [{ question: 'New Q?', answers: [{ text: 'New A', points: 99 }], tags: [] }],
       };
       useGameStore.getState().loadBank(mockBankData);
       useGameStore.getState().loadBank(secondBank);
