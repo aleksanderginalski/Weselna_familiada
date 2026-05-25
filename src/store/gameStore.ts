@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 
 import {
+  AnswerData,
   BoardColors,
   FinalRoundAnswer,
   FinalRoundDataFile,
@@ -166,14 +167,19 @@ export const useGameStore = create<GameState & StoreActions & SoundPreferences>(
       currentRound: INITIAL_ROUND_STATE,
     }),
 
-  // Loads the question bank; localStorage edits take precedence over the JSON file
+  // Loads the question bank; localStorage edits take precedence over the JSON file.
+  // Applies backward-compat migration: old entries with `category` are converted to `tags`.
   loadBank: (data: QuestionBankFile) => {
     const stored = loadQuestionBank();
-    set({
-      questionBank: stored ?? data.questions ?? [],
-      rounds: [],
-      status: 'selectingQuestions',
+    const raw = stored ?? data.questions ?? [];
+    const migrated = raw.map((q) => {
+      const r = q as unknown as Record<string, unknown>;
+      if (Array.isArray(r.tags)) return q;
+      const tags: string[] =
+        typeof r.category === 'string' && r.category ? [r.category] : [];
+      return { question: q.question, answers: q.answers as AnswerData[], tags };
     });
+    set({ questionBank: migrated, rounds: [], status: 'selectingQuestions' });
   },
 
   // Locks main round selection and moves to final round question selection

@@ -5,15 +5,23 @@ import { describe, expect, it, vi } from 'vitest';
 import { QuestionEditorList } from './QuestionEditorList';
 
 const MOCK_QUESTIONS = [
-  { question: 'Pytanie 1?', answers: [{ text: 'A', points: 10 }] },
-  { question: 'Pytanie 2?', answers: [{ text: 'B', points: 20 }, { text: 'C', points: 5 }] },
+  { question: 'Pytanie 1?', answers: [{ text: 'A', points: 10 }], tags: [] },
+  { question: 'Pytanie 2?', answers: [{ text: 'B', points: 20 }, { text: 'C', points: 5 }], tags: [] },
 ];
 
 describe('QuestionEditorList', () => {
   // TC-151
   it('should render question list with count and empty state when no questions', () => {
     render(
-      <QuestionEditorList questions={[]} onEdit={vi.fn()} onDelete={vi.fn()} onAddNew={vi.fn()} />,
+      <QuestionEditorList
+        questions={[]}
+        selectedTags={[]}
+        onTagSelect={vi.fn()}
+        onTagDeselect={vi.fn()}
+        onEdit={vi.fn()}
+        onDelete={vi.fn()}
+        onAddNew={vi.fn()}
+      />,
     );
 
     expect(screen.getByText('Brak pytań w banku')).toBeInTheDocument();
@@ -25,6 +33,9 @@ describe('QuestionEditorList', () => {
     render(
       <QuestionEditorList
         questions={MOCK_QUESTIONS}
+        selectedTags={[]}
+        onTagSelect={vi.fn()}
+        onTagDeselect={vi.fn()}
         onEdit={vi.fn()}
         onDelete={vi.fn()}
         onAddNew={vi.fn()}
@@ -45,6 +56,9 @@ describe('QuestionEditorList', () => {
     render(
       <QuestionEditorList
         questions={MOCK_QUESTIONS}
+        selectedTags={[]}
+        onTagSelect={vi.fn()}
+        onTagDeselect={vi.fn()}
         onEdit={onEdit}
         onDelete={onDelete}
         onAddNew={onAddNew}

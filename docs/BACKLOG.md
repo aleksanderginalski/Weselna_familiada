@@ -2,7 +2,7 @@
 
 **Project:** Weselna Familiada  
 **Version:** 2.0  
-**Last Updated:** 2026-05-01 (US-040 completed — team background color customization)  
+**Last Updated:** 2026-05-25 (US-041 added — question tags and filtering)  
 **Product Owner:** Aleksander Ginalski  
 **Repository:** https://github.com/AleksanderGinalworking/Weselna_familiada
 
@@ -1065,7 +1065,7 @@ EPIC-005: Weselna Familiada M5 - Desktop Distribution
 ## 🔧 FEATURE-011: Question Bank & Selection
 
 **Priority:** P1 (High)
-**Total Points:** 18
+**Total Points:** 23
 **Status:** 🔄 In Progress
 
 ### US-029: Question bank data model
@@ -1130,6 +1130,52 @@ EPIC-005: Weselna Familiada M5 - Desktop Distribution
 - [x] Changes reflected immediately in question selection screen
 - [x] Validation: question text required, at least 2 answers, points must be positive integers
 - [x] Non-technical UX: clear labels, no JSON visible
+
+---
+
+### US-041: Question tags — tagging and filtering
+
+**As an** operator
+**I want to** assign multiple tags to questions and filter by them in the editor and selection screen
+**So that** I can quickly find and curate questions matching a specific theme or audience
+
+**Status:** 📋 Planned
+**Story Points:** 5
+**Priority:** P1
+
+**Acceptance Criteria:**
+
+**Data model:**
+- [ ] `category?: string` replaced by `tags: string[]` in `QuestionBankEntry`
+- [ ] Backward compat: `loadBank` converts old `category` → `tags: [category]` on load
+- [ ] `pytania-bank.json` migrated — existing questions: `category` → first tag
+- [ ] New util `extractAllTags(bank): string[]` — sorted unique tags from entire bank
+
+**Tag editing in question editor form (`QuestionEditorForm`):**
+- [ ] Tag input below answer rows: user types, system suggests existing tags from bank (case-insensitive match)
+- [ ] If no exact match: option "Dodaj '[tag]'" appears
+- [ ] `Enter` or clicking suggestion adds the tag; duplicate tags ignored
+- [ ] Tags displayed as chips with `×` to remove
+- [ ] Tags saved when question is saved
+
+**Tag filtering in question editor list (`QuestionEditorList`):**
+- [ ] Tag filter panel above question list
+- [ ] Shows all tags from bank; clicking a tag adds it as active filter
+- [ ] Questions filtered live (AND logic) — question must have **all** selected tags
+- [ ] Questions without tags are hidden when any filter is active
+- [ ] Available tags update dynamically (faceted navigation): after selecting tag A, only tags co-existing with A on remaining questions are shown
+- [ ] Selected tags shown as active chips with `×` to deselect; deselecting a tag re-expands available tags
+- [ ] When no filter active — all questions visible, all tags shown
+
+**Tag filtering in question selection screen (`QuestionSelectionScreen`):**
+- [ ] Same tag filter panel (shared `TagFilterPanel` component) above question list
+- [ ] Same live AND filtering and faceted navigation logic
+- [ ] Filter resets when entering the screen
+- [ ] Questions without tags hidden when filter is active
+
+**Technical:**
+- [ ] New shared component: `src/components/shared/TagFilterPanel.tsx`
+- [ ] New util: `src/utils/tagUtils.ts` — `extractAllTags()`, `computeAvailableTags(bank, selectedTags)`
 
 ---
 

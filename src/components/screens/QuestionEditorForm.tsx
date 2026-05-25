@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 import { QuestionBankEntry } from '@/types/game';
 
@@ -9,6 +9,7 @@ interface AnswerDraft {
 
 interface Props {
   initialQuestion?: QuestionBankEntry;
+  allTags: string[];
   onSave: (question: QuestionBankEntry) => void;
   onCancel: () => void;
 }
@@ -62,10 +63,48 @@ function validate(questionText: string, answers: AnswerDraft[]): ValidationError
   return hasError ? errors : null;
 }
 
-export function QuestionEditorForm({ initialQuestion, onSave, onCancel }: Props) {
+export function QuestionEditorForm({ initialQuestion, allTags, onSave, onCancel }: Props) {
   const [questionText, setQuestionText] = useState(initialQuestion?.question ?? '');
   const [answers, setAnswers] = useState<AnswerDraft[]>(buildInitialAnswers(initialQuestion));
   const [errors, setErrors] = useState<ValidationErrors | null>(null);
+  const [tags, setTags] = useState<string[]>(initialQuestion?.tags ?? []);
+  const [tagInput, setTagInput] = useState('');
+  const [showDropdown, setShowDropdown] = useState(false);
+  const tagInputRef = useRef<HTMLInputElement>(null);
+
+  const filteredSuggestions = tagInput
+    ? allTags.filter(
+        (t) => t.toLowerCase().includes(tagInput.toLowerCase()) && !tags.includes(t),
+      )
+    : [];
+  const hasExactMatch = allTags.some((t) => t.toLowerCase() === tagInput.trim().toLowerCase());
+  const showAddOption =
+    tagInput.trim().length > 0 && !hasExactMatch && !tags.includes(tagInput.trim());
+
+  function addTag(tag: string) {
+    const trimmed = tag.trim();
+    if (trimmed && !tags.includes(trimmed)) {
+      setTags((prev) => [...prev, trimmed]);
+    }
+    setTagInput('');
+    setShowDropdown(false);
+    tagInputRef.current?.focus();
+  }
+
+  function removeTag(tag: string) {
+    setTags((prev) => prev.filter((t) => t !== tag));
+  }
+
+  function handleTagKeyDown(e: React.KeyboardEvent) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      if (filteredSuggestions.length > 0) {
+        addTag(filteredSuggestions[0]);
+      } else if (tagInput.trim()) {
+        addTag(tagInput);
+      }
+    }
+  }
 
   function handleAnswerChange(index: number, field: keyof AnswerDraft, value: string) {
     setAnswers((prev) => prev.map((a, i) => (i === index ? { ...a, [field]: value } : a)));
@@ -90,7 +129,7 @@ export function QuestionEditorForm({ initialQuestion, onSave, onCancel }: Props)
     onSave({
       question: questionText.trim(),
       answers: answers.map((a) => ({ text: a.text.trim(), points: parseInt(a.points, 10) })),
-      category: initialQuestion?.category,
+      tags,
     });
   }
 
@@ -165,6 +204,80 @@ export function QuestionEditorForm({ initialQuestion, onSave, onCancel }: Props)
               )}
             </div>
           ))}
+        </div>
+      </div>
+
+      <div>
+        <label className="block text-familiada-text-secondary text-sm font-bold uppercase mb-2">
+          Tagi
+        </label>
+        {tags.length > 0 && (
+          <div className="flex flex-wrap gap-2 mb-2">
+            {tags.map((tag) => (
+              <span
+                key={tag}
+                className="flex items-center gap-1 bg-familiada-gold text-familiada-bg-dark text-xs font-bold px-2 py-1 rounded-full"
+              >
+                {tag}
+                <button
+                  type="button"
+                  onClick={() => removeTag(tag)}
+                  className="hover:opacity-70 leading-none"
+                  aria-label={`Usuń tag ${tag}`}
+                >
+                  ×
+                </button>
+              </span>
+            ))}
+          </div>
+        )}
+        <div className="relative">
+          <input
+            ref={tagInputRef}
+            type="text"
+            value={tagInput}
+            onChange={(e) => {
+              setTagInput(e.target.value);
+              setShowDropdown(true);
+            }}
+            onFocus={() => setShowDropdown(true)}
+            onBlur={() => setTimeout(() => setShowDropdown(false), 150)}
+            onKeyDown={handleTagKeyDown}
+            placeholder="Wpisz tag i naciśnij Enter..."
+            className="w-full bg-familiada-bg-dark border-2 border-familiada-border rounded-lg px-4 py-2 text-familiada-text-primary focus:border-familiada-gold focus:outline-none"
+          />
+          {showDropdown && (filteredSuggestions.length > 0 || showAddOption) && (
+            <ul className="absolute z-10 top-full left-0 right-0 bg-familiada-bg-panel border border-familiada-border rounded-lg mt-1 max-h-40 overflow-y-auto">
+              {filteredSuggestions.map((tag) => (
+                <li key={tag}>
+                  <button
+                    type="button"
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                      addTag(tag);
+                    }}
+                    className="w-full text-left px-4 py-2 text-familiada-text-primary hover:bg-familiada-bg-dark text-sm"
+                  >
+                    {tag}
+                  </button>
+                </li>
+              ))}
+              {showAddOption && (
+                <li>
+                  <button
+                    type="button"
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                      addTag(tagInput);
+                    }}
+                    className="w-full text-left px-4 py-2 text-familiada-gold hover:bg-familiada-bg-dark text-sm"
+                  >
+                    Dodaj &quot;{tagInput.trim()}&quot;
+                  </button>
+                </li>
+              )}
+            </ul>
+          )}
         </div>
       </div>
 

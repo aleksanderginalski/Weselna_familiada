@@ -4,8 +4,8 @@ import { loadQuestionBank, saveQuestionBank } from './questionBankStorage';
 
 const STORAGE_KEY = 'familiada-question-bank';
 const MOCK_QUESTIONS = [
-  { question: 'Q1?', answers: [{ text: 'A', points: 10 }] },
-  { question: 'Q2?', answers: [{ text: 'B', points: 20 }] },
+  { question: 'Q1?', answers: [{ text: 'A', points: 10 }], tags: [] },
+  { question: 'Q2?', answers: [{ text: 'B', points: 20 }], tags: [] },
 ];
 
 beforeEach(() => {

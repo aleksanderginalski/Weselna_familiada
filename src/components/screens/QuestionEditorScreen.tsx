@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useGameStore } from '@/store/gameStore';
 import { QuestionBankEntry, QuestionBankFile } from '@/types/game';
 import { loadQuestionBank } from '@/utils/questionBankStorage';
+import { extractAllTags } from '@/utils/tagUtils';
 
 import { QuestionEditorForm } from './QuestionEditorForm';
 import { QuestionEditorList } from './QuestionEditorList';
@@ -16,6 +17,7 @@ export function QuestionEditorScreen() {
   const backToLobbyFromEditor = useGameStore((state) => state.backToLobbyFromEditor);
 
   const [editingIndex, setEditingIndex] = useState<EditingIndex>(null);
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
   // Load the bank if it wasn't populated yet (editor opened before clicking DALEJ)
   useEffect(() => {
@@ -45,8 +47,19 @@ export function QuestionEditorScreen() {
     updateQuestionBank(questionBank.filter((_, i) => i !== globalIndex));
   }
 
+  function handleEdit(globalIndex: number) {
+    setSelectedTags([]);
+    setEditingIndex(globalIndex);
+  }
+
+  function handleAddNew() {
+    setSelectedTags([]);
+    setEditingIndex(-1);
+  }
+
   const isEditing = editingIndex !== null;
   const formTitle = editingIndex === -1 ? 'Nowe pytanie' : 'Edytuj pytanie';
+  const allTags = extractAllTags(questionBank);
 
   return (
     <div className="min-h-screen bg-familiada-bg-dark flex flex-col">
@@ -64,15 +77,19 @@ export function QuestionEditorScreen() {
           {isEditing ? (
             <QuestionEditorForm
               initialQuestion={editingIndex >= 0 ? questionBank[editingIndex] : undefined}
+              allTags={allTags}
               onSave={handleSave}
               onCancel={() => setEditingIndex(null)}
             />
           ) : (
             <QuestionEditorList
               questions={questionBank}
-              onEdit={(globalIndex) => setEditingIndex(globalIndex)}
+              selectedTags={selectedTags}
+              onTagSelect={(tag) => setSelectedTags((prev) => [...prev, tag])}
+              onTagDeselect={(tag) => setSelectedTags((prev) => prev.filter((t) => t !== tag))}
+              onEdit={handleEdit}
               onDelete={handleDelete}
-              onAddNew={() => setEditingIndex(-1)}
+              onAddNew={handleAddNew}
             />
           )}
         </div>

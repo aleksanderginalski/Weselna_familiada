@@ -10,12 +10,13 @@ const INITIAL_QUESTION = {
     { text: 'Odpowiedź A', points: 30 },
     { text: 'Odpowiedź B', points: 20 },
   ],
+  tags: [],
 };
 
 describe('QuestionEditorForm', () => {
   // TC-153
   it('should render empty form for new question', () => {
-    render(<QuestionEditorForm onSave={vi.fn()} onCancel={vi.fn()} />);
+    render(<QuestionEditorForm allTags={[]} onSave={vi.fn()} onCancel={vi.fn()} />);
 
     expect(screen.getByPlaceholderText('Wpisz treść pytania...')).toHaveValue('');
     // Two empty answer rows by default
@@ -26,6 +27,7 @@ describe('QuestionEditorForm', () => {
     render(
       <QuestionEditorForm
         initialQuestion={INITIAL_QUESTION}
+        allTags={[]}
         onSave={vi.fn()}
         onCancel={vi.fn()}
       />,
@@ -39,7 +41,7 @@ describe('QuestionEditorForm', () => {
   // TC-154
   it('should call onSave with trimmed data when form is valid', async () => {
     const onSave = vi.fn();
-    render(<QuestionEditorForm onSave={onSave} onCancel={vi.fn()} />);
+    render(<QuestionEditorForm allTags={[]} onSave={onSave} onCancel={vi.fn()} />);
 
     await userEvent.type(screen.getByPlaceholderText('Wpisz treść pytania...'), 'Nowe pytanie?');
 
@@ -59,13 +61,13 @@ describe('QuestionEditorForm', () => {
         { text: 'Tak', points: 10 },
         { text: 'Nie', points: 5 },
       ],
-      category: undefined,
+      tags: [],
     });
   });
 
   // TC-155
   it('should show validation errors for empty question, empty answer text, and invalid points', async () => {
-    render(<QuestionEditorForm onSave={vi.fn()} onCancel={vi.fn()} />);
+    render(<QuestionEditorForm allTags={[]} onSave={vi.fn()} onCancel={vi.fn()} />);
 
     await userEvent.click(screen.getByRole('button', { name: 'Zapisz' }));
 
@@ -76,7 +78,7 @@ describe('QuestionEditorForm', () => {
 
   it('should call onCancel when cancel button is clicked', async () => {
     const onCancel = vi.fn();
-    render(<QuestionEditorForm onSave={vi.fn()} onCancel={onCancel} />);
+    render(<QuestionEditorForm allTags={[]} onSave={vi.fn()} onCancel={onCancel} />);
 
     await userEvent.click(screen.getByRole('button', { name: 'Anuluj' }));
 
@@ -84,7 +86,7 @@ describe('QuestionEditorForm', () => {
   });
 
   it('should add answer row up to max and remove row above min', async () => {
-    render(<QuestionEditorForm onSave={vi.fn()} onCancel={vi.fn()} />);
+    render(<QuestionEditorForm allTags={[]} onSave={vi.fn()} onCancel={vi.fn()} />);
 
     // Initially 2 answers — remove button should not be visible (at min)
     expect(screen.queryByRole('button', { name: 'Usuń odpowiedź' })).not.toBeInTheDocument();
