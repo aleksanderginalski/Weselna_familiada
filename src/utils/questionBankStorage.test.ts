@@ -36,4 +36,14 @@ describe('questionBankStorage', () => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify({ not: 'an array' }));
     expect(loadQuestionBank()).toBeNull();
   });
+
+  // TC-182
+  it('should migrate old category field to tags array on load', () => {
+    const oldFormat = [{ question: 'Q?', answers: [{ text: 'A', points: 10 }], category: 'general' }];
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(oldFormat));
+
+    const result = loadQuestionBank();
+
+    expect(result).toEqual([{ question: 'Q?', answers: [{ text: 'A', points: 10 }], tags: ['general'] }]);
+  });
 });

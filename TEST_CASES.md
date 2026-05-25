@@ -2385,6 +2385,166 @@ beforeEach(() => {
 
 ---
 
+### FEATURE-011: Question Tags — Tagging & Filtering (US-041)
+
+#### TC-173: extractAllTags — returns empty array for empty bank
+
+**Related US:** US-041
+**Type:** Unit
+**Priority:** High
+**File:** `src/utils/tagUtils.test.ts`
+
+**Test Steps:**
+1. Call `extractAllTags([])`
+2. Assert result equals `[]`
+
+**Status:** ✅ Done
+
+---
+
+#### TC-174: extractAllTags — returns sorted unique tags, ignores tagless entries
+
+**Related US:** US-041
+**Type:** Unit
+**Priority:** High
+**File:** `src/utils/tagUtils.test.ts`
+
+**Test Steps:**
+1. Bank with questions having tags `['b','a']`, `['c','a']`, `[]`
+2. Call `extractAllTags`
+3. Assert result equals `['a', 'b', 'c']`
+
+**Status:** ✅ Done
+
+---
+
+#### TC-175: computeAvailableTags — returns all tags when no filter selected
+
+**Related US:** US-041
+**Type:** Unit
+**Priority:** Critical
+**File:** `src/utils/tagUtils.test.ts`
+
+**Test Steps:**
+1. Bank with `['sport','muzyka']` and `['film']`
+2. Call `computeAvailableTags(bank, [])`
+3. Assert result equals `['film', 'muzyka', 'sport']`
+
+**Status:** ✅ Done
+
+---
+
+#### TC-176: computeAvailableTags — returns co-existing tags excluding selected (AND logic)
+
+**Related US:** US-041
+**Type:** Unit
+**Priority:** Critical
+**File:** `src/utils/tagUtils.test.ts`
+
+**Test Steps:**
+1. Bank: `['a','b']`, `['a','c']`, `['b']`
+2. Call `computeAvailableTags(bank, ['a'])`
+3. Assert result equals `['b', 'c']` (only tags on questions that have 'a')
+
+**Status:** ✅ Done
+
+---
+
+#### TC-177: computeAvailableTags — returns empty array when no questions match all selected tags
+
+**Related US:** US-041
+**Type:** Unit
+**Priority:** High
+**File:** `src/utils/tagUtils.test.ts`
+
+**Test Steps:**
+1. Bank: `['a','b']`, `['a','c']`
+2. Call `computeAvailableTags(bank, ['b', 'c'])`
+3. Assert result equals `[]`
+
+**Status:** ✅ Done
+
+---
+
+#### TC-178: TagFilterPanel — returns null when bank has no tags and nothing is selected
+
+**Related US:** US-041
+**Type:** Component
+**Priority:** High
+**File:** `src/components/shared/TagFilterPanel.test.tsx`
+
+**Test Steps:**
+1. Render with bank of questions having empty tags, `selectedTags=[]`
+2. Assert `container.firstChild` is null
+
+**Status:** ✅ Done
+
+---
+
+#### TC-179: TagFilterPanel — renders selected chips and available tag buttons
+
+**Related US:** US-041
+**Type:** Component
+**Priority:** Critical
+**File:** `src/components/shared/TagFilterPanel.test.tsx`
+
+**Test Steps:**
+1. Bank: `['sport','muzyka']`, `['sport']`; `selectedTags=['sport']`
+2. Assert 'sport' chip is rendered
+3. Assert 'muzyka' available button is rendered (faceted: co-exists with 'sport')
+
+**Status:** ✅ Done
+
+---
+
+#### TC-180: TagFilterPanel — calls onDeselect when chip remove button is clicked
+
+**Related US:** US-041
+**Type:** Component
+**Priority:** Critical
+**File:** `src/components/shared/TagFilterPanel.test.tsx`
+
+**Test Steps:**
+1. Render with `selectedTags=['sport']`
+2. Click button with `aria-label="Usuń filtr sport"`
+3. Assert `onDeselect('sport')` was called
+
+**Status:** ✅ Done
+
+---
+
+#### TC-181: TagFilterPanel — calls onSelect when available tag button is clicked
+
+**Related US:** US-041
+**Type:** Component
+**Priority:** Critical
+**File:** `src/components/shared/TagFilterPanel.test.tsx`
+
+**Test Steps:**
+1. Render with `selectedTags=[]`, bank with `['sport','muzyka']`
+2. Click 'sport' button
+3. Assert `onSelect('sport')` was called
+
+**Status:** ✅ Done
+
+---
+
+#### TC-182: loadQuestionBank — migrates old category field to tags array on load
+
+**Related US:** US-041
+**Type:** Unit
+**Priority:** Critical
+**File:** `src/utils/questionBankStorage.test.ts`
+
+**Test Steps:**
+1. Store JSON with `category: 'general'` (no `tags`) in localStorage
+2. Call `loadQuestionBank()`
+3. Assert result has `tags: ['general']` and no `category` field
+
+**Status:** ✅ Done
+
+---
+
 ## 4. Test Data
 
 ### 4.1 Mock Game Data
